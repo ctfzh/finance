@@ -2,7 +2,9 @@ package com.ih2ome.dao.caspain;
 
 import com.ih2ome.model.caspain.AuthUser;
 import com.ih2ome.model.caspain.AuthUserExample;
+
 import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
