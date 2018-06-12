@@ -1,0 +1,16 @@
+/bin
+build
+/logs
+target
+*.iml
+*.ipr
+*.iws
+logs
+/.idea/
+/.gradle/
+*/target
+*.class
+.project
+.settings/
+.classpath
+

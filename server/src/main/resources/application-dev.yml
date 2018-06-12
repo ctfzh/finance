@@ -1,0 +1,84 @@
+spring:
+##redis配置
+  profiles: dev
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    password:
+    pool:
+      max-active: 8
+      max-wait: -1
+      max-idle: 8
+      min-idle: 0
+    timeout: 0
+  #hardware-druid-datasource
+  hardware-druid-datasource:
+    url: jdbc:mysql://192.168.199.182:3307/narcissus_test?useSSL=false&serverTimezone=GMT%2b8
+    username: xiaoshuidi
+    password: xiaoshuidi
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 30000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    filters: stat,wall,log4j
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000;config.decrypt=true;config.decrypt.key=${publicKey}
+
+  #volga-druid-datasource
+  volga-druid-datasource:
+    url: jdbc:mysql://192.168.199.182:3307/volga_test?useSSL=false&serverTimezone=GMT%2b8
+    username: xiaoshuidi
+    password: xiaoshuidi
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 30000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    filters: stat,wall,log4j
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000;config.decrypt=true;config.decrypt.key=${publicKey}
+
+  #caspain-druid-datasource
+  caspain-druid-datasource:
+    url: jdbc:mysql://192.168.199.182:3307/caspain_test?useSSL=false&serverTimezone=GMT%2b8
+    username: xiaoshuidi
+    password: xiaoshuidi
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 30000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    filters: stat,wall,log4j
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000;config.decrypt=true;config.decrypt.key=${publicKey}
+server:
+  port: 8080
+
+#短信平台地址
+sms:
+  baseUrl: http://xs1:5312
+
+
