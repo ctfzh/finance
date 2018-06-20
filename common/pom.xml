@@ -24,14 +24,88 @@
         <java.version>1.8</java.version>
     </properties>
 
+    <dependencies>
+        <!--对接平安的jar包(外部引入).............start-->
+        <dependency>
+            <groupId>open-sdk</groupId>
+            <artifactId>open-sdk</artifactId>
+            <version>1.0.6</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/lib/open-sdk.1.0.6.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>sadk</groupId>
+            <artifactId>sadk</artifactId>
+            <version>3.2.0.5</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/lib/sadk-3.2.0.5.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>saxon</groupId>
+            <artifactId>saxon</artifactId>
+            <version>8.7</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/lib/saxon-8.7.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>jaxen</groupId>
+            <artifactId>jaxen</artifactId>
+            <version>1.1.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/lib/jaxen-1.1.1.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.7.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/lib/commons-beanutils-1.7.0.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.9</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/lib/commons-codec-1.9.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>1.4</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/lib/commons-io-1.4.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.2</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/lib/commons-logging-1.2.jar</systemPath>
+        </dependency>
+        <!--对接平安的jar包(外部引入).............end-->
+    </dependencies>
+
     <build>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>config/config.properties</include>
+                    <include>config/open.cer</include>
+                    <include>config/protocol.xml</include>
+                    <include>config/test.pfx</include>
+                </includes>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <!--<configuration>-->
-                    <!--<classifier>exec</classifier>-->
-                <!--</configuration>-->
+                <configuration>
+                    <classifier>exec</classifier>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
