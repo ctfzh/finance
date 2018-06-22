@@ -1,4 +1,4 @@
-package com.ih2ome.common.test;
+package com.ih2ome.common.test.sdk;
 
 import java.io.IOException;
 import java.util.Map;
@@ -13,7 +13,7 @@ public class Test {
         String req = "{\"AcctNo\":\"55423\",\"BankSeqNo\":\"2652685651566546\",\"BsnSeqNo\":\"545124541541613245\",\"BussTypeNo\":\"100157\",\"CnsmrSeqNo\":\"00062714985309527897\",\"CorpAgreementNo\":\"133565\",\"EndDate\":\"20170626\",\"RequestSeqNo\":\"78941216\",\"StartDate\":\"20170626\",\"TranStatus\":\"0\"}";
         //初始化配置
 //        PABankSDK.init("D:\\mywork\\ih2ome\\SRC\\server\\finance\\common\\src\\main\\resources\\config\\config.properties");
-        PABankSDK.init("config/config.properties");
+        PABankSDK.init("sdkConfig/config.properties");
 //		PABankSDK.init("D:/软件/eclipse-jee-kepler-R-win321/eclipse-jee-kepler-R-win32/eclipse/workspace_test/Open-API1.1.3/conf/config.properties");
         //验证开发者
 //		PABankSDK.getInstance().approveDev();

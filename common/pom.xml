@@ -25,7 +25,7 @@
     </properties>
 
     <dependencies>
-        <!--对接平安的jar包(外部引入).............start-->
+        <!--对接平安的sdk..jar包(外部引入).............start-->
         <dependency>
             <groupId>open-sdk</groupId>
             <artifactId>open-sdk</artifactId>
@@ -82,22 +82,10 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/src/main/resources/lib/commons-logging-1.2.jar</systemPath>
         </dependency>
-        <!--对接平安的jar包(外部引入).............end-->
+        <!--对接平安的sdk..jar包(外部引入).............end-->
     </dependencies>
 
     <build>
-
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>config/config.properties</include>
-                    <include>config/open.cer</include>
-                    <include>config/protocol.xml</include>
-                    <include>config/test.pfx</include>
-                </includes>
-            </resource>
-        </resources>
 
         <plugins>
             <plugin>
