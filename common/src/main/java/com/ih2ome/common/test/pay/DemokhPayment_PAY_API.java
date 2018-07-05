@@ -4,85 +4,105 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.ecc.emp.data.KeyedCollection;
 import com.sdb.payclient.bean.exception.*;
 
 /**
- * æ¨¡æ‹Ÿï¼ˆKH0001ï¼‰å•ç¬”è®¢å•çŠ¶æ€æŸ¥è¯¢
+ * Ä£Äâ£¨KH0001£©µ¥±Ê¶©µ¥×´Ì¬²éÑ¯
+ *
  * @author: zhuning090
  */
-public class DemokhPayment_PAY_API {	
-	public static void main(String[] args) throws CsiiException {
-		com.sdb.payclient.core.PayclientInterfaceUtil  util = new com.sdb.payclient.core.PayclientInterfaceUtil();
-		com.ecc.emp.data.KeyedCollection input = new com.ecc.emp.data.KeyedCollection("input");
-		com.ecc.emp.data.KeyedCollection output = new com.ecc.emp.data.KeyedCollection("output");
-		
-		Calendar calendar = Calendar.getInstance();
-		Date date = calendar.getTime();
-		SimpleDateFormat formatter = new SimpleDateFormat( "yyyyMMddHHmmss" );
-		String timestamp = formatter.format( date );  //æ—¶é—´
-		String datetamp = timestamp.substring(0, 8);  //æ—¥æœŸ	
-		
-		input.put("masterId","2000311146");  //å•†æˆ·å·ï¼Œæ³¨æ„ç”Ÿäº§ç¯å¢ƒä¸Šè¦æ›¿æ¢æˆå•†æˆ·è‡ªå·±çš„ç”Ÿäº§å•†æˆ·å·
-	    input.put("orderId","2000311146"+datetamp+getOrderId());  //è®¢å•å·ï¼Œä¸¥æ ¼éµå®ˆæ ¼å¼ï¼šå•†æˆ·å·+8ä½æ—¥æœŸYYYYMMDD+8ä½æµæ°´
-	    
-	    input.put("currency","RMB");
-	    input.put("customerId","6222980067337248");//å®¢æˆ·å·ï¼Œå•†æˆ·å¯¹å…¶å®¢æˆ·çš„å”¯ä¸€æ ‡è¯†
-	    input.put("amount","1.21");
-	    input.put("remark","forGodness");
-	    input.put("objectName","1111");
-	    input.put("paydate",timestamp);
-	    input.put("validtime","0");
-	    input.put("payType","05");//æ”¯ä»˜æ–¹å¼ï¼Œ01B2Bç½‘å…³ï¼Œ02B2Cç½‘å…³ï¼Œ03é“¶è”å¿«æ·ï¼Œ04å¹³å®‰ä»˜å¿«æ·ï¼Œ05å¾®ä¿¡æ‰«ç 
-	    //input.put("payCardType","00");//ç½‘å…³ã€å¹³å®‰ä»˜ã€é“¶è”å¿«æ·æ”¯ä»˜éœ€ä¸Šé€ï¼Œå…¶ä»–æ”¯ä»˜æ–¹å¼ä¸ä¸Šé€
-	    //input.put("issInsCode","PAB");//ç½‘å…³ã€å¹³å®‰ä»˜ã€é“¶è”å¿«æ·æ”¯ä»˜éœ€ä¸Šé€ï¼Œå…¶ä»–æ”¯ä»˜æ–¹å¼ä¸ä¸Šé€
-	    //input.put("dateTime","201706241530");//å¹³å®‰ä»˜å¿«æ·æ”¯ä»˜éœ€ä¸Šé€(ä½¿ç”¨khPayment_PAY_APIè¿”å›çš„dateTime)ï¼Œå…¶ä»–æ”¯ä»˜æ–¹å¼ä¸ä¸Šé€
-	    //input.put("bindId","20003111462017051155340531");//å¹³å®‰ä»˜å¿«æ·æ”¯ä»˜éœ€ä¸Šé€ï¼Œå…¶ä»–æ”¯ä»˜æ–¹å¼ä¸ä¸Šé€
-	    //input.put("OpenId","20003111462017051155340531");//é“¶è”å¿«æ·æ”¯ä»˜éœ€ä¸Šé€ï¼Œå…¶ä»–æ”¯ä»˜æ–¹å¼ä¸ä¸Šé€
-	    //input.put("cardStr","20003111462017051155340531");//å¹³å®‰ä»˜å¿«æ·æ–°å¡æ”¯ä»˜éœ€ä¸Šé€ï¼Œå…¶ä»–æ”¯ä»˜æ–¹å¼ä¸ä¸Šé€
-	    String returnurl="123";
-	    String NOTIFYURL="123";
-	    input.put("returnurl",returnurl);
-	    input.put("NOTIFYURL",NOTIFYURL);
-	    try {
-	    	output = util.execute(input,"khPayment_PAY_API"); //æ‰§è¡Œå‘é€ï¼ˆKH0001ï¼‰å•ç¬”è®¢å•çŠ¶æ€æŸ¥è¯¢è¯·æ±‚ï¼Œå¹¶è¿”å›ç»“æœå¯¹è±¡
-			String errorCode = (String)output.getDataValue("errorCode");
-			String errorMsg = (String)output.getDataValue("errorMsg");
-			
-			System.out.println("---å•ç¬”è®¢å•çŠ¶æ€æŸ¥è¯¢ç»“æœè¯¦ç»†ä¿¡æ¯---"+output);
-			
-			if((errorCode == null || errorCode.equals(""))&& (errorMsg == null || errorMsg.equals(""))){
-				/**
-				 * è¯¦ç»†è¿”å›ä¿¡æ¯è¯·çœ‹å¹³å®‰é“¶è¡Œè·¨è¡Œæ”¯ä»˜æ¥å£æ–‡æ¡£
-				 */			
-				System.out.println("---è®¢å•çŠ¶æ€---"+output.getDataValue("status"));
-			}else{
-				System.out.println("---é”™è¯¯ç ---"+output.getDataValue("errorCode"));
-				System.out.println("---é”™è¯¯è¯´æ˜---"+output.getDataValue("errorMsg"));
-			}
+public class DemokhPayment_PAY_API {
+    public static void main(String[] args) throws CsiiException {
+        com.sdb.payclient.core.PayclientInterfaceUtil util = new com.sdb.payclient.core.PayclientInterfaceUtil();
+        com.ecc.emp.data.KeyedCollection input = new com.ecc.emp.data.KeyedCollection("input");
+        com.ecc.emp.data.KeyedCollection output = new com.ecc.emp.data.KeyedCollection("output");
 
-	    }catch (Exception e) {
-			e.printStackTrace();
-		 }
-	}
-	//ç”Ÿæˆ8ä½éšæœºæ•°
-	private static String getOrderId(){
-		String orderId ;
-		java.util.Random r=new java.util.Random();
-		while(true){
-			int i=r.nextInt(99999999);
-			if(i<0)i=-i;
-			orderId = String.valueOf(i);
-			System.out.println("---ç”Ÿæˆéšæœºæ•°---"+orderId);
-			if(orderId.length()<8){
-				System.out.println("---ä½æ•°ä¸å¤Ÿ8ä½---"+orderId);
-				continue;
-			}
-			if(orderId.length()>=8){
-				orderId = orderId.substring(0,8);
-				System.out.println("---ç”Ÿæˆ8ä½æµæ°´---"+orderId);
-				break;
-			}
-		  }
-		return orderId;
-	}
+        Calendar calendar = Calendar.getInstance();
+        Date date = calendar.getTime();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+        String timestamp = formatter.format(date);  //Ê±¼ä
+        String datetamp = timestamp.substring(0, 8);  //ÈÕÆÚ
+
+        input.put("masterId", "2000311146");  //ÉÌ»§ºÅ£¬×¢ÒâÉú²ú»·¾³ÉÏÒªÌæ»»³ÉÉÌ»§×Ô¼ºµÄÉú²úÉÌ»§ºÅ
+        input.put("orderId", "2000311146" + datetamp + getOrderId());  //¶©µ¥ºÅ£¬ÑÏ¸ñ×ñÊØ¸ñÊ½£ºÉÌ»§ºÅ+8Î»ÈÕÆÚYYYYMMDD+8Î»Á÷Ë®
+
+        input.put("currency", "RMB");
+        input.put("customerId", "6222980067337248");//¿Í»§ºÅ£¬ÉÌ»§¶ÔÆä¿Í»§µÄÎ¨Ò»±êÊ¶
+        input.put("amount", "1.21");
+        input.put("remark", "forGodness");
+        input.put("objectName", "1111");
+        input.put("paydate", timestamp);
+        input.put("validtime", "0");
+        input.put("payType", "05");//Ö§¸¶·½Ê½£¬01B2BÍø¹Ø£¬02B2CÍø¹Ø£¬03ÒøÁª¿ì½İ£¬04Æ½°²¸¶¿ì½İ£¬05Î¢ĞÅÉ¨Âë
+        //input.put("payCardType","00");//Íø¹Ø¡¢Æ½°²¸¶¡¢ÒøÁª¿ì½İÖ§¸¶ĞèÉÏËÍ£¬ÆäËûÖ§¸¶·½Ê½²»ÉÏËÍ
+        //input.put("issInsCode","PAB");//Íø¹Ø¡¢Æ½°²¸¶¡¢ÒøÁª¿ì½İÖ§¸¶ĞèÉÏËÍ£¬ÆäËûÖ§¸¶·½Ê½²»ÉÏËÍ
+        //input.put("dateTime","201706241530");//Æ½°²¸¶¿ì½İÖ§¸¶ĞèÉÏËÍ(Ê¹ÓÃkhPayment_PAY_API·µ»ØµÄdateTime)£¬ÆäËûÖ§¸¶·½Ê½²»ÉÏËÍ
+        //input.put("bindId","20003111462017051155340531");//Æ½°²¸¶¿ì½İÖ§¸¶ĞèÉÏËÍ£¬ÆäËûÖ§¸¶·½Ê½²»ÉÏËÍ
+        //input.put("OpenId","20003111462017051155340531");//ÒøÁª¿ì½İÖ§¸¶ĞèÉÏËÍ£¬ÆäËûÖ§¸¶·½Ê½²»ÉÏËÍ
+        //input.put("cardStr","20003111462017051155340531");//Æ½°²¸¶¿ì½İĞÂ¿¨Ö§¸¶ĞèÉÏËÍ£¬ÆäËûÖ§¸¶·½Ê½²»ÉÏËÍ
+        String returnurl = "123";
+        String NOTIFYURL = "123";
+        input.put("returnurl", returnurl);
+        input.put("NOTIFYURL", NOTIFYURL);
+        try {
+            KeyedCollection signData = util.getSignData(input);
+            String origs = (String) signData.getDataValue("orig");
+            String sign = (String) signData.getDataValue("sign");
+            System.out.println("»ñÈ¡Ç©ÃûÔ´Êı¾İ=========================");
+            System.out.println(origs);
+            System.out.println("»ñÈ¡Ç©ÃûºóÊı¾İ=========================");
+            System.out.println(sign);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            output = util.execute(input, "khPayment_PAY_API"); //Ö´ĞĞ·¢ËÍ£¨KH0001£©µ¥±Ê¶©µ¥×´Ì¬²éÑ¯ÇëÇó£¬²¢·µ»Ø½á¹û¶ÔÏó
+            Object orig = output.getDataValue("orig");
+            Object sign = output.getDataValue("sign");
+            System.out.println("ÒøĞĞ·µ»ØµÄÇ©ÃûÔ´Êı¾İ=====================");
+            System.out.println(orig);
+            System.out.println("ÒøĞĞ·µ»ØµÄÇ©ÃûºóÊı¾İ======================");
+            System.out.println(sign);
+            String errorCode = (String) output.getDataValue("errorCode");
+            String errorMsg = (String) output.getDataValue("errorMsg");
+
+            System.out.println("---µ¥±Ê¶©µ¥×´Ì¬²éÑ¯½á¹ûÏêÏ¸ĞÅÏ¢---" + output);
+
+            if ((errorCode == null || errorCode.equals("")) && (errorMsg == null || errorMsg.equals(""))) {
+                /**
+                 * ÏêÏ¸·µ»ØĞÅÏ¢Çë¿´Æ½°²ÒøĞĞ¿çĞĞÖ§¸¶½Ó¿ÚÎÄµµ
+                 */
+                System.out.println("---¶©µ¥×´Ì¬---" + output.getDataValue("status"));
+            } else {
+                System.out.println("---´íÎóÂë---" + output.getDataValue("errorCode"));
+                System.out.println("---´íÎóËµÃ÷---" + output.getDataValue("errorMsg"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //Éú³É8Î»Ëæ»úÊı
+    private static String getOrderId() {
+        String orderId;
+        java.util.Random r = new java.util.Random();
+        while (true) {
+            int i = r.nextInt(99999999);
+            if (i < 0) i = -i;
+            orderId = String.valueOf(i);
+            System.out.println("---Éú³ÉËæ»úÊı---" + orderId);
+            if (orderId.length() < 8) {
+                System.out.println("---Î»Êı²»¹»8Î»---" + orderId);
+                continue;
+            }
+            if (orderId.length() >= 8) {
+                orderId = orderId.substring(0, 8);
+                System.out.println("---Éú³É8Î»Á÷Ë®---" + orderId);
+                break;
+            }
+        }
+        return orderId;
+    }
 }

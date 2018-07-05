@@ -30,7 +30,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.web.server.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.ih2ome.server.controller"))
                 .paths(PathSelectors.any())
                 .build().globalOperationParameters(pars);
     }
@@ -41,7 +41,7 @@ public class SwaggerConfig {
                 .description("api文档")
                 .termsOfServiceUrl("")
                 .contact("")
-                .version("1.0")
+                .version("1.0                  ")
                 .build();
     }
 }

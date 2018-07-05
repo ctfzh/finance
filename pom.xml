@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="gbk"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -16,7 +16,7 @@
     <packaging>pom</packaging>
 
     <name>finance</name>
-    <description>java閲戣瀺椤圭洰</description>
+    <description>java金融项目</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -27,8 +27,8 @@
 
     <properties>
         <start-class>com.ih2ome.server.ServerApplication</start-class>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <project.build.sourceEncoding>gbk</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>gbk</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
     </properties>
 
@@ -59,7 +59,7 @@
             <version>1.3.1</version>
         </dependency>
 
-        <!-- MyBatis 閫氱敤 Mapper -->
+        <!-- MyBatis 通用 Mapper -->
         <dependency>
             <groupId>tk.mybatis</groupId>
             <artifactId>mapper</artifactId>
@@ -186,14 +186,14 @@
             <version>1.3.2</version>
         </dependency>
 
-        <!--jodd鏀寔-->
+        <!--jodd支持-->
         <dependency>
             <groupId>org.jodd</groupId>
             <artifactId>jodd-core</artifactId>
             <version>3.4.8</version>
         </dependency>
 
-        <!-- 鐢熸垚Excel鏂囦欢 -->
+        <!-- 生成Excel文件 -->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
