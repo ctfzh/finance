@@ -16,10 +16,10 @@ import java.util.Date;
 import java.util.UUID;
 
 /**
- * @author 李世成
- * @email: lishicheng@innjia.com
- * @date: 2017/8/25
- */
+ * @author Sky
+ * create 2018/07/04
+ * email sky.li@ixiaoshuidi.com
+ **/
 public class ConstUtils {
     /**
      * 对象深层复制，写的不是很好，待优化
