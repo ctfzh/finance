@@ -62,14 +62,14 @@
         <!-- MyBatis 通用 Mapper -->
         <dependency>
             <groupId>tk.mybatis</groupId>
-            <artifactId>mapper</artifactId>
-            <version>3.4.5</version>
+            <artifactId>mapper-spring-boot-starter</artifactId>
+            <version>RELEASE</version>
         </dependency>
-
+        <!--mybatis分页插件-->
         <dependency>
             <groupId>com.github.pagehelper</groupId>
-            <artifactId>pagehelper</artifactId>
-            <version>5.1.2</version>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>RELEASE</version>
         </dependency>
 
         <!--mysql -->

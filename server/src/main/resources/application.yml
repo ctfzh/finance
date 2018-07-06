@@ -6,23 +6,17 @@ spring:
   http:
     encoding:
       force: true
-      charset: UTF-8
+      charset: gbk
       enabled: true
-  freemarker:
-    template-loader-path: classpath:/templates
-    resources.static-locations: classpath:/static
-    cache: false
-    charset: UTF-8
-    check-template-location: true
-    content-type: text/html
-    suffix: .html
-    request-context-attribute: request
-    expose-spring-macro-helpers: true
-    settings.template_exception_handler: ignore
 
+#mybatis&&通用Mapper
 mybatis:
   mapper-locations: classpath*:mapping/**/*.xml
-  type-aliases-package: com.ih2ome.dao.model
+  type-aliases-package: com.ih2ome.model
+mapper:
+  mappers: com.ih2ome.dao.BaseDao
+  identity: MYSQL
+
 pagehelper:
   helper-dialect: mysql
   reasonable: true
@@ -33,3 +27,4 @@ pagehelper:
 privateKey: MIIBVAIBADANBgkqhkiG9w0BAQEFAASCAT4wggE6AgEAAkEAp4TF8PO2xO3zDchq1ty2wsG9B78hQt6mqiKHHJVq2jkBT86pzpFs8gUoTWD8/6cBXJ07rF2qA52kNprmJPO7ewIDAQABAkAfsg+Bt5stR5hlUzZj0P8DeoS5ooA4lsgSCNZnoh3FjBSoMP42JBoaDmOuIib5DcrHFo1FTlHUDVvbHz0KmLGBAiEA6rzWncuADHYvgjCTlazsN4SMYwWwo5WlsG5dqgqn6L0CIQC2sT3xcFtdN/FxVSrHi8buaLg616eXuPf0RIqxKgiElwIhAK510vxL9stMO1sDR20CrD1G4h/mZrXtzssl+68ZZFnxAiAwjJlxd/JPq3Y2L/PWY4bSBHIw8O5Qm48JEs3olsr8sQIgXfV2emIMkiGQEFF23FfSTDLLEFKNM9GjGb4SwC54RPU=
 publicKey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAKeExfDztsTt8w3IatbctsLBvQe/IULepqoihxyVato5AU/Oqc6RbPIFKE1g/P+nAVydO6xdqgOdpDaa5iTzu3sCAwEAAQ==
 password: eJl8Ww/jV9oio9evhnP5KMuqHblRwIK8hitR1uTh+1hiltI45jC64YSgMucRefnXa1N5NeociBGjWZv640IdqA==
+

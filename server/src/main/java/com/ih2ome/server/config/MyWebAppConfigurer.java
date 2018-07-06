@@ -23,7 +23,7 @@ public class MyWebAppConfigurer extends WebMvcConfigurerAdapter {
     @Bean
     public HttpMessageConverter<String> responseBodyConverter() {
         StringHttpMessageConverter converter = new StringHttpMessageConverter(
-                Charset.forName("UTF-8"));
+                Charset.forName("gbk"));
         return converter;
     }
 
