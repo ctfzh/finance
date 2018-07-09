@@ -1,12 +1,15 @@
 package com.ih2ome.common.support;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.Data;
+import sun.awt.SunHints;
 
 /**
  * @author Sky
  * create 2018/04/26
  * email sky.li@ixiaoshuidi.com
  **/
+@Data
 public class ResponseBodyVO {
     private Integer code;
     private JSONObject data;
@@ -21,28 +24,14 @@ public class ResponseBodyVO {
         this.msg = msg;
     }
 
-    public Integer getCode() {
-        return code;
+    public static ResponseBodyVO generateResponseObject(Integer code, JSONObject data, String msg) {
+        ResponseBodyVO responseBodyVO = new ResponseBodyVO();
+        responseBodyVO.setCode(code);
+        responseBodyVO.setMsg(msg);
+        responseBodyVO.setData(data);
+        return responseBodyVO;
     }
 
-    public void setCode(Integer code) {
-        this.code = code;
-    }
 
-    public JSONObject getData() {
-        return data;
-    }
-
-    public void setData(JSONObject data) {
-        this.data = data;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
 }
 

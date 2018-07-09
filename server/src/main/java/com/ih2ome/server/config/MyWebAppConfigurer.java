@@ -38,6 +38,8 @@ public class MyWebAppConfigurer extends WebMvcConfigurerAdapter {
         FastJsonHttpMessageConverter fastConverter = new FastJsonHttpMessageConverter();
         //2.添加fastjson 的配置信息
         FastJsonConfig fastJsonConfig = new FastJsonConfig();
+        /*WriteNullStringAsEmpty :字符类型字段如果为null,输出为”“,而非null
+*/
         fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat, SerializerFeature.WriteMapNullValue, SerializerFeature.WriteNullStringAsEmpty);
         fastJsonConfig.setCharset(Charset.forName("gbk"));
         //3.在convert中添加配置信息

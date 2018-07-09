@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
 
@@ -55,14 +56,18 @@ public class TestMapperController {
     public ResponseBodyVO test02() {
         ResponseBodyVO responseBodyVO = new ResponseBodyVO();
         MoneyFlow volgaMoneyFlow = volgaMoneyFlowDao.selectByPrimaryKey(1);
+        Example example = new Example(MoneyFlow.class);
+        example.createCriteria().andEqualTo("feeType", 3);
+        volgaMoneyFlowDao.selectByExample(example);
         com.ih2ome.model.caspain.MoneyFlow caspainMoneyFlow = caspainMoneyFlowDao.selectByPrimaryKey(10);
+//        List<com.ih2ome.model.caspain.MoneyFlow> fee_types = caspainMoneyFlowDao.selectByExample(new Example(com.ih2ome.model.caspain.MoneyFlow.class).createCriteria().andEqualTo("feeType", 3));
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("hello", "world");
-        jsonObject.put("www", caspainMoneyFlow);
-        responseBodyVO.setData(jsonObject);
+        jsonObject.put("caspainMoneyFlow", caspainMoneyFlow);
+        ResponseBodyVO.generateResponseObject(0, jsonObject, "success");
         responseBodyVO.setCode(0);
         responseBodyVO.setMsg("³É¹¦");
-        return responseBodyVO;
+        return ResponseBodyVO.generateResponseObject(0, jsonObject, "success");
+
     }
 
 }

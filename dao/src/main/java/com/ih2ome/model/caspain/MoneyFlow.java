@@ -66,4 +66,211 @@ public class MoneyFlow {
     @Column(name = "management_id")
     private Integer managementId;
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Integer getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(Integer isDelete) {
+        this.isDelete = isDelete;
+    }
+
+    public Integer getFlowType() {
+        return flowType;
+    }
+
+    public void setFlowType(Integer flowType) {
+        this.flowType = flowType;
+    }
+
+    public Integer getFeeType() {
+        return feeType;
+    }
+
+    public void setFeeType(Integer feeType) {
+        this.feeType = feeType;
+    }
+
+    public Double getRealAmount() {
+        return realAmount;
+    }
+
+    public void setRealAmount(Double realAmount) {
+        this.realAmount = realAmount;
+    }
+
+    public Double getOughtAmount() {
+        return oughtAmount;
+    }
+
+    public void setOughtAmount(Double oughtAmount) {
+        this.oughtAmount = oughtAmount;
+    }
+
+    public String getTradeNo() {
+        return tradeNo;
+    }
+
+    public void setTradeNo(String tradeNo) {
+        this.tradeNo = tradeNo;
+    }
+
+    public String getTradeCode() {
+        return tradeCode;
+    }
+
+    public void setTradeCode(String tradeCode) {
+        this.tradeCode = tradeCode;
+    }
+
+    public Integer getPayMethod() {
+        return payMethod;
+    }
+
+    public void setPayMethod(Integer payMethod) {
+        this.payMethod = payMethod;
+    }
+
+    public Integer getSourceFrom() {
+        return sourceFrom;
+    }
+
+    public void setSourceFrom(Integer sourceFrom) {
+        this.sourceFrom = sourceFrom;
+    }
+
+    public String getOrderUuid() {
+        return orderUuid;
+    }
+
+    public void setOrderUuid(String orderUuid) {
+        this.orderUuid = orderUuid;
+    }
+
+    public Integer getIsWholeHouse() {
+        return isWholeHouse;
+    }
+
+    public void setIsWholeHouse(Integer isWholeHouse) {
+        this.isWholeHouse = isWholeHouse;
+    }
+
+    public Date getTradeAt() {
+        return tradeAt;
+    }
+
+    public void setTradeAt(Date tradeAt) {
+        this.tradeAt = tradeAt;
+    }
+
+    public String getTraderName() {
+        return traderName;
+    }
+
+    public void setTraderName(String traderName) {
+        this.traderName = traderName;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public Integer getCreatedById() {
+        return createdById;
+    }
+
+    public void setCreatedById(Integer createdById) {
+        this.createdById = createdById;
+    }
+
+    public Integer getHouseId() {
+        return houseId;
+    }
+
+    public void setHouseId(Integer houseId) {
+        this.houseId = houseId;
+    }
+
+    public Integer getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(Integer roomId) {
+        this.roomId = roomId;
+    }
+
+    public Date getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void setDeletedAt(Date deletedAt) {
+        this.deletedAt = deletedAt;
+    }
+
+    public Integer getDeletedById() {
+        return deletedById;
+    }
+
+    public void setDeletedById(Integer deletedById) {
+        this.deletedById = deletedById;
+    }
+
+    public Integer getDeletedType() {
+        return deletedType;
+    }
+
+    public void setDeletedType(Integer deletedType) {
+        this.deletedType = deletedType;
+    }
+
+    public String getTradeSerialNo() {
+        return tradeSerialNo;
+    }
+
+    public void setTradeSerialNo(String tradeSerialNo) {
+        this.tradeSerialNo = tradeSerialNo;
+    }
+
+    public String getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
+    }
+
+    public Integer getManagementId() {
+        return managementId;
+    }
+
+    public void setManagementId(Integer managementId) {
+        this.managementId = managementId;
+    }
 }
