@@ -1,5 +1,8 @@
 package com.ih2ome.server.config;
 
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.alibaba.fastjson.support.config.FastJsonConfig;
+import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.ih2ome.server.interceptor.OperateLogInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +34,16 @@ public class MyWebAppConfigurer extends WebMvcConfigurerAdapter {
     public void configureMessageConverters(
             List<HttpMessageConverter<?>> converters) {
         super.configureMessageConverters(converters);
-        converters.add(responseBodyConverter());
+        //1.自定义一个convert 转消息的对象
+        FastJsonHttpMessageConverter fastConverter = new FastJsonHttpMessageConverter();
+        //2.添加fastjson 的配置信息
+        FastJsonConfig fastJsonConfig = new FastJsonConfig();
+        fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat, SerializerFeature.WriteMapNullValue, SerializerFeature.WriteNullStringAsEmpty);
+        fastJsonConfig.setCharset(Charset.forName("gbk"));
+        //3.在convert中添加配置信息
+        fastConverter.setFastJsonConfig(fastJsonConfig);
+        HttpMessageConverter<?> converter = fastConverter;
+        converters.add(converter);
     }
 
     @Override
