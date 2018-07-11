@@ -75,7 +75,7 @@ spring:
     filters: stat,wall,log4j
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000;config.decrypt=true;config.decrypt.key=${publicKey}
 server:
-  port: 8080
+  port: 80
 
 #短信平台地址
 sms:

@@ -79,9 +79,9 @@ public class ConfigPaymentsServiceImpl implements ConfigPaymentsService {
                 }
             }
             if (assumePerson.equals(ConfigPayAssumeEnum.RENTER.getName())) {
-                configPaymentsVO.setChargeInfo(chargeInfo.append("! : 手续费用为").append(pinganpayWxCharge).append("‰").append(",小数部分按1元计").toString());
+                configPaymentsVO.setChargeInfo(chargeInfo.append("手续费用为").append(pinganpayWxCharge).append("‰").append(",小数部分按1元计").toString());
             } else {
-                configPaymentsVO.setChargeInfo(chargeInfo.append("! : 手续费用为").append(pinganpayWxCharge).append("‰").toString());
+                configPaymentsVO.setChargeInfo(chargeInfo.append("手续费用为").append(pinganpayWxCharge).append("‰").toString());
             }
             configPaymentsVO.setPayAssume(assumePerson);
         } else {
