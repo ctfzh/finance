@@ -13,4 +13,4 @@ logs
 .project
 .settings/
 .classpath
-
+/.xml
