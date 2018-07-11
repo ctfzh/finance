@@ -9,7 +9,7 @@ import com.ih2ome.model.caspain.TerminalToken;
  **/
 public interface TerminalTokenService {
     /**
-     * 根据token查询用户信息
+     * 鏍规嵁璇锋眰token鑾峰彇鐢ㄦ埛淇℃伅
      *
      * @param token
      * @return

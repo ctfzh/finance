@@ -3,7 +3,7 @@ package com.ih2ome.common.test.pay;
 import com.sdb.payclient.bean.exception.*;
 
 /**
- * Ä£Äâ£¨SF0008£©µ¥±Ê¶©µ¥Ö§¸¶×´Ì¬²éÑ¯
+ * æ¨¡æ‹Ÿï¼ˆSF0008ï¼‰å•ç¬”è®¢å•æ”¯ä»˜çŠ¶æ€æŸ¥è¯¢
  * @author: zhuning090
  */
 public class DemoSF0008 {	
@@ -12,36 +12,36 @@ public class DemoSF0008 {
 		com.ecc.emp.data.KeyedCollection input = new com.ecc.emp.data.KeyedCollection("input");
 		com.ecc.emp.data.KeyedCollection output = new com.ecc.emp.data.KeyedCollection("output");
 		
-		input.put("masterId","2000311146");  //ÉÌ»§ºÅ£¬×¢ÒâÉú²ú»·¾³ÉÏÒªÌæ»»³ÉÉÌ»§×Ô¼ºµÄÉú²úÉÌ»§ºÅ
-	    input.put("orderId","20003111462017060644723674");  //¶©µ¥ºÅ£¬ÑÏ¸ñ×ñÊØ¸ñÊ½£ºÉÌ»§ºÅ+8Î»ÈÕÆÚYYYYMMDD+8Î»Á÷Ë®
+		input.put("masterId","2000311146");  //å•†æˆ·å·ï¼Œæ³¨æ„ç”Ÿäº§ç¯å¢ƒä¸Šè¦æ›¿æ¢æˆå•†æˆ·è‡ªå·±çš„ç”Ÿäº§å•†æˆ·å·
+	    input.put("orderId","20003111462017060644723674");  //è®¢å•å·ï¼Œä¸¥æ ¼éµå®ˆæ ¼å¼ï¼šå•†æˆ·å·+8ä½æ—¥æœŸYYYYMMDD+8ä½æµæ°´
 	    
 	    try {
-	    	output = util.execute(input,"SF0008"); //Ö´ĞĞ·¢ËÍ£¨SF0008£©µ¥±Ê¶©µ¥×´Ì¬²éÑ¯ÇëÇó£¬²¢·µ»Ø½á¹û¶ÔÏó
+	    	output = util.execute(input,"SF0008"); //æ‰§è¡Œå‘é€ï¼ˆSF0008ï¼‰å•ç¬”è®¢å•çŠ¶æ€æŸ¥è¯¢è¯·æ±‚ï¼Œå¹¶è¿”å›ç»“æœå¯¹è±¡
 			String errorCode = (String)output.getDataValue("errorCode");
 			String errorMsg = (String)output.getDataValue("errorMsg");
 			
-			System.out.println("---µ¥±Ê¶©µ¥Ö§¸¶×´Ì¬²éÑ¯½á¹ûÏêÏ¸ĞÅÏ¢---"+output);
+			System.out.println("---å•ç¬”è®¢å•æ”¯ä»˜çŠ¶æ€æŸ¥è¯¢ç»“æœè¯¦ç»†ä¿¡æ¯---"+output);
 			
 			if((errorCode == null || errorCode.equals(""))&& (errorMsg == null || errorMsg.equals(""))){				
-				System.out.println("---¶©µ¥×´Ì¬---"+output.getDataValue("status"));
-				System.out.println("---Ö§¸¶Íê³ÉÊ±¼ä---"+output.getDataValue("date"));
-				System.out.println("---ÊÖĞø·Ñ½ğ¶î---"+output.getDataValue("charge"));
-				System.out.println("---ÉÌ»§ºÅ---"+output.getDataValue("masterId"));
-				System.out.println("---¶©µ¥ºÅ---"+output.getDataValue("orderId"));
-				System.out.println("---±ÒÖÖ---"+output.getDataValue("currency"));
-				System.out.println("---¶©µ¥½ğ¶î---"+output.getDataValue("amount"));
-				System.out.println("---ÏÂµ¥Ê±¼ä---"+output.getDataValue("paydate"));
-				System.out.println("---ÉÌÆ·ÃèÊö---"+output.getDataValue("objectName"));
-				System.out.println("---¶©µ¥ÓĞĞ§ÆÚ---"+output.getDataValue("validtime"));
-				System.out.println("---±¸×¢---"+output.getDataValue("remark"));
-				System.out.println("---±¾½ğÇåËã±êÖ¾---"+output.getDataValue("settleflg"));  //1ÒÑÇåËã£¬0´ıÇåËã
-				System.out.println("---±¾½ğÇåËãÊ±¼ä---"+output.getDataValue("settletime"));
-				System.out.println("---ÊÖĞø·ÑÇåËã±êÖ¾---"+output.getDataValue("chargeflg"));  //1ÒÑÇåËã£¬0´ıÇåËã
-				System.out.println("---ÊÖĞø·ÑÇåËãÊ±¼ä---"+output.getDataValue("chargetime"));
-				System.out.println("---ÉÌ»§¶©µ¥ÀàĞÍ---"+output.getDataValue("orderType"));
+				System.out.println("---è®¢å•çŠ¶æ€---"+output.getDataValue("status"));
+				System.out.println("---æ”¯ä»˜å®Œæˆæ—¶é—´---"+output.getDataValue("date"));
+				System.out.println("---æ‰‹ç»­è´¹é‡‘é¢---"+output.getDataValue("charge"));
+				System.out.println("---å•†æˆ·å·---"+output.getDataValue("masterId"));
+				System.out.println("---è®¢å•å·---"+output.getDataValue("orderId"));
+				System.out.println("---å¸ç§---"+output.getDataValue("currency"));
+				System.out.println("---è®¢å•é‡‘é¢---"+output.getDataValue("amount"));
+				System.out.println("---ä¸‹å•æ—¶é—´---"+output.getDataValue("paydate"));
+				System.out.println("---å•†å“æè¿°---"+output.getDataValue("objectName"));
+				System.out.println("---è®¢å•æœ‰æ•ˆæœŸ---"+output.getDataValue("validtime"));
+				System.out.println("---å¤‡æ³¨---"+output.getDataValue("remark"));
+				System.out.println("---æœ¬é‡‘æ¸…ç®—æ ‡å¿—---"+output.getDataValue("settleflg"));  //1å·²æ¸…ç®—ï¼Œ0å¾…æ¸…ç®—
+				System.out.println("---æœ¬é‡‘æ¸…ç®—æ—¶é—´---"+output.getDataValue("settletime"));
+				System.out.println("---æ‰‹ç»­è´¹æ¸…ç®—æ ‡å¿—---"+output.getDataValue("chargeflg"));  //1å·²æ¸…ç®—ï¼Œ0å¾…æ¸…ç®—
+				System.out.println("---æ‰‹ç»­è´¹æ¸…ç®—æ—¶é—´---"+output.getDataValue("chargetime"));
+				System.out.println("---å•†æˆ·è®¢å•ç±»å‹---"+output.getDataValue("orderType"));
 			}else{
-				System.out.println("---´íÎóÂë---"+output.getDataValue("errorCode"));
-				System.out.println("---´íÎóËµÃ÷---"+output.getDataValue("errorMsg"));
+				System.out.println("---é”™è¯¯ç ---"+output.getDataValue("errorCode"));
+				System.out.println("---é”™è¯¯è¯´æ˜---"+output.getDataValue("errorMsg"));
 			}
 
 	    }catch (Exception e) {

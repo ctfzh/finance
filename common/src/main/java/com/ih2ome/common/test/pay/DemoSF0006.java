@@ -3,7 +3,7 @@ package com.ih2ome.common.test.pay;
 import com.sdb.payclient.bean.exception.*;
 
 /**
- * Ä£Äâ£¨SF0006£©¶©µ¥ÍË¿î²éÑ¯
+ * æ¨¡æ‹Ÿï¼ˆSF0006ï¼‰è®¢å•é€€æ¬¾æŸ¥è¯¢
  * @author: zhuning090
  */
 public class DemoSF0006 {	
@@ -12,38 +12,38 @@ public class DemoSF0006 {
 		com.ecc.emp.data.KeyedCollection input = new com.ecc.emp.data.KeyedCollection("input");
 		com.ecc.emp.data.KeyedCollection output = new com.ecc.emp.data.KeyedCollection("output");
 		
-		input.put("masterId","2000311146");  //ÉÌ»§ºÅ£¬×¢ÒâÉú²ú»·¾³ÉÏÒªÌæ»»³ÉÉÌ»§×Ô¼ºµÄÉú²úÉÌ»§ºÅ
-	    input.put("beginDate","20170601000000");  //²éÑ¯¿ªÊ¼Ê±¼ä£¨ÍË¿îÇëÇó½ÓÊÕÊ±¼ä£©YYYYMMDDHHMMSS
-	    input.put("endDate","20170624240000");  //²éÑ¯½áÊøÊ±¼ä£¨ÍË¿îÇëÇó½ÓÊÕÊ±¼ä£©YYYYMMDDHHMMSS
+		input.put("masterId","2000311146");  //å•†æˆ·å·ï¼Œæ³¨æ„ç”Ÿäº§ç¯å¢ƒä¸Šè¦æ›¿æ¢æˆå•†æˆ·è‡ªå·±çš„ç”Ÿäº§å•†æˆ·å·
+	    input.put("beginDate","20170601000000");  //æŸ¥è¯¢å¼€å§‹æ—¶é—´ï¼ˆé€€æ¬¾è¯·æ±‚æ¥æ”¶æ—¶é—´ï¼‰YYYYMMDDHHMMSS
+	    input.put("endDate","20170624240000");  //æŸ¥è¯¢ç»“æŸæ—¶é—´ï¼ˆé€€æ¬¾è¯·æ±‚æ¥æ”¶æ—¶é—´ï¼‰YYYYMMDDHHMMSS
 	    
 	    try {
-	    	output = util.execute(input,"SF0006"); //Ö´ĞĞ·¢ËÍ£¨SF0006£©¶©µ¥ÍË¿î²éÑ¯ÇëÇó£¬²¢·µ»Ø½á¹û¶ÔÏó
+	    	output = util.execute(input,"SF0006"); //æ‰§è¡Œå‘é€ï¼ˆSF0006ï¼‰è®¢å•é€€æ¬¾æŸ¥è¯¢è¯·æ±‚ï¼Œå¹¶è¿”å›ç»“æœå¯¹è±¡
 			String errorCode = (String)output.getDataValue("errorCode");
 			String errorMsg = (String)output.getDataValue("errorMsg");
 			
-			System.out.println("---¶©µ¥ÍË¿î²éÑ¯½á¹ûÏêÏ¸ĞÅÏ¢---"+output);
+			System.out.println("---è®¢å•é€€æ¬¾æŸ¥è¯¢ç»“æœè¯¦ç»†ä¿¡æ¯---"+output);
 			
 			if((errorCode == null || errorCode.equals(""))&& (errorMsg == null || errorMsg.equals(""))){
-				System.out.println("---×Ü½ğ¶î---"+output.getDataValue("sumAmount"));
-				System.out.println("---×Ü±ÊÊı---"+output.getDataValue("sumCount"));
+				System.out.println("---æ€»é‡‘é¢---"+output.getDataValue("sumAmount"));
+				System.out.println("---æ€»ç¬”æ•°---"+output.getDataValue("sumCount"));
 				com.ecc.emp.data.IndexedCollection orderList = (com.ecc.emp.data.IndexedCollection) output.getDataElement("iOrderListDetail");
 				for(int i=0;i<orderList.size();i++){
 					com.ecc.emp.data.KeyedCollection orderDetail = (com.ecc.emp.data.KeyedCollection) orderList.getElementAt(i);
-				    System.out.print("---ÉÌ»§ºÅ---"+orderDetail.getDataValue("masterId"));
-				    System.out.print("---ÍË¿îµ¥ºÅ---"+orderDetail.getDataValue("refundNo"));
-				    System.out.print("---Ô­¶©µ¥ºÅ---"+orderDetail.getDataValue("orderId"));
-				    System.out.print("---ÍË¿îÇëÇó½ÓÊÕÊ±¼ä---"+orderDetail.getDataValue("refundTime"));
-				    System.out.print("---±ÒÖÖ---"+orderDetail.getDataValue("currency"));
-				    System.out.print("---ÍË¿î½ğ¶î---"+orderDetail.getDataValue("refundAmt"));
-					System.out.print("---ÍË¿î×´Ì¬---"+orderDetail.getDataValue("refundStatus"));  //01³É¹¦£»02Ê§°Ü£»00´¦ÀíÖĞ
-				    System.out.print("---ÍË¿î±¾½ğ¿ÛÊÕ±êÖ¾---"+orderDetail.getDataValue("settleflg"));  //0£ºÎ´¿Û¿î£»1£ºÒÑ¿Û¿î£»2£º¿Û¿îÖĞ
-				    System.out.print("---ÍË¿îÊ§°Ü±¾½ğÍË»¹±êÖ¾---"+orderDetail.getDataValue("refundFlag"));  //0£ºÎ´ÍË¿î£»1£ºÒÑÍË¿î£»2£º´¦ÀíÖĞ
-				    System.out.print("---´íÎóÂë---"+orderDetail.getDataValue("errorCode"));  //1ÒÑÇåËã£¬0´ıÇåËã
-				    System.out.println("---´íÎóËµÃ÷---"+orderDetail.getDataValue("errorMsg"));
+				    System.out.print("---å•†æˆ·å·---"+orderDetail.getDataValue("masterId"));
+				    System.out.print("---é€€æ¬¾å•å·---"+orderDetail.getDataValue("refundNo"));
+				    System.out.print("---åŸè®¢å•å·---"+orderDetail.getDataValue("orderId"));
+				    System.out.print("---é€€æ¬¾è¯·æ±‚æ¥æ”¶æ—¶é—´---"+orderDetail.getDataValue("refundTime"));
+				    System.out.print("---å¸ç§---"+orderDetail.getDataValue("currency"));
+				    System.out.print("---é€€æ¬¾é‡‘é¢---"+orderDetail.getDataValue("refundAmt"));
+					System.out.print("---é€€æ¬¾çŠ¶æ€---"+orderDetail.getDataValue("refundStatus"));  //01æˆåŠŸï¼›02å¤±è´¥ï¼›00å¤„ç†ä¸­
+				    System.out.print("---é€€æ¬¾æœ¬é‡‘æ‰£æ”¶æ ‡å¿—---"+orderDetail.getDataValue("settleflg"));  //0ï¼šæœªæ‰£æ¬¾ï¼›1ï¼šå·²æ‰£æ¬¾ï¼›2ï¼šæ‰£æ¬¾ä¸­
+				    System.out.print("---é€€æ¬¾å¤±è´¥æœ¬é‡‘é€€è¿˜æ ‡å¿—---"+orderDetail.getDataValue("refundFlag"));  //0ï¼šæœªé€€æ¬¾ï¼›1ï¼šå·²é€€æ¬¾ï¼›2ï¼šå¤„ç†ä¸­
+				    System.out.print("---é”™è¯¯ç ---"+orderDetail.getDataValue("errorCode"));  //1å·²æ¸…ç®—ï¼Œ0å¾…æ¸…ç®—
+				    System.out.println("---é”™è¯¯è¯´æ˜---"+orderDetail.getDataValue("errorMsg"));
 				}
 			}else{
-				System.out.println("---´íÎóÂë---"+output.getDataValue("errorCode"));
-				System.out.println("---´íÎóËµÃ÷---"+output.getDataValue("errorMsg"));
+				System.out.println("---é”™è¯¯ç ---"+output.getDataValue("errorCode"));
+				System.out.println("---é”™è¯¯è¯´æ˜---"+output.getDataValue("errorMsg"));
 			}
 	    }catch (Exception e) {
 			e.printStackTrace();

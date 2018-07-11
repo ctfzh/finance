@@ -1,6 +1,7 @@
 package com.ih2ome.service;
 
 import com.ih2ome.common.PageVO.ConfigPaymentsVO;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 
 /**
  * @author Sky
@@ -9,10 +10,19 @@ import com.ih2ome.common.PageVO.ConfigPaymentsVO;
  **/
 public interface ConfigPaymentsService {
     /**
-     * 根据userId查询支付设置
+     * 鏍规嵁鐢ㄦ埛Id鑾峰彇鏀粯閰嶇疆
      *
      * @param userId
      * @return
      */
     ConfigPaymentsVO findConfigPaymentsInfo(Integer userId) throws Exception;
+
+    /**
+     * 璁剧疆鏀粯閰嶇疆
+     *
+     * @param userId
+     * @param assumePerson
+     * @return
+     */
+    void setConfigPaymentsInfo(Integer userId, String assumePerson) throws Exception;
 }

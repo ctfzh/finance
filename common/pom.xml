@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="gbk"?>
+<?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -16,16 +16,16 @@
     <packaging>jar</packaging>
 
     <name>common</name>
-    <description>∑‚◊∞π§æﬂ</description>
+    <description>Â∞ÅË£ÖÂ∑•ÂÖ∑</description>
 
     <properties>
-        <project.build.sourceEncoding>gbk</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>gbk</project.reporting.outputEncoding>
+        <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>utf-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
     </properties>
 
     <dependencies>
-        <!--∂‘Ω”∆Ω∞≤µƒsdk..jar∞¸(Õ‚≤ø“˝»Î).............start-->
+        <!--ÂØπÊé•Âπ≥ÂÆâÁöÑsdk..jarÂåÖ(Â§ñÈÉ®ÂºïÂÖ•).............start-->
         <dependency>
             <groupId>open-sdk</groupId>
             <artifactId>open-sdk</artifactId>
@@ -82,10 +82,10 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/src/main/resources/lib/commons-logging-1.2.jar</systemPath>
         </dependency>
-        <!--∂‘Ω”∆Ω∞≤µƒsdk..jar∞¸(Õ‚≤ø“˝»Î).............end-->
+        <!--ÂØπÊé•Âπ≥ÂÆâÁöÑsdk..jarÂåÖ(Â§ñÈÉ®ÂºïÂÖ•).............end-->
 
 
-        <!--∂‘Ω”∆Ω∞≤µƒ¥øΩ”ø⁄÷ß∏∂µƒjar∞¸(Õ‚≤ø“˝»Î)..........start-->
+        <!--ÂØπÊé•Âπ≥ÂÆâÁöÑÁ∫ØÊé•Âè£ÊîØ‰ªòÁöÑjarÂåÖ(Â§ñÈÉ®ÂºïÂÖ•)..........start-->
         <dependency>
             <groupId>emp</groupId>
             <artifactId>emp</artifactId>
@@ -128,7 +128,7 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/src/main/resources/lib/payclient.jar</systemPath>
         </dependency>
-        <!--∂‘Ω”∆Ω∞≤µƒ¥øΩ”ø⁄÷ß∏∂µƒjar∞¸(Õ‚≤ø“˝»Î)..........end-->
+        <!--ÂØπÊé•Âπ≥ÂÆâÁöÑÁ∫ØÊé•Âè£ÊîØ‰ªòÁöÑjarÂåÖ(Â§ñÈÉ®ÂºïÂÖ•)..........end-->
 
     </dependencies>
 
@@ -149,7 +149,7 @@
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
-                    <encoding>gbk</encoding>
+                    <encoding>utf-8</encoding>
                 </configuration>
             </plugin>
 

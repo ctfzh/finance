@@ -6,11 +6,13 @@ import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.ih2ome.server.interceptor.OperateLogInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.*;
 
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,7 +28,7 @@ public class MyWebAppConfigurer extends WebMvcConfigurerAdapter {
     @Bean
     public HttpMessageConverter<String> responseBodyConverter() {
         StringHttpMessageConverter converter = new StringHttpMessageConverter(
-                Charset.forName("gbk"));
+                Charset.forName("utf-8"));
         return converter;
     }
 
@@ -34,15 +36,17 @@ public class MyWebAppConfigurer extends WebMvcConfigurerAdapter {
     public void configureMessageConverters(
             List<HttpMessageConverter<?>> converters) {
         super.configureMessageConverters(converters);
-        //1.×Ô¶¨ÒåÒ»¸öconvert ×ªÏûÏ¢µÄ¶ÔÏó
+        //åˆ›å»ºfastjsonè½¬æ¢å™¨å®ä¾‹
         FastJsonHttpMessageConverter fastConverter = new FastJsonHttpMessageConverter();
-        //2.Ìí¼Ófastjson µÄÅäÖÃĞÅÏ¢
+        //é…ç½®å¯¹è±¡
         FastJsonConfig fastJsonConfig = new FastJsonConfig();
-        /*WriteNullStringAsEmpty :×Ö·ûÀàĞÍ×Ö¶ÎÈç¹ûÎªnull,Êä³öÎª¡±¡°,¶ø·Çnull
-*/
         fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat, SerializerFeature.WriteMapNullValue, SerializerFeature.WriteNullStringAsEmpty);
-        fastJsonConfig.setCharset(Charset.forName("gbk"));
-        //3.ÔÚconvertÖĞÌí¼ÓÅäÖÃĞÅÏ¢
+//        fastJsonConfig.setCharset(Charset.forName("gbk"));
+        List<MediaType> mediaTypes = new ArrayList<>();
+        //ä¸­æ–‡ç¼–ç 
+        MediaType mediaType = MediaType.APPLICATION_JSON_UTF8;
+        mediaTypes.add(mediaType);
+        fastConverter.setSupportedMediaTypes(mediaTypes);
         fastConverter.setFastJsonConfig(fastJsonConfig);
         HttpMessageConverter<?> converter = fastConverter;
         converters.add(converter);
@@ -54,7 +58,7 @@ public class MyWebAppConfigurer extends WebMvcConfigurerAdapter {
         configurer.favorPathExtension(false);
     }
 
-    //Ìí¼ÓÀ¹½ØÆ÷
+    //æ·»åŠ æ‹¦æˆªå™¨
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new OperateLogInterceptor()).addPathPatterns("/**");
@@ -66,7 +70,7 @@ public class MyWebAppConfigurer extends WebMvcConfigurerAdapter {
         configurer.setUseTrailingSlashMatch(true).setUseSuffixPatternMatch(true);
     }
 
-    //½â¾ö¿çÓòÎÊÌâ
+    //è§£å†³è·¨åŸŸé—®é¢˜
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**").allowedMethods("*").allowedOrigins("*").allowedHeaders("*");

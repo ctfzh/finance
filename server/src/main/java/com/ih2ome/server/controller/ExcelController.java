@@ -24,20 +24,16 @@ public class ExcelController {
     @RequestMapping(value = "/export", method = RequestMethod.GET)
     public void excel(HttpServletResponse response) throws Exception {
         ExcelData data = new ExcelData();
-        data.setName("用户信息数据");
-        //添加表头
+        data.setName("鍝堝搱");
+
         List<String> titles = new ArrayList();
         //for(String title: excelInfo.getNames())
         titles.add("title1");
         titles.add("title2");
         titles.add("title3");
         data.setTitles(titles);
-        //添加列
         List<List<Object>> rows = new ArrayList();
         List<Object> row1 = new ArrayList<>();
-        row1.add("张三");
-        row1.add("李四");
-        row1.add("赵六");
         List<Object> row2 = new ArrayList<>();
         row2.add("a");
         row2.add("b");

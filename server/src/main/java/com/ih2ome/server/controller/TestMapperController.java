@@ -36,7 +36,7 @@ public class TestMapperController {
     @GetMapping("/one")
     @ResponseBody
     public ResponseBodyVO test01() {
-        //分页插件
+        //鍒嗛〉
         PageHelper.startPage(0, 2);
         List<ConfigPaymentsChannel> configPaymentsChannels = configPaymentsChannelDao.selectAll();
         ConfigPaymentsChannel configPaymentsChannel = configPaymentsChannelDao.selectByPrimaryKey((Integer) 2);
@@ -47,7 +47,7 @@ public class TestMapperController {
         jsonObject.put("www", configPaymentsChannels);
         responseBodyVO.setData(jsonObject);
         responseBodyVO.setCode(0);
-        responseBodyVO.setMsg("成功");
+        responseBodyVO.setMsg("success");
         return responseBodyVO;
     }
 
@@ -65,7 +65,7 @@ public class TestMapperController {
         jsonObject.put("caspainMoneyFlow", caspainMoneyFlow);
         ResponseBodyVO.generateResponseObject(0, jsonObject, "success");
         responseBodyVO.setCode(0);
-        responseBodyVO.setMsg("成功");
+        responseBodyVO.setMsg("success");
         return ResponseBodyVO.generateResponseObject(0, jsonObject, "success");
 
     }

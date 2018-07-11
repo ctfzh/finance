@@ -1,6 +1,7 @@
 package com.ih2ome.common.support;
 
 import com.alibaba.fastjson.JSONObject;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import sun.awt.SunHints;
 
@@ -11,8 +12,11 @@ import sun.awt.SunHints;
  **/
 @Data
 public class ResponseBodyVO {
+    @ApiModelProperty("返回状态码(0:成功,-1:失败)")
     private Integer code;
+    @ApiModelProperty("返回数据")
     private JSONObject data;
+    @ApiModelProperty("返回信息")
     private String msg;
 
     public ResponseBodyVO() {

@@ -3,7 +3,7 @@ package com.ih2ome.common.test.pay;
 import com.sdb.payclient.bean.exception.*;
 
 /**
- * Ä£Äâ£¨Union10004£©²éÑ¯ÉÌ»§T0ĞÅÏ¢
+ * æ¨¡æ‹Ÿï¼ˆUnion10004ï¼‰æŸ¥è¯¢å•†æˆ·T0ä¿¡æ¯
  * @author: zhuning090
  */
 public class DemoUnion10004 {	
@@ -12,23 +12,23 @@ public class DemoUnion10004 {
 		com.ecc.emp.data.KeyedCollection input = new com.ecc.emp.data.KeyedCollection("input");
 		com.ecc.emp.data.KeyedCollection output = new com.ecc.emp.data.KeyedCollection("output");
 		
-		input.put("masterId","2000311146");  //ÉÌ»§ºÅ£¬×¢ÒâÉú²ú»·¾³ÉÏÒªÌæ»»³ÉÉÌ»§×Ô¼ºµÄÉú²úÉÌ»§ºÅ
+		input.put("masterId","2000311146");  //å•†æˆ·å·ï¼Œæ³¨æ„ç”Ÿäº§ç¯å¢ƒä¸Šè¦æ›¿æ¢æˆå•†æˆ·è‡ªå·±çš„ç”Ÿäº§å•†æˆ·å·
 	    
 	    try {
-	    	output = util.execute(input,"Union10004"); //Ö´ĞĞ·¢ËÍ£¨Union10004£©²éÑ¯ÉÌ»§T0ĞÅÏ¢ÇëÇó£¬²¢·µ»Ø½á¹û¶ÔÏó
+	    	output = util.execute(input,"Union10004"); //æ‰§è¡Œå‘é€ï¼ˆUnion10004ï¼‰æŸ¥è¯¢å•†æˆ·T0ä¿¡æ¯è¯·æ±‚ï¼Œå¹¶è¿”å›ç»“æœå¯¹è±¡
 			String errorCode = (String)output.getDataValue("errorCode");
 			String errorMsg = (String)output.getDataValue("errorMsg");
 			
-			System.out.println("---²éÑ¯ÉÌ»§T0ĞÅ²éÑ¯½á¹ûÏêÏ¸ĞÅÏ¢---"+output);
+			System.out.println("---æŸ¥è¯¢å•†æˆ·T0ä¿¡æŸ¥è¯¢ç»“æœè¯¦ç»†ä¿¡æ¯---"+output);
 			
 			if((errorCode == null || errorCode.equals(""))&& (errorMsg == null || errorMsg.equals(""))){				
-				System.out.println("---T0Çå·Ö×´Ì¬---"+output.getDataValue("status"));//TO¿ª¹Ø 0´ú±íT0²»Çå·Ö,1´ú±íT0Çå·Ö
-				System.out.println("---T0×Ü¶î¶È---"+output.getDataValue("amount"));//T0×Ü¶î¶È
-				System.out.println("---ÉÌ»§T0¿ÉÓÃÓà¶î---"+output.getDataValue("useamount"));//ÉÌ»§T0¿ÉÓÃÓà¶î
-				System.out.println("---ÉÌ»§T0µ¥±ÊÏŞ¶î---"+output.getDataValue("singlelimt"));//ÉÌ»§T0µ¥±ÊÏŞ¶î
+				System.out.println("---T0æ¸…åˆ†çŠ¶æ€---"+output.getDataValue("status"));//TOå¼€å…³ 0ä»£è¡¨T0ä¸æ¸…åˆ†,1ä»£è¡¨T0æ¸…åˆ†
+				System.out.println("---T0æ€»é¢åº¦---"+output.getDataValue("amount"));//T0æ€»é¢åº¦
+				System.out.println("---å•†æˆ·T0å¯ç”¨ä½™é¢---"+output.getDataValue("useamount"));//å•†æˆ·T0å¯ç”¨ä½™é¢
+				System.out.println("---å•†æˆ·T0å•ç¬”é™é¢---"+output.getDataValue("singlelimt"));//å•†æˆ·T0å•ç¬”é™é¢
 			}else{
-				System.out.println("---´íÎóÂë---"+output.getDataValue("errorCode"));
-				System.out.println("---´íÎóËµÃ÷---"+output.getDataValue("errorMsg"));
+				System.out.println("---é”™è¯¯ç ---"+output.getDataValue("errorCode"));
+				System.out.println("---é”™è¯¯è¯´æ˜---"+output.getDataValue("errorMsg"));
 			}
 
 	    }catch (Exception e) {

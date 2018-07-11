@@ -3,7 +3,7 @@ package com.ih2ome.common.test.pay;
 import com.sdb.payclient.bean.exception.*;
 
 /**
- * Ä£Äâ£¨SF0003£©Ã¿ÈÕ¶ÔÕËµ¥²éÑ¯
+ * æ¨¡æ‹Ÿï¼ˆSF0003ï¼‰æ¯æ—¥å¯¹è´¦å•æŸ¥è¯¢
  * @author: zhuning090
  */
 public class DemoSF0003 {	
@@ -12,41 +12,41 @@ public class DemoSF0003 {
 		com.ecc.emp.data.KeyedCollection input = new com.ecc.emp.data.KeyedCollection("input");
 		com.ecc.emp.data.KeyedCollection output = new com.ecc.emp.data.KeyedCollection("output");
 		
-		input.put("masterId","2000311146");  //ÉÌ»§ºÅ£¬×¢ÒâÉú²ú»·¾³ÉÏÒªÌæ»»³ÉÉÌ»§×Ô¼ºµÄÉú²úÉÌ»§ºÅ
-	    input.put("date","20160910");  //¶ÔÕËÈÕÆÚ£¬¸ñÊ½£ºYYYYMMDD
+		input.put("masterId","2000311146");  //å•†æˆ·å·ï¼Œæ³¨æ„ç”Ÿäº§ç¯å¢ƒä¸Šè¦æ›¿æ¢æˆå•†æˆ·è‡ªå·±çš„ç”Ÿäº§å•†æˆ·å·
+	    input.put("date","20160910");  //å¯¹è´¦æ—¥æœŸï¼Œæ ¼å¼ï¼šYYYYMMDD
 	    
 	    try {
-	    	output = util.execute(input,"SF0003"); //Ö´ĞĞ·¢ËÍ£¨SF0003£©Ã¿ÈÕ¶ÔÕËµ¥²éÑ¯ÇëÇó£¬²¢·µ»Ø½á¹û¶ÔÏó
+	    	output = util.execute(input,"SF0003"); //æ‰§è¡Œå‘é€ï¼ˆSF0003ï¼‰æ¯æ—¥å¯¹è´¦å•æŸ¥è¯¢è¯·æ±‚ï¼Œå¹¶è¿”å›ç»“æœå¯¹è±¡
 			String errorCode = (String)output.getDataValue("errorCode");
 			String errorMsg = (String)output.getDataValue("errorMsg");
 			
-			System.out.println("---Ã¿ÈÕ¶ÔÕËµ¥²éÑ¯½á¹ûÏêÏ¸ĞÅÏ¢---"+output);
+			System.out.println("---æ¯æ—¥å¯¹è´¦å•æŸ¥è¯¢ç»“æœè¯¦ç»†ä¿¡æ¯---"+output);
 			
 			if((errorCode == null || errorCode.equals(""))&& (errorMsg == null || errorMsg.equals(""))){
-				System.out.println("---×Ü½ğ¶î---"+output.getDataValue("sumAmount"));
-				System.out.println("---×Ü±ÊÊı---"+output.getDataValue("sumCount"));
+				System.out.println("---æ€»é‡‘é¢---"+output.getDataValue("sumAmount"));
+				System.out.println("---æ€»ç¬”æ•°---"+output.getDataValue("sumCount"));
 				com.ecc.emp.data.IndexedCollection orderList = (com.ecc.emp.data.IndexedCollection) output.getDataElement("iOrderListDetail");
 				for(int i=0;i<orderList.size();i++){
 					com.ecc.emp.data.KeyedCollection orderDetail = (com.ecc.emp.data.KeyedCollection) orderList.getElementAt(i);
-					System.out.print("---¶©µ¥×´Ì¬---"+orderDetail.getDataValue("status"));
-				    System.out.print("---Ö§¸¶Íê³ÉÊ±¼ä---"+orderDetail.getDataValue("date"));
-				    System.out.print("---ÊÖĞø·Ñ½ğ¶î---"+orderDetail.getDataValue("charge"));
-				    System.out.print("---ÉÌ»§ºÅ---"+orderDetail.getDataValue("masterId"));
-				    System.out.print("---¶©µ¥ºÅ---"+orderDetail.getDataValue("orderId"));
-				    System.out.print("---±ÒÖÖ---"+orderDetail.getDataValue("currency"));
-				    System.out.print("---¶©µ¥½ğ¶î---"+orderDetail.getDataValue("amount"));
-				    System.out.print("---ÏÂµ¥Ê±¼ä---"+orderDetail.getDataValue("paydate"));
-				    System.out.print("---ÉÌÆ·ÃèÊö---"+orderDetail.getDataValue("objectName"));
-				    System.out.print("---¶©µ¥ÓĞĞ§ÆÚ---"+orderDetail.getDataValue("validtime"));
-				    System.out.print("---±¸×¢---"+orderDetail.getDataValue("remark"));
-				    System.out.print("---±¾½ğÇåËã±êÖ¾---"+orderDetail.getDataValue("settleflg"));  //1ÒÑÇåËã£¬0´ıÇåËã
-				    System.out.print("---±¾½ğÇåËãÊ±¼ä---"+orderDetail.getDataValue("settletime"));
-				    System.out.print("---ÊÖĞø·ÑÇåËã±êÖ¾---"+orderDetail.getDataValue("chargeflg"));  //1ÒÑÇåËã£¬0´ıÇåËã
-				    System.out.println("---ÊÖĞø·ÑÇåËãÊ±¼ä---"+orderDetail.getDataValue("chargetime"));
+					System.out.print("---è®¢å•çŠ¶æ€---"+orderDetail.getDataValue("status"));
+				    System.out.print("---æ”¯ä»˜å®Œæˆæ—¶é—´---"+orderDetail.getDataValue("date"));
+				    System.out.print("---æ‰‹ç»­è´¹é‡‘é¢---"+orderDetail.getDataValue("charge"));
+				    System.out.print("---å•†æˆ·å·---"+orderDetail.getDataValue("masterId"));
+				    System.out.print("---è®¢å•å·---"+orderDetail.getDataValue("orderId"));
+				    System.out.print("---å¸ç§---"+orderDetail.getDataValue("currency"));
+				    System.out.print("---è®¢å•é‡‘é¢---"+orderDetail.getDataValue("amount"));
+				    System.out.print("---ä¸‹å•æ—¶é—´---"+orderDetail.getDataValue("paydate"));
+				    System.out.print("---å•†å“æè¿°---"+orderDetail.getDataValue("objectName"));
+				    System.out.print("---è®¢å•æœ‰æ•ˆæœŸ---"+orderDetail.getDataValue("validtime"));
+				    System.out.print("---å¤‡æ³¨---"+orderDetail.getDataValue("remark"));
+				    System.out.print("---æœ¬é‡‘æ¸…ç®—æ ‡å¿—---"+orderDetail.getDataValue("settleflg"));  //1å·²æ¸…ç®—ï¼Œ0å¾…æ¸…ç®—
+				    System.out.print("---æœ¬é‡‘æ¸…ç®—æ—¶é—´---"+orderDetail.getDataValue("settletime"));
+				    System.out.print("---æ‰‹ç»­è´¹æ¸…ç®—æ ‡å¿—---"+orderDetail.getDataValue("chargeflg"));  //1å·²æ¸…ç®—ï¼Œ0å¾…æ¸…ç®—
+				    System.out.println("---æ‰‹ç»­è´¹æ¸…ç®—æ—¶é—´---"+orderDetail.getDataValue("chargetime"));
 				}
 			}else{
-				System.out.println("---´íÎóÂë---"+output.getDataValue("errorCode"));
-				System.out.println("---´íÎóËµÃ÷---"+output.getDataValue("errorMsg"));
+				System.out.println("---é”™è¯¯ç ---"+output.getDataValue("errorCode"));
+				System.out.println("---é”™è¯¯è¯´æ˜---"+output.getDataValue("errorMsg"));
 			}
 	    }catch (Exception e) {
 			e.printStackTrace();

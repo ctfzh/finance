@@ -82,3 +82,4 @@ server:
 sms:
   baseUrl: http://xs1:5312
 
+bigCustomersInfo: 2788

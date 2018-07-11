@@ -3,7 +3,7 @@ package com.ih2ome.common.test.pay;
 import com.sdb.payclient.bean.exception.*;
 
 /**
- * Ä£Äâ£¨SF0009£©µ¥±ÊÍË¿î×´Ì¬²éÑ¯
+ * æ¨¡æ‹Ÿï¼ˆSF0009ï¼‰å•ç¬”é€€æ¬¾çŠ¶æ€æŸ¥è¯¢
  * @author: zhuning090
  */
 public class DemoSF0009 {	
@@ -12,29 +12,29 @@ public class DemoSF0009 {
 		com.ecc.emp.data.KeyedCollection input = new com.ecc.emp.data.KeyedCollection("input");
 		com.ecc.emp.data.KeyedCollection output = new com.ecc.emp.data.KeyedCollection("output");
 		
-		input.put("masterId","2000311146");  //ÉÌ»§ºÅ£¬×¢ÒâÉú²ú»·¾³ÉÏÒªÌæ»»³ÉÉÌ»§×Ô¼ºµÄÉú²úÉÌ»§ºÅ
-	    input.put("refundNo","20003111462016083127448429");  //ÍË¿îµ¥ºÅ£¬ÑÏ¸ñ×ñÊØ¸ñÊ½£ºÉÌ»§ºÅ+8Î»ÈÕÆÚYYYYMMDD+8Î»Á÷Ë®
+		input.put("masterId","2000311146");  //å•†æˆ·å·ï¼Œæ³¨æ„ç”Ÿäº§ç¯å¢ƒä¸Šè¦æ›¿æ¢æˆå•†æˆ·è‡ªå·±çš„ç”Ÿäº§å•†æˆ·å·
+	    input.put("refundNo","20003111462016083127448429");  //é€€æ¬¾å•å·ï¼Œä¸¥æ ¼éµå®ˆæ ¼å¼ï¼šå•†æˆ·å·+8ä½æ—¥æœŸYYYYMMDD+8ä½æµæ°´
 	    
 	    try {
-	    	output = util.execute(input,"SF0009"); //Ö´ĞĞ·¢ËÍ£¨SF0009£©µ¥±ÊÍË¿î×´Ì¬²éÑ¯ÇëÇó£¬²¢·µ»Ø½á¹û¶ÔÏó
+	    	output = util.execute(input,"SF0009"); //æ‰§è¡Œå‘é€ï¼ˆSF0009ï¼‰å•ç¬”é€€æ¬¾çŠ¶æ€æŸ¥è¯¢è¯·æ±‚ï¼Œå¹¶è¿”å›ç»“æœå¯¹è±¡
 			String errorCode = (String)output.getDataValue("errorCode");
 			String errorMsg = (String)output.getDataValue("errorMsg");
 			
-			System.out.println("---µ¥±ÊÍË¿î×´Ì¬²éÑ¯²éÑ¯½á¹ûÏêÏ¸ĞÅÏ¢---"+output);
+			System.out.println("---å•ç¬”é€€æ¬¾çŠ¶æ€æŸ¥è¯¢æŸ¥è¯¢ç»“æœè¯¦ç»†ä¿¡æ¯---"+output);
 			
 			if((errorCode == null || errorCode.equals(""))&& (errorMsg == null || errorMsg.equals(""))){				
-				System.out.println("---ÉÌ»§ºÅ---"+output.getDataValue("masterId"));
-				System.out.println("---ÍË¿îµ¥ºÅ---"+output.getDataValue("refundNo"));
-				System.out.println("---ÍË¿îÇëÇó½ÓÊÕÊ±¼ä---"+output.getDataValue("refundTime"));
-				System.out.println("---Ô­¶©µ¥ºÅ---"+output.getDataValue("orderId"));
-				System.out.println("---±ÒÖÖ---"+output.getDataValue("currency"));
-				System.out.println("---±¾½ğÇåËã±êÖ¾---"+output.getDataValue("settleflg")); //ÍË¿î±¾½ğ¿ÛÊÕ±êÖ¾£º0£ºÎ´¿Û¿î£»1£ºÒÑ¿Û¿î£»2£º¿Û¿îÖĞ
-				System.out.println("---ÊÖĞø·ÑÇåËã±êÖ¾---"+output.getDataValue("refundFlag"));//ÍË¿îÊ§°Ü±¾½ğÍË»¹±êÖ¾£º0£ºÎ´ÍË¿î£»1£ºÒÑÍË¿î£»2£º´¦ÀíÖĞ
-				System.out.println("---ÏÂµ¥Ê±¼ä---"+output.getDataValue("refundAmt"));
-				System.out.println("---ÉÌÆ·ÃèÊö---"+output.getDataValue("refundStatus"));//ÍË¿î×´Ì¬£º01³É¹¦£»02Ê§°Ü£»00´¦ÀíÖĞ
+				System.out.println("---å•†æˆ·å·---"+output.getDataValue("masterId"));
+				System.out.println("---é€€æ¬¾å•å·---"+output.getDataValue("refundNo"));
+				System.out.println("---é€€æ¬¾è¯·æ±‚æ¥æ”¶æ—¶é—´---"+output.getDataValue("refundTime"));
+				System.out.println("---åŸè®¢å•å·---"+output.getDataValue("orderId"));
+				System.out.println("---å¸ç§---"+output.getDataValue("currency"));
+				System.out.println("---æœ¬é‡‘æ¸…ç®—æ ‡å¿—---"+output.getDataValue("settleflg")); //é€€æ¬¾æœ¬é‡‘æ‰£æ”¶æ ‡å¿—ï¼š0ï¼šæœªæ‰£æ¬¾ï¼›1ï¼šå·²æ‰£æ¬¾ï¼›2ï¼šæ‰£æ¬¾ä¸­
+				System.out.println("---æ‰‹ç»­è´¹æ¸…ç®—æ ‡å¿—---"+output.getDataValue("refundFlag"));//é€€æ¬¾å¤±è´¥æœ¬é‡‘é€€è¿˜æ ‡å¿—ï¼š0ï¼šæœªé€€æ¬¾ï¼›1ï¼šå·²é€€æ¬¾ï¼›2ï¼šå¤„ç†ä¸­
+				System.out.println("---ä¸‹å•æ—¶é—´---"+output.getDataValue("refundAmt"));
+				System.out.println("---å•†å“æè¿°---"+output.getDataValue("refundStatus"));//é€€æ¬¾çŠ¶æ€ï¼š01æˆåŠŸï¼›02å¤±è´¥ï¼›00å¤„ç†ä¸­
 			}else{
-				System.out.println("---´íÎóÂë---"+output.getDataValue("errorCode"));
-				System.out.println("---´íÎóËµÃ÷---"+output.getDataValue("errorMsg"));
+				System.out.println("---é”™è¯¯ç ---"+output.getDataValue("errorCode"));
+				System.out.println("---é”™è¯¯è¯´æ˜---"+output.getDataValue("errorMsg"));
 			}
 	    }catch (Exception e) {
 			e.printStackTrace();

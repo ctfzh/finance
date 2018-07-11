@@ -6,7 +6,7 @@ package com.ih2ome.common.enums;
  * email sky.li@ixiaoshuidi.com
  **/
 public enum ConfigPayAssumeEnum {
-    //renter:×â¿Í³Ðµ££¬ landlord:·¿¶«³Ðµ£
+    //renter:ç§Ÿå®¢æ‰¿æ‹… landlord:æˆ¿ä¸œæ‰¿æ‹…
     RENTER("renter"), LANDLORD("landlord");
     private String name;
 
