@@ -75,7 +75,7 @@ spring:
     filters: stat,wall,log4j
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000;config.decrypt=true;config.decrypt.key=${publicKey}
 server:
-  port: 9180
+  port: 9181
   max-http-header-size: 10000000
 
 #短信平台地址

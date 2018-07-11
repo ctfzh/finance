@@ -11,10 +11,9 @@ import lombok.Data;
  **/
 @Data
 public class ConfigPaymentsVO {
-    //³Ğµ£Õß(renter:×â¿Í£¬landlord:·¿¶«)
-    @ApiModelProperty(value = "ÊÖĞø·ÑÓÃ³Ğµ£Õß(renter:×â¿Í£¬landlord:·¿¶«)")
+    @ApiModelProperty(value = "è´¹ç”¨æ‰¿æ‹…æ–¹(renter:ç§Ÿå®¢landlord:æˆ¿ä¸œ)")
     private String payAssume;
-    //·ÑÂÊĞÅÏ¢(Î¢ĞÅ·ÑÂÊ,Ö§¸¶±¦·ÑÂÊ,¿ì½İÖ§¸¶·ÑÂÊ)
-    @ApiModelProperty(value = "·ÑÓÃĞÅÏ¢")
+
+    @ApiModelProperty(value = "è´¹ç”¨ä¿¡æ¯")
     private String chargeInfo;
 }

@@ -1,7 +1,9 @@
 package com.ih2ome.server.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.ih2ome.common.PageVO.CalculateChargeVO;
 import com.ih2ome.common.PageVO.ConfigPaymentsVO;
+import com.ih2ome.common.enums.ConfigPayWayEnum;
 import com.ih2ome.common.support.ResponseBodyVO;
 import com.ih2ome.model.caspain.TerminalToken;
 import com.ih2ome.service.ConfigPaymentsService;
@@ -83,4 +85,26 @@ public class ConfigPaymentsController {
         LOGGER.info("setConfigPayments-----验证失败,失败token:{}", authorization);
         return ResponseBodyVO.generateResponseObject(-1, null, "用户token验证失败");
     }
+
+
+    @GetMapping(value = "calculate/{userId}/{payWay}/{money}", produces = "application/json;charset=UTF-8")
+    @ApiOperation("根据支付设置计算费用")
+    public ResponseBodyVO calculateCharge(@ApiParam(value = "主账号id") @PathVariable("userId") Integer userId,
+                                          @ApiParam(value = "支付方式[WX:微信,ALI:支付宝,CARD:快捷]") @PathVariable("payWay") ConfigPayWayEnum payWay,
+                                          @ApiParam(value = "金额") @PathVariable("money") Double money) {
+        LOGGER.info("calculateCharge-----用户id:{},支付方式:{},初始金额:{}", userId, payWay, money);
+        JSONObject data = new JSONObject();
+        //计算费用
+        try {
+            CalculateChargeVO calculateChargeVO = configPaymentsService.calculateCharge(userId, payWay, money);
+            LOGGER.info("calculateCharge-----计算结果:{}", JSONObject.toJSON(calculateChargeVO));
+            data.put("calculateChargeVO", calculateChargeVO);
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.info("calculateCharge-----calculateCharge({},{},{})出错,错误原因:{},", userId, payWay, money, e.getMessage());
+            return ResponseBodyVO.generateResponseObject(-1, null, "计算费用失败");
+        }
+        return ResponseBodyVO.generateResponseObject(0, data, "计算费用成功");
+    }
+
 }

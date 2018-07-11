@@ -190,7 +190,7 @@ public class ConstUtils {
 
     //保留两位小数
     public static Double getDecimalFormat(Double param) {
-        DecimalFormat decimalFormat = new DecimalFormat("#.00");
+        DecimalFormat decimalFormat = new DecimalFormat("#.0000");
         String format = decimalFormat.format(param);
         return Double.valueOf(format);
     }
