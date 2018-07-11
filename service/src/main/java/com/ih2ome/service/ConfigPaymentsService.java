@@ -1,7 +1,8 @@
 package com.ih2ome.service;
 
+import com.ih2ome.common.PageVO.CalculateChargeVO;
 import com.ih2ome.common.PageVO.ConfigPaymentsVO;
-import com.sun.org.apache.xpath.internal.operations.Bool;
+import com.ih2ome.common.enums.ConfigPayWayEnum;
 
 /**
  * @author Sky
@@ -25,4 +26,13 @@ public interface ConfigPaymentsService {
      * @return
      */
     void setConfigPaymentsInfo(Integer userId, String assumePerson) throws Exception;
+
+    /**
+     * 计算费用
+     *
+     * @param userId
+     * @param payWay
+     * @param money  @return
+     */
+    CalculateChargeVO calculateCharge(Integer userId, ConfigPayWayEnum payWay, Double money) throws Exception;
 }

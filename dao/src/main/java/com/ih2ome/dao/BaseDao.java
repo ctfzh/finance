@@ -10,8 +10,8 @@ import tk.mybatis.mapper.common.MySqlMapper;
  **/
 
 /**
- * Mapper接口：基本的增、删、改、查方法
- * MySqlMapper：针对MySQL的额外补充接口，支持批量插入
+ * Mapper鎺ュ彛锛氬熀鏈殑澧炪�佸垹銆佹敼銆佹煡鏂规硶
+ * MySqlMapper锛氶拡瀵筂ySQL鐨勯澶栬ˉ鍏呮帴鍙ｏ紝鏀寔鎵归噺鎻掑叆
  */
 public interface BaseDao<T> extends Mapper<T>, MySqlMapper<T> {
 }
