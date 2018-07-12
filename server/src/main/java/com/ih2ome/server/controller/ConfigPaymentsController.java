@@ -43,7 +43,7 @@ public class ConfigPaymentsController {
     @ApiOperation("获取支付配置")
     public ResponseBodyVO getConfigPayments(HttpServletRequest request) {
         JSONObject data = new JSONObject();
-        String authorization = request.getHeader("Authorization");
+        String authorization = request.getHeader("Authorization").split(" ")[1];
         TerminalToken terminalToken = terminalTokenService.findByToken(authorization);
         if (terminalToken != null) {
             Integer userId = terminalToken.getUserId();
@@ -69,7 +69,7 @@ public class ConfigPaymentsController {
                                             @ApiParam(value = "费用承担方(renter:租客,landlord:房东)") @RequestParam(value = "assumePerson") String assumePerson)
 
     {
-        TerminalToken terminalToken = terminalTokenService.findByToken(authorization);
+        TerminalToken terminalToken = terminalTokenService.findByToken(authorization.split(" ")[1]);
         if (terminalToken != null) {
             Integer userId = terminalToken.getUserId();
             LOGGER.info("setConfigPayments-----登录成功token:{},userId:{}", authorization, userId);

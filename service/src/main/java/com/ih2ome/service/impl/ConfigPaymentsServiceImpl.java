@@ -78,11 +78,11 @@ public class ConfigPaymentsServiceImpl implements ConfigPaymentsService {
                     assumePerson = configPaymentsSet.getAssumePerson();
                 }
             }
-            if (assumePerson.equals(ConfigPayAssumeEnum.RENTER.getName())) {
-                configPaymentsVO.setChargeInfo(chargeInfo.append("手续费用为").append(pinganpayWxCharge).append("‰").append(",小数部分按1元计").toString());
-            } else {
-                configPaymentsVO.setChargeInfo(chargeInfo.append("手续费用为").append(pinganpayWxCharge).append("‰").toString());
-            }
+            configPaymentsVO.setRentChargeInfo(chargeInfo.append("手续费用为").append(pinganpayWxCharge).append("‰").append(",小数部分按1元计").toString());
+            chargeInfo.delete(0, chargeInfo.length());
+            configPaymentsVO.setLandlordChargeInfo(chargeInfo.append("手续费用为").append(pinganpayWxCharge).append("‰").toString());
+            //中建等大客户展示方式
+            configPaymentsVO.setShowType(2);
             configPaymentsVO.setPayAssume(assumePerson);
         } else {
             //普通客户
@@ -119,7 +119,10 @@ public class ConfigPaymentsServiceImpl implements ConfigPaymentsService {
                     assumePerson = configPaymentsSet.getAssumePerson();
                 }
             }
-            configPaymentsVO.setChargeInfo(chargeInfo.append("! : 使用微信或支付宝支付通道,将收取").append(allianpayWxCharge).append("%的手续费(借记卡支付通道暂免手续费)").toString());
+            configPaymentsVO.setRentChargeInfo(chargeInfo.append("使用微信或支付宝支付通道,将收取").append(allianpayWxCharge).append("%的手续费(借记卡支付通道暂免手续费)").toString());
+            chargeInfo.delete(0, chargeInfo.length());
+            configPaymentsVO.setLandlordChargeInfo(chargeInfo.append("使用微信或支付宝支付通道,将收取").append(allianpayWxCharge).append("%的手续费(借记卡支付通道暂免手续费)").toString());
+            configPaymentsVO.setShowType(1);
             configPaymentsVO.setPayAssume(assumePerson);
         }
         return configPaymentsVO;

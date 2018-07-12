@@ -26,9 +26,7 @@ import java.awt.Color;
 public class ExcelUtils {
 
     public static void exportExcel(HttpServletResponse response, String fileName, ExcelData data) throws Exception {
-        // 告诉浏览器用什么软件可以打开此文件
         response.setHeader("content-Type", "application/vnd.ms-excel");
-        // 下载文件的默认名称
         response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, "utf-8"));
         exportExcel(data, response.getOutputStream());
     }
@@ -48,7 +46,6 @@ public class ExcelUtils {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            //此处需要关闭 wb 变量
             out.close();
         }
     }
