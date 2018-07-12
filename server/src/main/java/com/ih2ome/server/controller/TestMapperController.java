@@ -2,7 +2,10 @@ package com.ih2ome.server.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
+import com.google.common.io.Resources;
 import com.ih2ome.common.support.ResponseBodyVO;
+import com.ih2ome.common.utils.ip.IPUtil;
+import com.ih2ome.common.utils.ip.IPWhiteListUtil;
 import com.ih2ome.dao.caspain.CaspainMoneyFlowDao;
 import com.ih2ome.dao.caspain.ConfigPaymentsChannelDao;
 import com.ih2ome.dao.volga.VolgaMoneyFlowDao;
@@ -15,6 +18,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import tk.mybatis.mapper.entity.Example;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.List;
 
 /**
@@ -67,7 +73,22 @@ public class TestMapperController {
         responseBodyVO.setCode(0);
         responseBodyVO.setMsg("success");
         return ResponseBodyVO.generateResponseObject(0, jsonObject, "success");
+    }
 
+    @GetMapping("three")
+    @ResponseBody
+    public ResponseBodyVO test03(HttpServletRequest request) {
+        String realIp = IPUtil.getIpAddr(request);
+        System.out.println(realIp);
+        try {
+            List<String> ipList = Resources.readLines(Resources.getResource("ipWhiteList.txt"), Charset.forName("utf-8"));
+            if (!IPWhiteListUtil.checkIpList(realIp, ipList)) {
+                System.out.println("=================错误，错误ip" + realIp);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ResponseBodyVO.generateResponseObject(0, null, "success");
     }
 
 }
