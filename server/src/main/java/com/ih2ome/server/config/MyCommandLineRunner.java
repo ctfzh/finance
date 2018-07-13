@@ -26,19 +26,8 @@ public class MyCommandLineRunner implements CommandLineRunner {
     @Value("${pinganSDK.protocalName}")
     private String protocolName;
 
-    @Value("${pinganSDK.dirPath}")
-    private String dirPath;
-
     @Override
     public void run(String... var1) throws Exception {
-        //修改配置文件内容
-        PropertiesConfigUtil.initProperties(dirPath);
-        //设置公钥
-        PropertiesConfigUtil.updateProperties("PUBLIC_KEY_PATH", cerName);
-        //设置私钥
-        PropertiesConfigUtil.updateProperties("KEYPATH", pfxName);
-        //设置协议
-        PropertiesConfigUtil.updateProperties("PROTOCOL_PATH", protocolName);
         //SDK的初始化操作
         InitConfiguration.init(cerName, pfxName, protocolName);
     }
