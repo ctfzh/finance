@@ -1,5 +1,6 @@
 package com.ih2ome.server.config;
 
+import com.ih2ome.common.pingan.sdk.InitConfiguration;
 import com.ih2ome.common.utils.properties.PropertiesConfigUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -39,6 +40,6 @@ public class MyCommandLineRunner implements CommandLineRunner {
         //设置协议
         PropertiesConfigUtil.updateProperties("PROTOCOL_PATH", protocolName);
         //SDK的初始化操作
-//        InitConfiguration.init(cerName, pfxName, protocolName);
+        InitConfiguration.init(cerName, pfxName, protocolName);
     }
 }
