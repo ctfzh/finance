@@ -1,15 +1,15 @@
 package com.ih2ome.common.pingan.sdk;
 
-import com.ih2ome.common.utils.PropertiesConfigUtil;
+import com.ih2ome.common.utils.properties.PropertiesConfigUtil;
 import com.pabank.sdk.PABankSDK;
-
-import java.io.File;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Sky
  * create 2018/06/19
  * email sky.li@ixiaoshuidi.com
  **/
+@Component
 public class InitConfiguration {
 
     private static final String cerName = "open.cer";
@@ -19,7 +19,7 @@ public class InitConfiguration {
     private static final String protocolName = "protocol.xml";
 
     //初始化配置(sdk)
-    public static void init() {
+    public static void init(String cerName, String pfxName, String protocolName) {
 //        System.out.println(File.separator);
 //        硬盘地址
         String dirPath = InitConfiguration.class.getClassLoader().getResource("sdkConfig").getPath();
@@ -46,6 +46,6 @@ public class InitConfiguration {
         System.out.println(PropertiesConfigUtil.getKeyValue("PROTOCOL_PATH"));
         System.out.println(PropertiesConfigUtil.getKeyValue("KEYPATH"));
         //初始化配置
-//        PABankSDK.init(configProperties);
+        PABankSDK.init(configProperties);
     }
 }
