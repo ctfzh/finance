@@ -45,9 +45,10 @@ public class InitConfiguration {
             PropertiesConfigUtil.updateProperties("KEYPATH", dirPath + "/" + pfxName);
         }
         */
-        LOGGER.info("-----------------PUBLIC_KEY_PATH{}----------------", PropertiesConfigUtil.getKeyValue("PUBLIC_KEY_PATH"));
-        LOGGER.info("-----------------PROTOCOL_PATH{}----------------", PropertiesConfigUtil.getKeyValue("PROTOCOL_PATH"));
-        LOGGER.info("-----------------KEYPATH{}----------------", PropertiesConfigUtil.getKeyValue("KEYPATH"));
+        PropertiesConfigUtil.initProperties(configProperties);
+        LOGGER.info("-----------------PUBLIC_KEY_PATH：{}----------------", PropertiesConfigUtil.getKeyValue("PUBLIC_KEY_PATH"));
+        LOGGER.info("-----------------PROTOCOL_PATH：{}----------------", PropertiesConfigUtil.getKeyValue("PROTOCOL_PATH"));
+        LOGGER.info("-----------------KEYPATH：{}----------------", PropertiesConfigUtil.getKeyValue("KEYPATH"));
         //初始化配置（当文件目录都正确）
         PABankSDK.init(configProperties);
         LOGGER.info("-----------------平安SDK初始化成功----------------");
