@@ -13,7 +13,7 @@ import javax.servlet.annotation.WebListener;
  * create 2018/07/17
  * email sky.li@ixiaoshuidi.com
  **/
-//@Component
+@Component
 //@WebListener
 public class MyServletContextListener implements ServletContextListener {
 
