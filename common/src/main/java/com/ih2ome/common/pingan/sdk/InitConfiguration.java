@@ -2,10 +2,7 @@ package com.ih2ome.common.pingan.sdk;
 
 import com.ih2ome.common.utils.properties.PropertiesConfigUtil;
 import com.pabank.sdk.PABankSDK;
-import jdk.internal.util.xml.impl.Input;
-import org.springframework.stereotype.Component;
 
-import java.io.FileInputStream;
 import java.io.InputStream;
 
 /**
@@ -13,7 +10,6 @@ import java.io.InputStream;
  * create 2018/06/19
  * email sky.li@ixiaoshuidi.com
  **/
-@Component
 public class InitConfiguration {
 
     //初始化配置(sdk)
