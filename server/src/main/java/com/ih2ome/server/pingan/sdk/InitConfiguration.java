@@ -1,4 +1,4 @@
-package com.ih2ome.common.pingan.sdk;
+package com.ih2ome.server.pingan.sdk;
 
 import com.ih2ome.common.utils.properties.PropertiesConfigUtil;
 import com.pabank.sdk.PABankSDK;
@@ -18,8 +18,10 @@ public class InitConfiguration {
 
 
     //初始化配置(sdk)
-    public static void init(String cerName, String pfxName, String protocolName) {
-        LOGGER.info("====================================初始化操作================");
+    public static void init() {
+        LOGGER.info("==============================初始化操作=======================");
+        String configProperties = InitConfiguration.class.getClassLoader().getResource("sdkConfig/config.properties").getPath();
+        /*
 //        硬盘地址
         String dirPath = InitConfiguration.class.getClassLoader().getResource("sdkConfig").getPath();
         //配置文件地址
@@ -42,12 +44,10 @@ public class InitConfiguration {
         if (!keypath.startsWith(dirPath)) {
             PropertiesConfigUtil.updateProperties("KEYPATH", dirPath + "/" + pfxName);
         }
-        LOGGER.info("-----------------PUBLIC_KEY_PATH{}----------------",PropertiesConfigUtil.getKeyValue("PUBLIC_KEY_PATH"));
-        LOGGER.info("-----------------PROTOCOL_PATH{}----------------",PropertiesConfigUtil.getKeyValue("PROTOCOL_PATH"));
-        LOGGER.info("-----------------KEYPATH{}----------------",PropertiesConfigUtil.getKeyValue("KEYPATH"));
-//        System.out.println(PropertiesConfigUtil.getKeyValue("PUBLIC_KEY_PATH"));
-//        System.out.println(PropertiesConfigUtil.getKeyValue("PROTOCOL_PATH"));
-//        System.out.println(PropertiesConfigUtil.getKeyValue("KEYPATH"));
+        */
+        LOGGER.info("-----------------PUBLIC_KEY_PATH{}----------------", PropertiesConfigUtil.getKeyValue("PUBLIC_KEY_PATH"));
+        LOGGER.info("-----------------PROTOCOL_PATH{}----------------", PropertiesConfigUtil.getKeyValue("PROTOCOL_PATH"));
+        LOGGER.info("-----------------KEYPATH{}----------------", PropertiesConfigUtil.getKeyValue("KEYPATH"));
         //初始化配置（当文件目录都正确）
         PABankSDK.init(configProperties);
         LOGGER.info("-----------------平安SDK初始化成功----------------");

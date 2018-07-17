@@ -13,7 +13,7 @@
     <groupId>com.ih2ome</groupId>
     <artifactId>service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <!--<packaging>jar</packaging>-->
 
     <name>service</name>
     <description>业务层</description>

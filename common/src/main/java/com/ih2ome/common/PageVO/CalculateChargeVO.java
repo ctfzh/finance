@@ -22,4 +22,7 @@ public class CalculateChargeVO {
 
     @ApiModelProperty(value = "入账金额")
     private Double enterPayMoney;
+
+    @ApiModelProperty(value = "费用承担者")
+    private String payAssume;
 }

@@ -14,7 +14,7 @@
     <groupId>com.ih2ome</groupId>
     <artifactId>dao</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <!--<packaging>jar</packaging>-->
 
     <name>dao</name>
     <description>数据库层</description>
