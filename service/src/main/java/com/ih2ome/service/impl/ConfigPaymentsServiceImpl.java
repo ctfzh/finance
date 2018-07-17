@@ -1,6 +1,7 @@
 package com.ih2ome.service.impl;
 
 import com.ih2ome.common.PageVO.CalculateChargeVO;
+import com.ih2ome.common.PageVO.ConfigPayChannelsVO;
 import com.ih2ome.common.PageVO.ConfigPaymentsVO;
 import com.ih2ome.common.enums.ConfigPayAssumeEnum;
 import com.ih2ome.common.enums.ConfigPayChannelEnum;
@@ -270,6 +271,47 @@ public class ConfigPaymentsServiceImpl implements ConfigPaymentsService {
             }
         }
         return calculateChargeVO;
+    }
+
+    @Override
+    public ConfigPayChannelsVO getConfigChannelInfo(Integer userId) throws Exception {
+        List<ConfigPaymentsChannel> configPaymentsChannels = new ArrayList<>();
+        ConfigPayChannelsVO configPayChannelsVO = new ConfigPayChannelsVO();
+        //判断是否是使用平安支付渠道的客户
+        if (bigCustomersInfo.contains(userId.toString())) {
+            //查询平安的支付通道有几种
+            Example configPaymentsChannelExample = new Example(ConfigPaymentsChannel.class);
+            configPaymentsChannelExample.createCriteria().andLike("payChannel", "%pinganpay%").andEqualTo("isDelete", 0);
+            configPaymentsChannels = configPaymentsChannelDao.selectByExample(configPaymentsChannelExample);
+        } else {
+            //查询非平安的支付通道
+            Example configPaymentsChannelExample = new Example(ConfigPaymentsChannel.class);
+            configPaymentsChannelExample.createCriteria().andNotLike("payChannel", "%pinganpay%").andEqualTo("isDelete", 0);
+            configPaymentsChannels = configPaymentsChannelDao.selectByExample(configPaymentsChannelExample);
+        }
+        Example configPaymentsSetExample = new Example(ConfigPaymentsSet.class);
+        for (ConfigPaymentsChannel configPaymentsChannel : configPaymentsChannels) {
+            Integer channelId = configPaymentsChannel.getId();
+            configPaymentsSetExample.createCriteria().andEqualTo("isDelete", 0).andEqualTo("paymentsChannelId", channelId)
+                    .andEqualTo("createdById", userId);
+            ConfigPaymentsSet configPaymentsSet = configPaymentsSetDao.selectOneByExample(configPaymentsSetExample);
+            //如果该支付渠道未设置，则添加
+            if (configPaymentsSet == null) {
+                configPayChannelsVO.setPayAssume(ConfigPayAssumeEnum.RENTER.getName());
+                //如果该平安支付渠道已设置,则修改
+            } else {
+                configPayChannelsVO.setPayAssume(configPaymentsSet.getAssumePerson());
+            }
+            if (configPaymentsChannel.getPayChannel().equals(ConfigPayChannelEnum.ALLIANPAY_WX.getName()) || configPaymentsChannel.getPayChannel().equals(ConfigPayChannelEnum.PINGANPAY_WX.getName())) {
+                configPayChannelsVO.setWxPercent(configPaymentsChannel.getDefaultCharge());
+            } else if (configPaymentsChannel.getPayChannel().equals(ConfigPayChannelEnum.ALIPAY.getName())) {
+                configPayChannelsVO.setAliPercent(configPaymentsChannel.getDefaultCharge());
+            } else if (configPaymentsChannel.getPayChannel().equals(ConfigPayChannelEnum.LLIANPAY_CARD.getName())) {
+                configPayChannelsVO.setCardPercent(configPaymentsChannel.getDefaultCharge());
+            }
+            configPaymentsSetExample.clear();
+        }
+        return configPayChannelsVO;
     }
 
     //处理费用

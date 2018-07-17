@@ -2,6 +2,7 @@ package com.ih2ome.server.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.PageVO.CalculateChargeVO;
+import com.ih2ome.common.PageVO.ConfigPayChannelsVO;
 import com.ih2ome.common.PageVO.ConfigPaymentsVO;
 import com.ih2ome.common.enums.ConfigPayWayEnum;
 import com.ih2ome.common.support.ResponseBodyVO;
@@ -96,6 +97,7 @@ public class ConfigPaymentsController {
         JSONObject data = new JSONObject();
         //计算费用
         try {
+//            ConfigPayChannelsVO channelsVO = configPaymentsService.getConfigChannelInfo(userId);
             CalculateChargeVO calculateChargeVO = configPaymentsService.calculateCharge(userId, payWay, money);
             LOGGER.info("calculateCharge-----计算结果:{}", JSONObject.toJSON(calculateChargeVO));
             data.put("calculateChargeVO", calculateChargeVO);
@@ -105,6 +107,23 @@ public class ConfigPaymentsController {
             return ResponseBodyVO.generateResponseObject(-1, null, "计算费用失败");
         }
         return ResponseBodyVO.generateResponseObject(0, data, "计算费用成功");
+    }
+
+
+    @GetMapping(value = "payChannels/{userId}", produces = "application/json;charset=UTF-8")
+    @ApiOperation("根据用户id查询支付配置")
+    public ResponseBodyVO getPayChannelsInfo(@ApiParam(value = "主账号id") @PathVariable("userId") Integer userId) {
+        LOGGER.info("getPayChannelsInfo-----用户id:{}", userId);
+        JSONObject data = new JSONObject();
+        try {
+            ConfigPayChannelsVO channelsVO = configPaymentsService.getConfigChannelInfo(userId);
+            data.put("channelsVO", channelsVO);
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.info("getPayChannelsInfo-----getConfigChannelInfo({})出错,错误原因:{},", userId, e.getMessage());
+            return ResponseBodyVO.generateResponseObject(-1, null, e.getMessage());
+        }
+        return ResponseBodyVO.generateResponseObject(0, data, "查询成功");
     }
 
 }

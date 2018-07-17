@@ -1,6 +1,7 @@
 package com.ih2ome.service;
 
 import com.ih2ome.common.PageVO.CalculateChargeVO;
+import com.ih2ome.common.PageVO.ConfigPayChannelsVO;
 import com.ih2ome.common.PageVO.ConfigPaymentsVO;
 import com.ih2ome.common.enums.ConfigPayWayEnum;
 
@@ -35,4 +36,12 @@ public interface ConfigPaymentsService {
      * @param money  @return
      */
     CalculateChargeVO calculateCharge(Integer userId, ConfigPayWayEnum payWay, Double money) throws Exception;
+
+    /**
+     * 根据用户id查询支付渠道手续费用配置
+     *
+     * @param userId
+     * @return
+     */
+    ConfigPayChannelsVO getConfigChannelInfo(Integer userId) throws Exception;
 }
