@@ -87,7 +87,7 @@ public class ConfigPaymentsController {
     }
 
 
-    @GetMapping(value = "calculate/{userId}/{payWay}/{money}", produces = "application/json;charset=UTF-8")
+    @GetMapping(value = "calculate/{userId}/{payWay}/{money:.+}", produces = "application/json;charset=UTF-8")
     @ApiOperation("根据支付设置计算费用")
     public ResponseBodyVO calculateCharge(@ApiParam(value = "主账号id") @PathVariable("userId") Integer userId,
                                           @ApiParam(value = "支付方式[WX:微信,ALI:支付宝,CARD:快捷]") @PathVariable("payWay") ConfigPayWayEnum payWay,
