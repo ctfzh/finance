@@ -2,7 +2,11 @@ package com.ih2ome.common.pingan.sdk;
 
 import com.ih2ome.common.utils.properties.PropertiesConfigUtil;
 import com.pabank.sdk.PABankSDK;
+import jdk.internal.util.xml.impl.Input;
 import org.springframework.stereotype.Component;
+
+import java.io.FileInputStream;
+import java.io.InputStream;
 
 /**
  * @author Sky
@@ -19,6 +23,7 @@ public class InitConfiguration {
         String dirPath = InitConfiguration.class.getClassLoader().getResource("sdkConfig").getPath();
         //配置文件地址
         String configProperties = InitConfiguration.class.getClassLoader().getResource("sdkConfig/config.properties").getPath();
+        InputStream configInputStream = InitConfiguration.class.getResourceAsStream("sdkConfig/config.properties");
         //初始化sdk配置文件
         PropertiesConfigUtil.initProperties(configProperties);
 //        设置公钥的绝对路径（公钥）

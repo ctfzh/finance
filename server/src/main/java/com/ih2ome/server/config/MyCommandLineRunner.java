@@ -29,6 +29,6 @@ public class MyCommandLineRunner implements CommandLineRunner {
     @Override
     public void run(String... var1) throws Exception {
         //SDK的初始化操作
-        InitConfiguration.init(cerName, pfxName, protocolName);
+//        InitConfiguration.init(cerName, pfxName, protocolName);
     }
 }
