@@ -85,7 +85,5 @@ sms:
 #使用平安银行支付的客户id
 bigCustomersInfo: 2788
 
-pinganSDK:
-  cerName: 2000904250@54.cer
-  pfxName: 2000904250@54.pfx
-  protocalName: protocol.xml
+#平安配置文件前缀
+pinganSDKPrefix: test

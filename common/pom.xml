@@ -13,7 +13,7 @@
     <groupId>com.ih2ome</groupId>
     <artifactId>common</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <!--<packaging>jar</packaging>-->
+    <packaging>jar</packaging>
 
     <name>common</name>
     <description>封装工具</description>

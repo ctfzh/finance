@@ -83,3 +83,6 @@ sms:
   baseUrl: http://xs1:5312
 
 bigCustomersInfo: 22886
+
+#平安配置文件前缀
+pinganSDKPrefix: prod

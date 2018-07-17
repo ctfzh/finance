@@ -4,6 +4,7 @@ import com.ih2ome.common.utils.properties.PropertiesConfigUtil;
 import com.pabank.sdk.PABankSDK;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.InputStream;
 
@@ -16,11 +17,10 @@ public class InitConfiguration {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(InitConfiguration.class);
 
-
     //初始化配置(sdk)
-    public static void init() {
+    public static void init(String prefix) {
         LOGGER.info("==============================初始化操作=======================");
-        String configProperties = InitConfiguration.class.getClassLoader().getResource("sdkConfig/config.properties").getPath();
+        String configProperties = InitConfiguration.class.getClassLoader().getResource(prefix + "_sdkConfig/config.properties").getPath();
         /*
 //        硬盘地址
         String dirPath = InitConfiguration.class.getClassLoader().getResource("sdkConfig").getPath();

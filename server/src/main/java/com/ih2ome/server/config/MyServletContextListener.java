@@ -13,15 +13,19 @@ import javax.servlet.annotation.WebListener;
  * create 2018/07/17
  * email sky.li@ixiaoshuidi.com
  **/
-//@Component
-//@WebListener
+@Component
+@WebListener
 public class MyServletContextListener implements ServletContextListener {
 
+    @Value("${pinganSDKPrefix}")
+    private String pinganSDKPrefix;
+
     @Override
+
     public void contextInitialized(ServletContextEvent sce) {
         //SDK的初始化操作
         System.out.println("SDK的初始化操作");
-        InitConfiguration.init();
+        InitConfiguration.init(pinganSDKPrefix);
     }
 
     @Override
