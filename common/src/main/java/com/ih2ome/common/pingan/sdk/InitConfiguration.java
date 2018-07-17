@@ -2,6 +2,8 @@ package com.ih2ome.common.pingan.sdk;
 
 import com.ih2ome.common.utils.properties.PropertiesConfigUtil;
 import com.pabank.sdk.PABankSDK;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 
@@ -11,6 +13,9 @@ import java.io.InputStream;
  * email sky.li@ixiaoshuidi.com
  **/
 public class InitConfiguration {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(InitConfiguration.class);
+
 
     //初始化配置(sdk)
     public static void init(String cerName, String pfxName, String protocolName) {
@@ -42,5 +47,6 @@ public class InitConfiguration {
         System.out.println(PropertiesConfigUtil.getKeyValue("KEYPATH"));
         //初始化配置（当文件目录都正确）
         PABankSDK.init(configProperties);
+        LOGGER.info("-----------------平安SDK初始化成功----------------");
     }
 }
