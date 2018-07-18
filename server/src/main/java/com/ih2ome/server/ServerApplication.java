@@ -30,6 +30,7 @@ public class ServerApplication extends SpringBootServletInitializer {
     }
 
     public static void main(String[] args) {
+        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         SpringApplication.run(ServerApplication.class, args);
     }
 
