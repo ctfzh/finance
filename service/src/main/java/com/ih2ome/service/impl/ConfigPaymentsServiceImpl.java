@@ -191,7 +191,7 @@ public class ConfigPaymentsServiceImpl implements ConfigPaymentsService {
                         //默认租客承担
                         Double defaultCharge = pinganpayWxChannel.getDefaultCharge();
                         Double charge = ConstUtils.getDecimalFormat(defaultCharge / 100);
-                        Double payCharge = Math.ceil((money + money * charge) * charge);
+                        Double payCharge = new BigDecimal((money + money * charge) * charge).setScale(1, RoundingMode.UP).doubleValue();
                         calculateChargeVO.setPayAssume(ConfigPayAssumeEnum.RENTER.getName());
                         calculateChargeVO.setPayCharge(payCharge);
                         calculateChargeVO.setEnterPayMoney(money);
@@ -201,17 +201,17 @@ public class ConfigPaymentsServiceImpl implements ConfigPaymentsService {
                         String assumePerson = paymentsSet.getAssumePerson();
                         //设置的是租客承担
                         if (assumePerson.equals(ConfigPayAssumeEnum.RENTER.getName())) {
-                            Double payCharge = Math.ceil((money + money * charge) * charge);
+                            Double payCharge = new BigDecimal((money + money * charge) * charge).setScale(1, RoundingMode.UP).doubleValue();
                             calculateChargeVO.setPayAssume(ConfigPayAssumeEnum.RENTER.getName());
                             calculateChargeVO.setEnterPayMoney(money);
                             calculateChargeVO.setPayCharge(payCharge);
                             calculateChargeVO.setTotalPayMoney(money + payCharge);
                             //设置的是公寓方承担
                         } else {
-                            Double payCharge = new BigDecimal(money * charge).setScale(2, RoundingMode.UP).doubleValue();
+                            Double payCharge = new BigDecimal(money * charge).setScale(1, RoundingMode.UP).doubleValue();
                             calculateChargeVO.setPayAssume(ConfigPayAssumeEnum.LANDLORD.getName());
                             calculateChargeVO.setPayCharge(payCharge);
-                            calculateChargeVO.setEnterPayMoney(money - payCharge);
+                            calculateChargeVO.setEnterPayMoney(ConstUtils.getDecimalFormat(money - payCharge));
                             calculateChargeVO.setTotalPayMoney(money);
                         }
                     }
@@ -283,27 +283,43 @@ public class ConfigPaymentsServiceImpl implements ConfigPaymentsService {
             //默认租客承担
             Double defaultCharge = channel.getDefaultCharge();
             Double charge = ConstUtils.getDecimalFormat(defaultCharge / 100);
-            Double renterCharge = new BigDecimal(money * charge).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+            Double renterCharge = money * charge;
+            if (renterCharge <= 0.1) {
+                renterCharge = 0.1;
+            } else {
+                renterCharge = new BigDecimal(renterCharge).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+            }
             calculateChargeVO.setPayAssume(ConfigPayAssumeEnum.RENTER.getName());
             calculateChargeVO.setPayCharge(renterCharge);
             calculateChargeVO.setEnterPayMoney(money);
-            calculateChargeVO.setTotalPayMoney(money + renterCharge);
+            calculateChargeVO.setTotalPayMoney(ConstUtils.getDecimalFormat(money + renterCharge));
         } else {
             Double charge = ConstUtils.getDecimalFormat(paymentsSet.getServiceCharge() / 100);
             String assumePerson = paymentsSet.getAssumePerson();
             //设置的是租客承担
             if (assumePerson.equals(ConfigPayAssumeEnum.RENTER.getName())) {
-                Double payCharge = new BigDecimal(money * charge).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                Double payCharge = money * charge;
+                if (payCharge <= 0.1) {
+                    payCharge = 0.1;
+                } else {
+                    payCharge = new BigDecimal(payCharge).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                }
+//                Double payCharge = new BigDecimal(money * charge).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
                 calculateChargeVO.setPayAssume(ConfigPayAssumeEnum.RENTER.getName());
                 calculateChargeVO.setPayCharge(payCharge);
                 calculateChargeVO.setEnterPayMoney(money);
-                calculateChargeVO.setTotalPayMoney(money + payCharge);
+                calculateChargeVO.setTotalPayMoney(ConstUtils.getDecimalFormat(money + payCharge));
                 //设置的是公寓方承担
             } else {
-                Double payCharge = new BigDecimal(money * charge).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                Double payCharge = money * charge;
+                if (payCharge <= 0.1) {
+                    payCharge = 0.1;
+                } else {
+                    payCharge = new BigDecimal(payCharge).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                }
                 calculateChargeVO.setPayAssume(ConfigPayAssumeEnum.LANDLORD.getName());
                 calculateChargeVO.setPayCharge(payCharge);
-                calculateChargeVO.setEnterPayMoney(money - payCharge);
+                calculateChargeVO.setEnterPayMoney(ConstUtils.getDecimalFormat(money - payCharge));
                 calculateChargeVO.setTotalPayMoney(money);
             }
         }
