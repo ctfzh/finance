@@ -14,7 +14,7 @@ import javax.servlet.annotation.WebListener;
  * email sky.li@ixiaoshuidi.com
  **/
 @Component
-@WebListener
+//@WebListener
 public class MyServletContextListener implements ServletContextListener {
 
     @Value("${pinganSDKPrefix}")
