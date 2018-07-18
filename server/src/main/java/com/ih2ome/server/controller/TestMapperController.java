@@ -11,6 +11,7 @@ import com.ih2ome.dao.caspain.ConfigPaymentsChannelDao;
 import com.ih2ome.dao.volga.VolgaMoneyFlowDao;
 import com.ih2ome.model.caspain.ConfigPaymentsChannel;
 import com.ih2ome.model.volga.MoneyFlow;
+import com.ih2ome.server.pingan.sdk.InitConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -88,6 +89,13 @@ public class TestMapperController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return ResponseBodyVO.generateResponseObject(0, null, "success");
+    }
+
+    @GetMapping("four")
+    @ResponseBody
+    public ResponseBodyVO test04(HttpServletRequest request) {
+        InitConfiguration.init("prod");
         return ResponseBodyVO.generateResponseObject(0, null, "success");
     }
 
