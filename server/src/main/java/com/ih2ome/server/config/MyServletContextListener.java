@@ -13,8 +13,8 @@ import javax.servlet.annotation.WebListener;
  * create 2018/07/17
  * email sky.li@ixiaoshuidi.com
  **/
-//@Component
-//@WebListener
+@Component
+@WebListener
 public class MyServletContextListener implements ServletContextListener {
 
     @Value("${pinganSDKPrefix}")
