@@ -23,7 +23,7 @@ import javax.servlet.ServletException;
 @SpringBootApplication
 @EnableTransactionManagement
 @ComponentScan(basePackages = {"com.ih2ome"})
-//@ServletComponentScan
+@ServletComponentScan
 public class ServerApplication extends SpringBootServletInitializer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfigPaymentsController.class);

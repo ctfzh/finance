@@ -30,17 +30,6 @@
             <artifactId>service</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>open-sdk</groupId>
-            <artifactId>open-sdk</artifactId>
-            <version>RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>open-sdk</groupId>
-            <artifactId>open-sdk</artifactId>
-            <version>RELEASE</version>
-        </dependency>
-
 
         <!--对接平安的sdk..jar包(外部引入).............start-->
         <dependency>
@@ -183,6 +172,22 @@
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                     <encoding>utf-8</encoding>
+                </configuration>
+            </plugin>
+            <!--将Jar 引入 WEB-INF/lib中-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <webResources>
+                        <resource>
+                            <directory>src/main/resources/lib</directory>
+                            <targetPath>WEB-INF/lib/</targetPath>
+                            <includes>
+                                <include>**/*.jar</include>
+                            </includes>
+                        </resource>
+                    </webResources>
                 </configuration>
             </plugin>
 
