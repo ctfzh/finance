@@ -279,15 +279,20 @@ public class ConfigPaymentsServiceImpl implements ConfigPaymentsService {
 
     //处理费用
     private void disposeChargeMethod(Double money, CalculateChargeVO calculateChargeVO, ConfigPaymentsChannel channel, ConfigPaymentsSet paymentsSet) {
+        double minDefaultCharge = 0.1;
         if (paymentsSet == null) {
             //默认租客承担
             Double defaultCharge = channel.getDefaultCharge();
             Double charge = ConstUtils.getDecimalFormat(defaultCharge / 100);
             Double renterCharge = money * charge;
-            if (renterCharge <= 0.1) {
-                renterCharge = 0.1;
+            if (channel.getPayChannel().equals(ConfigPayChannelEnum.LLIANPAY_CARD.getName())) {
+                renterCharge = 0.0;
             } else {
-                renterCharge = new BigDecimal(renterCharge).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                if (renterCharge <= minDefaultCharge) {
+                    renterCharge = minDefaultCharge;
+                } else {
+                    renterCharge = new BigDecimal(renterCharge).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                }
             }
             calculateChargeVO.setPayAssume(ConfigPayAssumeEnum.RENTER.getName());
             calculateChargeVO.setPayCharge(renterCharge);
@@ -299,10 +304,14 @@ public class ConfigPaymentsServiceImpl implements ConfigPaymentsService {
             //设置的是租客承担
             if (assumePerson.equals(ConfigPayAssumeEnum.RENTER.getName())) {
                 Double payCharge = money * charge;
-                if (payCharge <= 0.1) {
-                    payCharge = 0.1;
+                if (channel.getPayChannel().equals(ConfigPayChannelEnum.LLIANPAY_CARD.getName())) {
+                    payCharge = 0.0;
                 } else {
-                    payCharge = new BigDecimal(payCharge).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                    if (payCharge <= minDefaultCharge) {
+                        payCharge = minDefaultCharge;
+                    } else {
+                        payCharge = new BigDecimal(payCharge).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                    }
                 }
 //                Double payCharge = new BigDecimal(money * charge).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
                 calculateChargeVO.setPayAssume(ConfigPayAssumeEnum.RENTER.getName());
@@ -312,10 +321,14 @@ public class ConfigPaymentsServiceImpl implements ConfigPaymentsService {
                 //设置的是公寓方承担
             } else {
                 Double payCharge = money * charge;
-                if (payCharge <= 0.1) {
-                    payCharge = 0.1;
+                if (channel.getPayChannel().equals(ConfigPayChannelEnum.LLIANPAY_CARD.getName())) {
+                    payCharge = 0.0;
                 } else {
-                    payCharge = new BigDecimal(payCharge).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                    if (payCharge <= minDefaultCharge) {
+                        payCharge = minDefaultCharge;
+                    } else {
+                        payCharge = new BigDecimal(payCharge).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                    }
                 }
                 calculateChargeVO.setPayAssume(ConfigPayAssumeEnum.LANDLORD.getName());
                 calculateChargeVO.setPayCharge(payCharge);
