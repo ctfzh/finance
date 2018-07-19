@@ -120,9 +120,9 @@ public class ConfigPaymentsServiceImpl implements ConfigPaymentsService {
                     assumePerson = configPaymentsSet.getAssumePerson();
                 }
             }
-            configPaymentsVO.setRentChargeInfo(chargeInfo.append("使用微信或支付宝支付通道,将收取").append(allianpayWxCharge).append("%的手续费(借记卡支付通道暂免手续费)").toString());
+            configPaymentsVO.setRentChargeInfo(chargeInfo.append("使用微信或支付宝支付通道,将收取").append(allianpayWxCharge).append("%的手续费,最低0.1元(借记卡支付通道暂免手续费)").toString());
             chargeInfo.delete(0, chargeInfo.length());
-            configPaymentsVO.setLandlordChargeInfo(chargeInfo.append("使用微信或支付宝支付通道,将收取").append(allianpayWxCharge).append("%的手续费(借记卡支付通道暂免手续费)").toString());
+            configPaymentsVO.setLandlordChargeInfo(chargeInfo.append("使用微信或支付宝支付通道,将收取").append(allianpayWxCharge).append("%的手续费,最低0.1元(借记卡支付通道暂免手续费)").toString());
             configPaymentsVO.setShowType(1);
             configPaymentsVO.setPayAssume(assumePerson);
         }
