@@ -142,7 +142,7 @@
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
-                <filtering>false</filtering>
+                <filtering>true</filtering>
                 <excludes>
                     <exclude>application-dev.yml</exclude>
                     <exclude>application-prod.yml</exclude>
