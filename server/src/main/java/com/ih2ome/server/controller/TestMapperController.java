@@ -79,6 +79,7 @@ public class TestMapperController {
     @GetMapping("three")
     @ResponseBody
     public ResponseBodyVO test03(HttpServletRequest request) {
+        InitConfiguration.init("test");
         String realIp = IPUtil.getIpAddr(request);
         System.out.println(realIp);
         try {
