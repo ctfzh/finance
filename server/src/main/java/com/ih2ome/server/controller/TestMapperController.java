@@ -96,7 +96,6 @@ public class TestMapperController {
     @GetMapping("four")
     @ResponseBody
     public ResponseBodyVO test04(HttpServletRequest request) {
-        System.out.println("hellooooooooooooooooooooooooooooo");
         InitConfiguration.init("test");
         return ResponseBodyVO.generateResponseObject(0, null, "success");
     }
