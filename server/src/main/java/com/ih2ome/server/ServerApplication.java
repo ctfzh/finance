@@ -35,8 +35,6 @@ public class ServerApplication extends SpringBootServletInitializer {
     }
 
     public static void main(String[] args) {
-        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-        LOGGER.info("===============aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         SpringApplication.run(ServerApplication.class, args);
     }
 

@@ -14,4 +14,5 @@ import tk.mybatis.mapper.common.MySqlMapper;
  * MySqlMapper：针对MySQL的额外补充接口，支持批量插入
  */
 public interface BaseDao<T> extends Mapper<T>, MySqlMapper<T> {
+    
 }

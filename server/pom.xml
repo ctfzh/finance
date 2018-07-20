@@ -31,110 +31,6 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
-        <!--对接平安的sdk..jar包(外部引入).............start-->
-        <dependency>
-            <groupId>open-sdk</groupId>
-            <artifactId>open-sdk</artifactId>
-            <version>1.0.6</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/lib/open-sdk.1.0.6.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>sadk</groupId>
-            <artifactId>sadk</artifactId>
-            <version>3.2.0.5</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/lib/sadk-3.2.0.5.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>saxon</groupId>
-            <artifactId>saxon</artifactId>
-            <version>8.7</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/lib/saxon-8.7.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>jaxen</groupId>
-            <artifactId>jaxen</artifactId>
-            <version>1.1.1</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/lib/jaxen-1.1.1.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>1.7.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/lib/commons-beanutils-1.7.0.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>1.9</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/lib/commons-codec-1.9.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>1.4</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/lib/commons-io-1.4.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.2</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/lib/commons-logging-1.2.jar</systemPath>
-        </dependency>
-        <!--对接平安的sdk..jar包(外部引入).............end-->
-
-
-        <!--对接平安的纯接口支付的jar包(外部引入)..........start-->
-        <dependency>
-            <groupId>emp</groupId>
-            <artifactId>emp</artifactId>
-            <version>1.0.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/lib/emp.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>jce</groupId>
-            <artifactId>jce</artifactId>
-            <version>1.0.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/lib/jce.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>jcert</groupId>
-            <artifactId>jcert</artifactId>
-            <version>1.0.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/lib/jcert.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>jnet</groupId>
-            <artifactId>jnet</artifactId>
-            <version>1.0.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/lib/jnet.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>jsse</groupId>
-            <artifactId>jsse</artifactId>
-            <version>1.0.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/lib/jsse.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>payclient</groupId>
-            <artifactId>payclient</artifactId>
-            <version>1.0.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/lib/payclient.jar</systemPath>
-        </dependency>
-        <!--对接平安的纯接口支付的jar包(外部引入)..........end-->
     </dependencies>
 
 
@@ -174,23 +70,6 @@
                     <encoding>utf-8</encoding>
                 </configuration>
             </plugin>
-            <!--将Jar 引入 WEB-INF/lib中-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <configuration>
-                    <webResources>
-                        <resource>
-                            <directory>src/main/resources/lib</directory>
-                            <targetPath>WEB-INF/lib/</targetPath>
-                            <includes>
-                                <include>**/*.jar</include>
-                            </includes>
-                        </resource>
-                    </webResources>
-                </configuration>
-            </plugin>
-
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
