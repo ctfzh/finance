@@ -1,7 +1,9 @@
 package com.ih2ome.server.pingan.sdk;
 
+import com.ih2ome.common.utils.RandomUtil;
 import com.ih2ome.common.utils.properties.PropertiesConfigUtil;
 import com.pabank.sdk.PABankSDK;
+import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
