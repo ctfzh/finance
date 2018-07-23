@@ -5,6 +5,7 @@ import com.pabank.sdk.PABankSDK;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -24,11 +25,10 @@ public class InitConfiguration {
         LOGGER.info("PROTOCOL_PATH：{}", PropertiesConfigUtil.getKeyValue("PROTOCOL_PATH"));
         LOGGER.info("KEYPATH：{}", PropertiesConfigUtil.getKeyValue("KEYPATH"));
         //初始化配置（当文件目录都正确）
+        LOGGER.info("-----------------平安SDK初始化----------------");
         PABankSDK.init(configProperties);
-        LOGGER.info("-----------------平安SDK初始化成功----------------");
+
         LOGGER.info("-----------------验证开发者----------------");
-//        Map<String, Object> returnApprMap = PABankSDK.getInstance().approveDev();
-//        Object appAccessToken = returnApprMap.get("appAccessToken");
-//        System.out.println(appAccessToken);
+        PABankSDK.getInstance().approveDev();
     }
 }
