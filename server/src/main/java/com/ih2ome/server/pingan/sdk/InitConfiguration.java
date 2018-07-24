@@ -19,7 +19,7 @@ public class InitConfiguration {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(InitConfiguration.class);
 
-    //初始化配置(sdk)
+    //初始化配置
     public static void init(String prefix) {
         String configProperties = InitConfiguration.class.getClassLoader().getResource(prefix + "_sdkConfig/config.properties").getPath();
         PropertiesConfigUtil.initProperties(configProperties);

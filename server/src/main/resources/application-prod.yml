@@ -84,5 +84,6 @@ sms:
 
 bigCustomersInfo: 22886
 
-#平安配置文件前缀
-pinganSDKPrefix: prod
+#平安配置文件
+pingan:
+  sdkPrefix: prod

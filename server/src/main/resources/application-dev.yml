@@ -84,5 +84,7 @@ sms:
 #使用平安银行支付的客户id
 bigCustomersInfo: 2788
 
-#平安配置文件前缀
-pinganSDKPrefix: dev
+#平安配置文件
+pingan:
+  sdkPrefix: dev
+  wxPay:

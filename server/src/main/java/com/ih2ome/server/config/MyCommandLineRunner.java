@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class MyCommandLineRunner implements CommandLineRunner {
 
-    @Value("${pinganSDKPrefix}")
+    @Value("${pingan.sdkPrefix}")
     private String pinganSDKPrefix;
 
     @Override
