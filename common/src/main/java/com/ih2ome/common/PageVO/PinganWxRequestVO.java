@@ -12,7 +12,7 @@ public class PinganWxRequestVO {
     //商户门店open_id
     private String open_id;
     //Unix时间戳
-    private Long timestamp;
+    private String timestamp;
     //签名
     private String sign;
     //用户提交的post请求数据
