@@ -46,7 +46,7 @@ public class Sha1Util {
 
 
     public static void main(String[] args) {
-        String origin = "data=DATA&open_id=txafCXQt058248b3230c9081ff90ce80&open_key=aG0ck19g2HdthGRdSCfmiloOoGXoOzWZ&timestamp=1234567890";
+        String origin = "data=DATA&open_id=OPEN_ID&open_key=OPEN_KEY&timestamp=1234567890";
         String sha1 = DigestUtils.sha1Hex(origin);
         System.out.println(sha1);
         String sha2 = Sha1Util.encrypt(origin);
