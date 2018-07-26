@@ -1,6 +1,5 @@
 package com.ih2ome.server;
 
-import com.ih2ome.server.config.MyServletContextListener;
 import com.ih2ome.server.controller.ConfigPaymentsController;
 import com.ih2ome.server.pingan.sdk.InitConfiguration;
 import org.apache.ibatis.annotations.Mapper;

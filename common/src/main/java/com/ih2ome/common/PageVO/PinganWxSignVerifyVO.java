@@ -22,9 +22,20 @@ public class PinganWxSignVerifyVO {
     //门店密钥
     private String open_key;
 
+    public String buildString() {
+        return "data=" + data + "&errcode=" +
+                errcode + "&msg=" + msg + "&open_key=" + open_key + "&timestamp=" + timestamp;
+    }
+
     @Override
     public String toString() {
-        return "data=" + data + "&errcode=" +
-                errcode + "&open_key=" + open_key + "&timestamp=" + timestamp;
+        return "PinganWxSignVerifyVO{" +
+                "errcode='" + errcode + '\'' +
+                ", msg='" + msg + '\'' +
+                ", data='" + data + '\'' +
+                ", sign='" + sign + '\'' +
+                ", timestamp='" + timestamp + '\'' +
+                ", open_key='" + open_key + '\'' +
+                '}';
     }
 }

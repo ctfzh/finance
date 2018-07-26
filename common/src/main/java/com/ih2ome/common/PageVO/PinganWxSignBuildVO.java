@@ -28,9 +28,18 @@ public class PinganWxSignBuildVO {
         this.timestamp = timestamp;
     }
 
-    @Override
-    public String toString() {
+    public String buildString() {
         return "data=" + data + "&open_id=" +
                 open_id + "&open_key=" + open_key + "&timestamp=" + timestamp;
+    }
+
+    @Override
+    public String toString() {
+        return "PinganWxSignBuildVO{" +
+                "data='" + data + '\'' +
+                ", open_id='" + open_id + '\'' +
+                ", open_key='" + open_key + '\'' +
+                ", timestamp='" + timestamp + '\'' +
+                '}';
     }
 }

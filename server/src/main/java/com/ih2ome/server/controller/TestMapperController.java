@@ -3,6 +3,9 @@ package com.ih2ome.server.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.google.common.io.Resources;
+import com.ih2ome.common.Exception.PinganApiException;
+import com.ih2ome.common.PageVO.PinganWxPayListRequestVO;
+import com.ih2ome.common.PageVO.PinganWxPayListResponseVO;
 import com.ih2ome.common.support.ResponseBodyVO;
 import com.ih2ome.common.utils.ip.IPUtil;
 import com.ih2ome.common.utils.ip.IPWhiteListUtil;
@@ -12,6 +15,7 @@ import com.ih2ome.dao.volga.VolgaMoneyFlowDao;
 import com.ih2ome.model.caspain.ConfigPaymentsChannel;
 import com.ih2ome.model.volga.MoneyFlow;
 import com.ih2ome.server.pingan.sdk.InitConfiguration;
+import com.ih2ome.service.PinganApiService;
 import com.pabank.sdk.PABankSDK;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +26,7 @@ import tk.mybatis.mapper.entity.Example;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +46,8 @@ public class TestMapperController {
     private VolgaMoneyFlowDao volgaMoneyFlowDao;
     @Autowired
     private CaspainMoneyFlowDao caspainMoneyFlowDao;
+    @Autowired
+    private PinganApiService pinganApiService;
 
     @GetMapping("/one")
     @ResponseBody
@@ -105,6 +112,21 @@ public class TestMapperController {
         // b.交易测试，提供流水号拼接方法，JSON报文流水号字段只需传入8位随机数
         // Map<String, Object> returnMap=PABankSDK.getInstance().newApiInter(req,"TranInfoQuery");
         System.out.println(returnMap);
+        return ResponseBodyVO.generateResponseObject(0, null, "success");
+    }
+
+
+    @GetMapping("five")
+    @ResponseBody
+    public ResponseBodyVO test05(HttpServletRequest request) throws IOException, InvocationTargetException, IllegalAccessException {
+        PinganWxPayListRequestVO pinganWxPayListRequestVO = new PinganWxPayListRequestVO();
+        pinganWxPayListRequestVO.setPmt_type("2,3,4,5");
+        try {
+            List<PinganWxPayListResponseVO> paylist = pinganApiService.paylist(pinganWxPayListRequestVO);
+            System.out.println(paylist);
+        } catch (PinganApiException e) {
+            e.printStackTrace();
+        }
         return ResponseBodyVO.generateResponseObject(0, null, "success");
     }
 
