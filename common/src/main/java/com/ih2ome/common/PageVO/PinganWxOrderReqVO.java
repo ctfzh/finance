@@ -10,7 +10,7 @@ import java.util.Date;
  * email sky.li@ixiaoshuidi.com
  * 获取订单列表请求对象
  **/
-public class PinganWxOrderRequestVO {
+public class PinganWxOrderReqVO {
     //分页编号，默认1
     private Integer page;
     //每页返回的数据条数，默认10，最多100

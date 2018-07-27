@@ -8,7 +8,7 @@ import lombok.Data;
  * email sky.li@ixiaoshuidi.com
  **/
 @Data
-public class PinganWxPayListResponseVO {
+public class PinganWxPayListResVO {
     //收单机构名称
     private String pmt_name;
     //收单机构内部名称

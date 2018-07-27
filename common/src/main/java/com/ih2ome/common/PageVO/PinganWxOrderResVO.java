@@ -11,7 +11,7 @@ import java.util.List;
  * 获取订单列表返回对象
  **/
 @Data
-public class PinganWxOrderResponseVO {
+public class PinganWxOrderResVO {
     //订单列表page数据
     private PinganWxOrderPageVO pages;
 

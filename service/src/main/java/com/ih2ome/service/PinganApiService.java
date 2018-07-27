@@ -14,20 +14,20 @@ public interface PinganApiService {
     /**
      * 获取门店支付方式列表
      *
-     * @param pinganWxPayListRequestVO
+     * @param pinganWxPayListReqVO
      * @return
      * @throws PinganApiException
      */
-    public List<PinganWxPayListResponseVO> paylist(PinganWxPayListRequestVO pinganWxPayListRequestVO) throws PinganApiException;
+    public List<PinganWxPayListResVO> paylist(PinganWxPayListReqVO pinganWxPayListReqVO) throws PinganApiException;
 
 
     /**
      * 获取门店订单列表
      *
-     * @param pinganWxOrderRequestVO
+     * @param pinganWxOrderReqVO
      * @return
      * @throws PinganApiException
      */
-    public PinganWxOrderResponseVO queryOrderList(PinganWxOrderRequestVO pinganWxOrderRequestVO) throws PinganApiException;
+    public PinganWxOrderResVO queryOrderList(PinganWxOrderReqVO pinganWxOrderReqVO) throws PinganApiException;
 
 }
