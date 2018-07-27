@@ -48,4 +48,16 @@ public class PinganWxPayOrderResVO {
     private String out_no;
     //公众号订单支付地址，如果为非公众号订单，此参数为空
     private String jsapi_pay_url;
+    //公众号id
+    private String appId;
+    //时间戳
+    private String timeStamp;
+    //随机字符串
+    private String nonceStr;
+    //签名方式
+    private String signType;
+    //统一下单接口返回prepay_id参数值
+    private String package_info;
+    //签名
+    private String paySign;
 }

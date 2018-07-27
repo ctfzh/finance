@@ -166,7 +166,7 @@ public class TestMapperController {
         String serialNum = SerialNumUtil.generateSerial();
         System.out.println(serialNum);
         pinganWxPayOrderReqVO.setOut_no(serialNum);
-        pinganWxPayOrderReqVO.setPmt_tag("WeixinBERL");
+        pinganWxPayOrderReqVO.setPmt_tag("WeixinOL");
         pinganWxPayOrderReqVO.setOrd_name("微信支付测试(服务器测试)");
         pinganWxPayOrderReqVO.setOriginal_amount(1);
         pinganWxPayOrderReqVO.setDiscount_amount(0);
@@ -174,7 +174,10 @@ public class TestMapperController {
         pinganWxPayOrderReqVO.setTrade_amount(1);
         pinganWxPayOrderReqVO.setRemark("下单接口");
         pinganWxPayOrderReqVO.setNotify_url("http://localhost:8085/demo111/callback.do");
-        pinganWxPayOrderReqVO.setJump_url("http://www.baidu.com");
+        pinganWxPayOrderReqVO.setSub_appid("wxed1a36ce3fa969f5");
+        pinganWxPayOrderReqVO.setSub_openid("JEQwcm9ULwfMrz5sCrrnXlAQ9k");
+        pinganWxPayOrderReqVO.setJSAPI("1");
+        System.out.println(pinganWxPayOrderReqVO);
         try {
             PinganWxPayOrderResVO pinganWxPayOrderResVO = pinganApiService.payOrder(pinganWxPayOrderReqVO);
             System.out.println(pinganWxPayOrderResVO);

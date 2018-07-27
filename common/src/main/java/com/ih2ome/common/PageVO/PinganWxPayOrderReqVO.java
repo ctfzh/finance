@@ -36,9 +36,14 @@ public class PinganWxPayOrderReqVO {
     private String tag;
     //异步通知地址
     private String notify_url;
-    //订单交易内部特殊指令（空中分账子订单信息）
-    private String ord_cmd;
-    //公众号/服务窗支付必填参数，支付结果跳转地址
-    private String jump_url;
+
+    //微信分配的子商户公众账号ID
+    private String sub_appid;
+
+    //用户在子商户appid下的唯一标识
+    private String sub_openid;
+
+    //JSAPI返回必填值为1
+    private String JSAPI;
 
 }
