@@ -89,5 +89,5 @@ pingan:
   sdkPrefix: dev
   wxPay:
     baseUrl: https://mixpayuat4.orangebank.com.cn/mct1/
-    open_id: 73b24f53ffc64486eb40d606456fb04d
-    open_key: 7386072b1f94fdd7acaae83cd0f0f1c1
+    open_id: ee757f1f219759974563dc80acc43b77
+    open_key: 333d153b8b16a5e07e297891e70552e8
