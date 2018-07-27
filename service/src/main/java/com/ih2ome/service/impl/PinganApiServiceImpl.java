@@ -1,6 +1,7 @@
 package com.ih2ome.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.ih2ome.common.Exception.PinganApiException;
 import com.ih2ome.common.PageVO.*;
 import com.ih2ome.common.utils.BeanMapUtil;
@@ -44,9 +45,11 @@ public class PinganApiServiceImpl implements PinganApiService {
      *
      * @param pinganWxPayListRequestVO
      * @return
+     * @throws PinganApiException
      */
     @Override
     public List<PinganWxPayListResponseVO> paylist(PinganWxPayListRequestVO pinganWxPayListRequestVO) throws PinganApiException {
+        //请求对象PinganWxRequestVO生成。
         PinganWxRequestVO pinganWxRequestVO = getPinganWxRequestVO(pinganWxPayListRequestVO);
         String url = baseUrl + "paylist";
         TreeMap<String, String> treeMap = BeanMapUtil.objectToMap(pinganWxRequestVO);
@@ -64,6 +67,48 @@ public class PinganApiServiceImpl implements PinganApiService {
                     String decryptData = AESUtil.decrypt(pinganWxSignVerifyVO.getData(), open_key);
                     List<PinganWxPayListResponseVO> pinganWxPayListResponseVO = JSONObject.parseArray(decryptData, PinganWxPayListResponseVO.class);
                     return pinganWxPayListResponseVO;
+                } else {
+                    LOGGER.error("签名校验失败,签名信息:{}", pinganWxSignVerifyVO.getSign());
+                    throw new PinganApiException("签名校验失败");
+                }
+            } else {
+                LOGGER.info("无data数据,无需验签!");
+            }
+        } else {
+            LOGGER.error("请求失败,失败原因:{}", pinganWxSignVerifyVO.toString());
+            throw new PinganApiException("第三方请求失败:" + pinganWxSignVerifyVO.getMsg());
+        }
+        return null;
+    }
+
+    /**
+     * 获取门店订单列表
+     *
+     * @param pinganWxOrderRequestVO
+     * @return
+     * @throws PinganApiException
+     */
+    @Override
+    public PinganWxOrderResponseVO queryOrderList(PinganWxOrderRequestVO pinganWxOrderRequestVO) throws PinganApiException {
+        //请求对象PinganWxRequestVO生成。
+        PinganWxRequestVO pinganWxRequestVO = getPinganWxRequestVO(pinganWxOrderRequestVO);
+        String url = baseUrl + "order";
+        TreeMap<String, String> treeMap = BeanMapUtil.objectToMap(pinganWxRequestVO);
+        String resultJson = handlePost(url, treeMap);
+        PinganWxSignVerifyVO pinganWxSignVerifyVO = JSONObject.parseObject(resultJson, PinganWxSignVerifyVO.class);
+        pinganWxSignVerifyVO.setOpen_key(open_key);
+        //请求成功
+        if (pinganWxSignVerifyVO.getErrcode().equals("0")) {
+            //data数据不为空(需要验证签名)
+            if (StringUtils.isNotEmpty(pinganWxSignVerifyVO.getData())) {
+                //校验签名。
+                Boolean flag = SignUtil.vertifySign(pinganWxSignVerifyVO);
+                if (flag) {
+                    //验证签名成功,拿到返回的响应data数据
+                    String decryptData = AESUtil.decrypt(pinganWxSignVerifyVO.getData(), open_key);
+                    PinganWxOrderResponseVO pinganWxOrderResponseVO = JSONObject.parseObject(decryptData, new TypeReference<PinganWxOrderResponseVO>() {
+                    });
+                    return pinganWxOrderResponseVO;
                 } else {
                     LOGGER.error("签名校验失败,签名信息:{}", pinganWxSignVerifyVO.getSign());
                     throw new PinganApiException("签名校验失败");

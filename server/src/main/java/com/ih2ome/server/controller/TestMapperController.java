@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.google.common.io.Resources;
 import com.ih2ome.common.Exception.PinganApiException;
+import com.ih2ome.common.PageVO.PinganWxOrderRequestVO;
+import com.ih2ome.common.PageVO.PinganWxOrderResponseVO;
 import com.ih2ome.common.PageVO.PinganWxPayListRequestVO;
 import com.ih2ome.common.PageVO.PinganWxPayListResponseVO;
 import com.ih2ome.common.support.ResponseBodyVO;
@@ -124,6 +126,20 @@ public class TestMapperController {
         try {
             List<PinganWxPayListResponseVO> paylist = pinganApiService.paylist(pinganWxPayListRequestVO);
             System.out.println(paylist);
+        } catch (PinganApiException e) {
+            e.printStackTrace();
+        }
+        return ResponseBodyVO.generateResponseObject(0, null, "success");
+    }
+
+
+    @GetMapping("six")
+    @ResponseBody
+    public ResponseBodyVO test06(HttpServletRequest request) throws IOException, InvocationTargetException, IllegalAccessException {
+        PinganWxOrderRequestVO pinganWxOrderRequestVO = new PinganWxOrderRequestVO();
+        try {
+            PinganWxOrderResponseVO pinganWxOrderResponseVO = pinganApiService.queryOrderList(pinganWxOrderRequestVO);
+            System.out.println(pinganWxOrderResponseVO);
         } catch (PinganApiException e) {
             e.printStackTrace();
         }
