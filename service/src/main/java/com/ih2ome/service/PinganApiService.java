@@ -38,4 +38,13 @@ public interface PinganApiService {
      * @throws PinganApiException
      */
     public PinganWxOrderViewResVO queryOrderView(PinganWxOrderViewReqVO pinganWxOrderViewReqVO) throws PinganApiException;
+
+    /**
+     * 下订单
+     *
+     * @param pinganWxPayOrderReqVO
+     * @return
+     * @throws PinganApiException
+     */
+    public PinganWxPayOrderResVO payOrder(PinganWxPayOrderReqVO pinganWxPayOrderReqVO) throws PinganApiException;
 }

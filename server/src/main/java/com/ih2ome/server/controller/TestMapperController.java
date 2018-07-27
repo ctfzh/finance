@@ -8,6 +8,7 @@ import com.ih2ome.common.PageVO.*;
 import com.ih2ome.common.support.ResponseBodyVO;
 import com.ih2ome.common.utils.ip.IPUtil;
 import com.ih2ome.common.utils.ip.IPWhiteListUtil;
+import com.ih2ome.common.utils.pingan.SerialNumUtil;
 import com.ih2ome.dao.caspain.CaspainMoneyFlowDao;
 import com.ih2ome.dao.caspain.ConfigPaymentsChannelDao;
 import com.ih2ome.dao.volga.VolgaMoneyFlowDao;
@@ -152,6 +153,31 @@ public class TestMapperController {
         try {
             PinganWxOrderViewResVO pinganWxOrderViewResVO = pinganApiService.queryOrderView(pinganWxOrderViewReqVO);
             System.out.println(pinganWxOrderViewResVO);
+        } catch (PinganApiException e) {
+            e.printStackTrace();
+        }
+        return ResponseBodyVO.generateResponseObject(0, null, "success");
+    }
+
+    @GetMapping("eight")
+    @ResponseBody
+    public ResponseBodyVO test08(HttpServletRequest request) throws IOException, InvocationTargetException, IllegalAccessException {
+        PinganWxPayOrderReqVO pinganWxPayOrderReqVO = new PinganWxPayOrderReqVO();
+        String serialNum = SerialNumUtil.generateSerial();
+        System.out.println(serialNum);
+        pinganWxPayOrderReqVO.setOut_no(serialNum);
+        pinganWxPayOrderReqVO.setPmt_tag("WeixinBERL");
+        pinganWxPayOrderReqVO.setOrd_name("微信支付测试(服务器测试)");
+        pinganWxPayOrderReqVO.setOriginal_amount(1);
+        pinganWxPayOrderReqVO.setDiscount_amount(0);
+        pinganWxPayOrderReqVO.setIgnore_amount(0);
+        pinganWxPayOrderReqVO.setTrade_amount(1);
+        pinganWxPayOrderReqVO.setRemark("下单接口");
+        pinganWxPayOrderReqVO.setNotify_url("http://localhost:8085/demo111/callback.do");
+        pinganWxPayOrderReqVO.setJump_url("http://www.baidu.com");
+        try {
+            PinganWxPayOrderResVO pinganWxPayOrderResVO = pinganApiService.payOrder(pinganWxPayOrderReqVO);
+            System.out.println(pinganWxPayOrderResVO);
         } catch (PinganApiException e) {
             e.printStackTrace();
         }

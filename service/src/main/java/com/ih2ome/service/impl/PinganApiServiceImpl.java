@@ -123,6 +123,13 @@ public class PinganApiServiceImpl implements PinganApiService {
         return null;
     }
 
+    /**
+     * 查询订单明细
+     *
+     * @param pinganWxOrderViewReqVO
+     * @return
+     * @throws PinganApiException
+     */
     @Override
     public PinganWxOrderViewResVO queryOrderView(PinganWxOrderViewReqVO pinganWxOrderViewReqVO) throws PinganApiException {
         //请求对象PinganWxRequestVO生成。
@@ -158,6 +165,51 @@ public class PinganApiServiceImpl implements PinganApiService {
     }
 
 
+    /**
+     * 下订单
+     *
+     * @param pinganWxPayOrderReqVO
+     * @return
+     * @throws PinganApiException
+     */
+    @Override
+    public PinganWxPayOrderResVO payOrder(PinganWxPayOrderReqVO pinganWxPayOrderReqVO) throws PinganApiException {
+        //请求对象PinganWxRequestVO生成。
+        PinganWxRequestVO pinganWxRequestVO = getPinganWxRequestVO(pinganWxPayOrderReqVO);
+        String url = baseUrl + "payorder";
+        TreeMap<String, String> treeMap = BeanMapUtil.objectToMap(pinganWxRequestVO);
+        String resultJson = handlePost(url, treeMap);
+        PinganWxSignVerifyVO pinganWxSignVerifyVO = JSONObject.parseObject(resultJson, PinganWxSignVerifyVO.class);
+        pinganWxSignVerifyVO.setOpen_key(open_key);
+        //请求成功
+        if (pinganWxSignVerifyVO.getErrcode().equals("0")) {
+            //data数据不为空(需要验证签名)
+            if (StringUtils.isNotEmpty(pinganWxSignVerifyVO.getData())) {
+                //校验签名。
+                Boolean flag = SignUtil.vertifySign(pinganWxSignVerifyVO);
+                if (flag) {
+                    //验证签名成功,拿到返回的响应data数据
+                    String decryptData = AESUtil.decrypt(pinganWxSignVerifyVO.getData(), open_key);
+                    PinganWxPayOrderResVO pinganWxOrderViewResVO = JSONObject.parseObject(decryptData, PinganWxPayOrderResVO.class);
+                    return pinganWxOrderViewResVO;
+                } else {
+                    LOGGER.error("签名校验失败,签名信息:{}", pinganWxSignVerifyVO.getSign());
+                    throw new PinganApiException("签名校验失败");
+                }
+            } else {
+                LOGGER.info("无data数据,无需验签!");
+            }
+        } else {
+            LOGGER.error("请求失败,失败原因:{}", pinganWxSignVerifyVO.toString());
+            throw new PinganApiException("第三方请求失败:" + pinganWxSignVerifyVO.getMsg());
+        }
+        return null;
+
+    }
+
+
+
+
     //请求数据处理(data数据AES加密,签名生成。)
     private PinganWxRequestVO getPinganWxRequestVO(Object object) {
         //对pinganWxPayListVO进行AES加密
@@ -177,7 +229,6 @@ public class PinganApiServiceImpl implements PinganApiService {
         pinganWxRequestVO.setSign(sign);
         return pinganWxRequestVO;
     }
-
 
     /**
      * http&https---post请求
