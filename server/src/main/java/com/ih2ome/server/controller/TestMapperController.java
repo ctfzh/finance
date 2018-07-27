@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.google.common.io.Resources;
 import com.ih2ome.common.Exception.PinganApiException;
-import com.ih2ome.common.PageVO.PinganWxOrderReqVO;
-import com.ih2ome.common.PageVO.PinganWxOrderResVO;
-import com.ih2ome.common.PageVO.PinganWxPayListReqVO;
-import com.ih2ome.common.PageVO.PinganWxPayListResVO;
+import com.ih2ome.common.PageVO.*;
 import com.ih2ome.common.support.ResponseBodyVO;
 import com.ih2ome.common.utils.ip.IPUtil;
 import com.ih2ome.common.utils.ip.IPWhiteListUtil;
@@ -140,6 +137,21 @@ public class TestMapperController {
         try {
             PinganWxOrderResVO pinganWxOrderResVO = pinganApiService.queryOrderList(pinganWxOrderReqVO);
             System.out.println(pinganWxOrderResVO);
+        } catch (PinganApiException e) {
+            e.printStackTrace();
+        }
+        return ResponseBodyVO.generateResponseObject(0, null, "success");
+    }
+
+
+    @GetMapping("seven")
+    @ResponseBody
+    public ResponseBodyVO test07(HttpServletRequest request) throws IOException, InvocationTargetException, IllegalAccessException {
+        PinganWxOrderViewReqVO pinganWxOrderViewReqVO = new PinganWxOrderViewReqVO();
+        pinganWxOrderViewReqVO.setOut_no("20009043412018072692671423");
+        try {
+            PinganWxOrderViewResVO pinganWxOrderViewResVO = pinganApiService.queryOrderView(pinganWxOrderViewReqVO);
+            System.out.println(pinganWxOrderViewResVO);
         } catch (PinganApiException e) {
             e.printStackTrace();
         }

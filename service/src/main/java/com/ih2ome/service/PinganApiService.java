@@ -30,4 +30,12 @@ public interface PinganApiService {
      */
     public PinganWxOrderResVO queryOrderList(PinganWxOrderReqVO pinganWxOrderReqVO) throws PinganApiException;
 
+    /**
+     * 查询订单明细
+     *
+     * @param pinganWxOrderViewReqVO
+     * @return
+     * @throws PinganApiException
+     */
+    public PinganWxOrderViewResVO queryOrderView(PinganWxOrderViewReqVO pinganWxOrderViewReqVO) throws PinganApiException;
 }
