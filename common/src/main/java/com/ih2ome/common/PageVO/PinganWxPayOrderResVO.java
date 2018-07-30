@@ -19,7 +19,7 @@ public class PinganWxPayOrderResVO {
     //商户流水号（从1开始自增长不重复
     private Integer ord_mct_id;
     //门店流水号（从1开始自增长不重复）
-    private Integer ord_shop_id;
+    private String ord_shop_id;
     //订单号
     private String ord_no;
     //订单类型

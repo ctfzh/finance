@@ -19,5 +19,5 @@ public class PinganWxPayOrderSubVO {
     //平台代码
     private String plantCode;
     //订单列表
-    private List<PinganWxPayOrderSubDataVO> oderlist;
+    private List<PinganWxPayOrderSubDataVO> orderList;
 }
