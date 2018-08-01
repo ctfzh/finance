@@ -41,7 +41,6 @@ public class MyWebAppConfigurer extends WebMvcConfigurerAdapter {
         //配置对象
         FastJsonConfig fastJsonConfig = new FastJsonConfig();
         fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat, SerializerFeature.WriteMapNullValue, SerializerFeature.WriteNullStringAsEmpty);
-//        fastJsonConfig.setCharset(Charset.forName("gbk"));
         List<MediaType> mediaTypes = new ArrayList<>();
         //中文编码
         MediaType mediaType = MediaType.APPLICATION_JSON_UTF8;

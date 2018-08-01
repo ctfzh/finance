@@ -11,8 +11,10 @@ import com.ih2ome.common.utils.ip.IPWhiteListUtil;
 import com.ih2ome.common.utils.pingan.SerialNumUtil;
 import com.ih2ome.dao.caspain.CaspainMoneyFlowDao;
 import com.ih2ome.dao.caspain.ConfigPaymentsChannelDao;
+import com.ih2ome.dao.lijiang.PayOrdersDao;
 import com.ih2ome.dao.volga.VolgaMoneyFlowDao;
 import com.ih2ome.model.caspain.ConfigPaymentsChannel;
+import com.ih2ome.model.lijiang.PayOrders;
 import com.ih2ome.model.volga.MoneyFlow;
 import com.ih2ome.server.pingan.sdk.InitConfiguration;
 import com.ih2ome.service.PinganApiService;
@@ -48,19 +50,20 @@ public class TestMapperController {
     private CaspainMoneyFlowDao caspainMoneyFlowDao;
     @Autowired
     private PinganApiService pinganApiService;
+    @Autowired
+    private PayOrdersDao payOrdersDao;
 
     @GetMapping("/one")
     @ResponseBody
     public ResponseBodyVO test01() {
         //分页
         PageHelper.startPage(0, 2);
-        List<ConfigPaymentsChannel> configPaymentsChannels = configPaymentsChannelDao.selectAll();
-        ConfigPaymentsChannel configPaymentsChannel = configPaymentsChannelDao.selectByPrimaryKey((Integer) 2);
-        System.out.println(configPaymentsChannel);
+        List<PayOrders> payOrders = payOrdersDao.selectAll();
+        System.out.println(payOrders);
         ResponseBodyVO responseBodyVO = new ResponseBodyVO();
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("hello", "world");
-        jsonObject.put("www", configPaymentsChannels);
+        jsonObject.put("www", payOrders);
         responseBodyVO.setData(jsonObject);
         responseBodyVO.setCode(0);
         responseBodyVO.setMsg("success");

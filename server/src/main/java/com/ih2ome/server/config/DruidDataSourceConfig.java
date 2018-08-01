@@ -52,6 +52,16 @@ public class DruidDataSourceConfig {
         return DruidDataSourceBuilder.create().build();
     }
 
+
+    @Bean(name = "lijiangDataSource", destroyMethod = "close", initMethod = "init")
+    @Qualifier("lijiangDataSource")
+    @ConfigurationProperties(prefix = "spring.lijiang-druid-datasource")
+    public DataSource lijiangDataSource() {
+        LOGGER.info("-------------------- lijiangDataSource init ---------------------");
+        return DruidDataSourceBuilder.create().build();
+    }
+
+
     @Bean
     public ServletRegistrationBean druidServlet() {
         LOGGER.info("init Druid Servlet Configuration ");
@@ -62,7 +72,7 @@ public class DruidDataSourceConfig {
         // 用户名
         initParameters.put("loginUsername", "admin");
         // 密码
-        initParameters.put("loginPassword", "admin");
+        initParameters.put("loginPassword", "shuidi2017");
         // 禁用HTML页面上的“Reset All”功能
         initParameters.put("resetEnable", "false");
         // IP白名单 (没有配置或者为空，则允许所有访问)
