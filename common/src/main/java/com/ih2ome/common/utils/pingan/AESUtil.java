@@ -1,10 +1,14 @@
 package com.ih2ome.common.utils.pingan;
 
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 
 /**
  * AES加密解密工具类
@@ -36,7 +40,8 @@ public class AESUtil {
      * @return
      */
     public static String decrypt(String data, String key) {
-        return doAES(data, key, Cipher.DECRYPT_MODE);
+        String s = doAES(data, key, Cipher.DECRYPT_MODE);
+        return JSONObject.parseObject(s).toJSONString();
     }
 
     /**
