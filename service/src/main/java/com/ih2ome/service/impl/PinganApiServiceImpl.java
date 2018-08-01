@@ -208,8 +208,6 @@ public class PinganApiServiceImpl implements PinganApiService {
     }
 
 
-
-
     //请求数据处理(data数据AES加密,签名生成。)
     private PinganWxRequestVO getPinganWxRequestVO(Object object) {
         //对pinganWxPayListVO进行AES加密
