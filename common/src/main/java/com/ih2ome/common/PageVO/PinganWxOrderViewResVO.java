@@ -88,4 +88,46 @@ public class PinganWxOrderViewResVO {
     //相关的应用
     private String app_list;
 
+    @Override
+    public String toString() {
+        return "PinganWxOrderViewResVO{" +
+                "pmt_name='" + pmt_name + '\'' +
+                ", pmt_tag='" + pmt_tag + '\'' +
+                ", ord_mct_id=" + ord_mct_id +
+                ", ord_shop_id=" + ord_shop_id +
+                ", ord_no='" + ord_no + '\'' +
+                ", ord_type=" + ord_type +
+                ", original_amount=" + original_amount +
+                ", discount_amount=" + discount_amount +
+                ", ignore_amount=" + ignore_amount +
+                ", trade_account='" + trade_account + '\'' +
+                ", trade_no='" + trade_no + '\'' +
+                ", trade_amount=" + trade_amount +
+                ", trade_qrcode='" + trade_qrcode + '\'' +
+                ", trade_pay_time=" + trade_pay_time +
+                ", status=" + status +
+                ", trade_result='" + trade_result + '\'' +
+                ", out_no='" + out_no + '\'' +
+                ", diy_pmt_name='" + diy_pmt_name + '\'' +
+                ", scr_id='" + scr_id + '\'' +
+                ", scr_true_name='" + scr_true_name + '\'' +
+                ", scr_user_name='" + scr_user_name + '\'' +
+                ", ord_name='" + ord_name + '\'' +
+                ", add_time=" + add_time +
+                ", trade_time=" + trade_time +
+                ", trade_no2='" + trade_no2 + '\'' +
+                ", trade_code='" + trade_code + '\'' +
+                ", remark='" + remark + '\'' +
+                ", original_ord_no='" + original_ord_no + '\'' +
+                ", currency='" + currency + '\'' +
+                ", currency_sign='" + currency_sign + '\'' +
+                ", tml_no='" + tml_no + '\'' +
+                ", tml_name='" + tml_name + '\'' +
+                ", shop_no='" + shop_no + '\'' +
+                ", shop_name='" + shop_name + '\'' +
+                ", shop_full_name='" + shop_full_name + '\'' +
+                ", related_order='" + related_order + '\'' +
+                ", app_list='" + app_list + '\'' +
+                '}';
+    }
 }

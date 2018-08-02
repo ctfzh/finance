@@ -41,7 +41,8 @@ public class AESUtil {
      */
     public static String decrypt(String data, String key) {
         String s = doAES(data, key, Cipher.DECRYPT_MODE);
-        return JSONObject.parseObject(s).toJSONString();
+//        return JSONObject.parseObject(s).toJSONString();
+        return s;
     }
 
     /**

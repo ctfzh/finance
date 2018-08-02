@@ -191,17 +191,19 @@ public class PinganApiServiceImpl implements PinganApiService {
                     //验证签名成功,拿到返回的响应data数据
                     String decryptData = AESUtil.decrypt(pinganWxSignVerifyVO.getData(), open_key);
                     PinganWxPayOrderResVO pinganWxPayOrderResVO = JSONObject.parseObject(decryptData, PinganWxPayOrderResVO.class);
+                    JSONObject jsonObject = JSONObject.parseObject(decryptData);
+                    pinganWxPayOrderResVO.setPackage_info(jsonObject.getString("package"));
                     return pinganWxPayOrderResVO;
                 } else {
                     LOGGER.error("签名校验失败,签名信息:{}", pinganWxSignVerifyVO.getSign());
-                    throw new PinganApiException("签名校验失败");
+                    throw new PinganApiException("签名校验失败,请求参数:" + pinganWxRequestVO.toString() + ",签名信息:" + pinganWxSignVerifyVO.getSign());
                 }
             } else {
                 LOGGER.info("无data数据,无需验签!");
             }
         } else {
             LOGGER.error("请求失败,失败原因:{}", pinganWxSignVerifyVO.toString());
-            throw new PinganApiException("第三方请求失败:" + pinganWxSignVerifyVO.getMsg());
+            throw new PinganApiException("平安第三方下单失败,失败原因:" + pinganWxSignVerifyVO.getMsg() + ",请求参数:" + pinganWxRequestVO.toString());
         }
         return null;
 

@@ -75,4 +75,41 @@ public class PinganWxOrderListVO {
     private String shop_full_name;
     //订单状态（1交易成功，2待支付，9待输入密码，4已取消）
     private String status;
+
+    @Override
+    public String toString() {
+        return "PinganWxOrderListVO{" +
+                "pmt_name='" + pmt_name + '\'' +
+                ", pmt_tag='" + pmt_tag + '\'' +
+                ", ord_name='" + ord_name + '\'' +
+                ", ord_id=" + ord_id +
+                ", ord_no='" + ord_no + '\'' +
+                ", ord_type=" + ord_type +
+                ", add_time=" + add_time +
+                ", trade_account='" + trade_account + '\'' +
+                ", trade_amount=" + trade_amount +
+                ", trade_time=" + trade_time +
+                ", trade_no='" + trade_no + '\'' +
+                ", trade_qrcode='" + trade_qrcode + '\'' +
+                ", trade_pay_time=" + trade_pay_time +
+                ", remark='" + remark + '\'' +
+                ", original_amount=" + original_amount +
+                ", discount_amount=" + discount_amount +
+                ", ignore_amount=" + ignore_amount +
+                ", trade_result='" + trade_result + '\'' +
+                ", out_no='" + out_no + '\'' +
+                ", diy_pmt_name='" + diy_pmt_name + '\'' +
+                ", ord_mct_id=" + ord_mct_id +
+                ", ord_shop_id=" + ord_shop_id +
+                ", currency='" + currency + '\'' +
+                ", currency_sign='" + currency_sign + '\'' +
+                ", scr_id='" + scr_id + '\'' +
+                ", scr_true_name='" + scr_true_name + '\'' +
+                ", tml_no='" + tml_no + '\'' +
+                ", shop_no='" + shop_no + '\'' +
+                ", shop_name='" + shop_name + '\'' +
+                ", shop_full_name='" + shop_full_name + '\'' +
+                ", status='" + status + '\'' +
+                '}';
+    }
 }

@@ -17,4 +17,14 @@ public class PinganWxRequestVO {
     private String sign;
     //用户提交的post请求数据
     private String data;
+
+    @Override
+    public String toString() {
+        return "PinganWxRequestVO{" +
+                "open_id='" + open_id + '\'' +
+                ", timestamp='" + timestamp + '\'' +
+                ", sign='" + sign + '\'' +
+                ", data='" + data + '\'' +
+                '}';
+    }
 }

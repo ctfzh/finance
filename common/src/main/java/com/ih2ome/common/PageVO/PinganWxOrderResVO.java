@@ -17,4 +17,12 @@ public class PinganWxOrderResVO {
 
     //订单列表list数据
     private List<PinganWxOrderListVO> list;
+
+    @Override
+    public String toString() {
+        return "PinganWxOrderResVO{" +
+                "pages=" + pages +
+                ", list=" + list +
+                '}';
+    }
 }

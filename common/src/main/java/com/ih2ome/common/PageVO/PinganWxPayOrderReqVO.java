@@ -34,6 +34,8 @@ public class PinganWxPayOrderReqVO {
     private String remark;
     //订单标记，订单附加数据
     private String tag;
+    //分账数据
+    private String cmd;
     //异步通知地址
     private String notify_url;
 

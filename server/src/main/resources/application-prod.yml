@@ -110,3 +110,10 @@ bigCustomersInfo: 22886
 #平安配置文件
 pingan:
   sdkPrefix: prod
+  wxPay:
+    shuidiUrl: http://finance.shuidiguanjia.com/finance/
+    baseUrl: https://mixpayuat4.orangebank.com.cn/mct1/
+    open_id: ee757f1f219759974563dc80acc43b77
+    open_key: 333d153b8b16a5e07e297891e70552e8
+    #文件传输用户短号
+    uid: M39479

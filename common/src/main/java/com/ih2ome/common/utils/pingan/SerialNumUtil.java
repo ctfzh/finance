@@ -8,21 +8,20 @@ import java.util.Random;
  * @author Sky
  * create 2018/07/27
  * email sky.li@ixiaoshuidi.com
- * 流水号生成工具类
+ * 平安流水号生成工具类
  **/
 public class SerialNumUtil {
-    public static final String NUMBERCHAR = "0123456789";
-
+    private static final String NUMBERCHAR = "0123456789";
 
     /**
-     * 生成流水号：yyyyMMdd+8位随机数字字符串
+     * 生成流水号：yyMMdd+10位随机数字字符串
      *
      * @return
      */
     public static String generateSerial() {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd");
         String date = simpleDateFormat.format(new Date());
-        return date + generateNumber(8);
+        return date + generateNumber(10);
     }
 
 
@@ -39,6 +38,11 @@ public class SerialNumUtil {
             sb.append(NUMBERCHAR.charAt(random.nextInt(NUMBERCHAR.length())));
         }
         return sb.toString();
+    }
+
+
+    public static void main(String[] args) {
+        System.out.println(generateSerial());
     }
 
 }

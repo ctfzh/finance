@@ -60,4 +60,34 @@ public class PinganWxPayOrderResVO {
     private String package_info;
     //签名
     private String paySign;
+
+    @Override
+    public String toString() {
+        return "PinganWxPayOrderResVO{" +
+                "pmt_name='" + pmt_name + '\'' +
+                ", pmt_tag='" + pmt_tag + '\'' +
+                ", ord_mct_id=" + ord_mct_id +
+                ", ord_shop_id='" + ord_shop_id + '\'' +
+                ", ord_no='" + ord_no + '\'' +
+                ", ord_type=" + ord_type +
+                ", original_amount=" + original_amount +
+                ", discount_amount=" + discount_amount +
+                ", ignore_amount=" + ignore_amount +
+                ", trade_account='" + trade_account + '\'' +
+                ", trade_no='" + trade_no + '\'' +
+                ", trade_amount=" + trade_amount +
+                ", trade_qrcode='" + trade_qrcode + '\'' +
+                ", trade_pay_time=" + trade_pay_time +
+                ", status=" + status +
+                ", trade_result='" + trade_result + '\'' +
+                ", out_no='" + out_no + '\'' +
+                ", jsapi_pay_url='" + jsapi_pay_url + '\'' +
+                ", appId='" + appId + '\'' +
+                ", timeStamp='" + timeStamp + '\'' +
+                ", nonceStr='" + nonceStr + '\'' +
+                ", signType='" + signType + '\'' +
+                ", package_info='" + package_info + '\'' +
+                ", paySign='" + paySign + '\'' +
+                '}';
+    }
 }

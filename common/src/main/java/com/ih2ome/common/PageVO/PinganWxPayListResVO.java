@@ -27,4 +27,19 @@ public class PinganWxPayListResVO {
     private String pmt_split_refund;
     //签购单名称
     private String ticket_name;
+
+    @Override
+    public String toString() {
+        return "PinganWxPayListResVO{" +
+                "pmt_name='" + pmt_name + '\'' +
+                ", pmt_internal_name='" + pmt_internal_name + '\'' +
+                ", pmt_type='" + pmt_type + '\'' +
+                ", pmt_icon='" + pmt_icon + '\'' +
+                ", pmt_ticket_icon='" + pmt_ticket_icon + '\'' +
+                ", pmt_tag='" + pmt_tag + '\'' +
+                ", pmt_currency='" + pmt_currency + '\'' +
+                ", pmt_split_refund='" + pmt_split_refund + '\'' +
+                ", ticket_name='" + ticket_name + '\'' +
+                '}';
+    }
 }
