@@ -2,6 +2,7 @@ package com.ih2ome.dao.lijiang;
 
 import com.ih2ome.dao.BaseDao;
 import com.ih2ome.model.lijiang.PayOrders;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -11,4 +12,5 @@ import org.springframework.stereotype.Repository;
  **/
 @Repository
 public interface PayOrdersDao extends BaseDao<PayOrders> {
+
 }

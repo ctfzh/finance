@@ -16,8 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -105,6 +107,21 @@ public class SaasWxPayServiceImpl implements SaasWxPayService {
         JSONObject jsonObject = JSONObject.parseObject(JSONObject.toJSONString(saasWxNotifyReqVO));
         jsonObject.put("open_key", open_key);
         Boolean bool = SignUtil.vertifySign(jsonObject);
+        //获取水滴订单号
+        String outNo = saasWxNotifyReqVO.getOut_no();
+        //验证签名成功，修改订单状态
+        if (bool) {
+            Example example = new Example(PayOrders.class);
+            example.createCriteria().andEqualTo("orderId", outNo);
+            List<PayOrders> payOrders = payOrdersDao.selectByExample(example);
+            for (PayOrders payOrder : payOrders) {
+                //支付状态(0未支付，1已支付)
+                payOrder.setPaid(1);
+                String timestamp = saasWxNotifyReqVO.getTimestamp();
+                payOrder.setPaidAt(new Date(Long.valueOf(timestamp) * 1000));
+                payOrdersDao.updateByPrimaryKey(payOrder);
+            }
+        }
         return bool;
     }
 }
