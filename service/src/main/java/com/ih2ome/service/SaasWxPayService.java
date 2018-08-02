@@ -2,6 +2,7 @@ package com.ih2ome.service;
 
 import com.ih2ome.common.Exception.PinganApiException;
 import com.ih2ome.common.Exception.SaasWxPayException;
+import com.ih2ome.common.PageVO.SaasWxNotifyReqVO;
 import com.ih2ome.common.PageVO.SaasWxPayOrderReqVO;
 import com.ih2ome.common.PageVO.SaasWxPayOrderResVO;
 
@@ -21,4 +22,12 @@ public interface SaasWxPayService {
      * @throws SaasWxPayException
      */
     SaasWxPayOrderResVO placeOrder(SaasWxPayOrderReqVO reqVO) throws SaasWxPayException, PinganApiException;
+
+    /**
+     * 支付成功回调
+     *
+     * @param saasWxNotifyReqVO
+     * @return
+     */
+    Boolean notify(SaasWxNotifyReqVO saasWxNotifyReqVO);
 }

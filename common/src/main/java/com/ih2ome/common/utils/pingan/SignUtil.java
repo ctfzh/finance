@@ -1,10 +1,13 @@
 package com.ih2ome.common.utils.pingan;
 
+import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.PageVO.PinganWxSignBuildVO;
 import com.ih2ome.common.PageVO.PinganWxSignVerifyVO;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.security.MessageDigest;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * @author Sky
@@ -41,6 +44,47 @@ public class SignUtil {
         String sign = MD5Util.MD5Encode(sha1Hex).toLowerCase();
         System.out.println("md5加密后======>：" + sign);
         return origin.equals(sign);
+    }
+
+    public static Boolean vertifySign(JSONObject respObject) {
+        String respSign = respObject.get("sign").toString();
+        respObject.remove("sign");
+        try {
+            //按照A-Z排序
+            String sort = sort(respObject);
+            System.out.println(sort);
+            //sha1加密
+            String sha1Hex = Sha1Util.SHA1(sort);
+            //md5加密
+            String sign = MD5Util.MD5Encode(sha1Hex).toLowerCase();
+            return sign.equals(respSign);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    //按照A-Z排序
+    public static String sort(Map paramMap) throws Exception {
+        String sort = "";
+        TLinxMapUtil signMap = new TLinxMapUtil();
+        if (paramMap != null) {
+            String key;
+            for (Iterator it = paramMap.keySet().iterator(); it.hasNext(); ) {
+                key = (String) it.next();
+                String value = ((paramMap.get(key) != null) && (!("".equals(paramMap.get(key).toString())))) ? paramMap.get(key).toString() : "";
+                signMap.put(key, value);
+            }
+            signMap.sort();
+            for (Iterator it = signMap.keySet().iterator(); it.hasNext(); ) {
+                key = (String) it.next();
+                sort = sort + key + "=" + signMap.get(key).toString() + "&";
+            }
+            if ((sort != null) && (!("".equals(sort)))) {
+                sort = sort.substring(0, sort.length() - 1);
+            }
+        }
+        return sort;
     }
 
 

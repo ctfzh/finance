@@ -1,13 +1,12 @@
 package com.ih2ome.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.Exception.PinganApiException;
 import com.ih2ome.common.Exception.SaasWxPayException;
-import com.ih2ome.common.PageVO.PinganWxPayOrderReqVO;
-import com.ih2ome.common.PageVO.PinganWxPayOrderResVO;
-import com.ih2ome.common.PageVO.SaasWxPayOrderReqVO;
-import com.ih2ome.common.PageVO.SaasWxPayOrderResVO;
+import com.ih2ome.common.PageVO.*;
 import com.ih2ome.common.enums.FeeTypeEnum;
 import com.ih2ome.common.utils.pingan.SerialNumUtil;
+import com.ih2ome.common.utils.pingan.SignUtil;
 import com.ih2ome.dao.lijiang.PayOrdersDao;
 import com.ih2ome.model.lijiang.PayOrders;
 import com.ih2ome.service.PinganApiService;
@@ -36,6 +35,12 @@ public class SaasWxPayServiceImpl implements SaasWxPayService {
     //项目地址
     @Value("${pingan.wxPay.shuidiUrl}")
     private String shuidiUrl;
+    //商户门店的唯一标识
+    @Value("${pingan.wxPay.open_id}")
+    private String open_id;
+    @Value("${pingan.wxPay.open_key}")
+    private String open_key;
+
     @Autowired
     private PayOrdersDao payOrdersDao;
     //平安第三方下单
@@ -87,5 +92,19 @@ public class SaasWxPayServiceImpl implements SaasWxPayService {
         SaasWxPayOrderResVO resVO = new SaasWxPayOrderResVO();
         BeanUtils.copyProperties(pinganWxPayOrderResVO, resVO);
         return resVO;
+    }
+
+    /**
+     * 支付成功回调
+     *
+     * @param saasWxNotifyReqVO
+     * @return
+     */
+    @Override
+    public Boolean notify(SaasWxNotifyReqVO saasWxNotifyReqVO) {
+        JSONObject jsonObject = JSONObject.parseObject(JSONObject.toJSONString(saasWxNotifyReqVO));
+        jsonObject.put("open_key", open_key);
+        Boolean bool = SignUtil.vertifySign(jsonObject);
+        return bool;
     }
 }

@@ -3,6 +3,7 @@ package com.ih2ome.server.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.Exception.PinganApiException;
 import com.ih2ome.common.Exception.SaasWxPayException;
+import com.ih2ome.common.PageVO.SaasWxNotifyReqVO;
 import com.ih2ome.common.PageVO.SaasWxPayOrderReqVO;
 import com.ih2ome.common.PageVO.SaasWxPayOrderResVO;
 import com.ih2ome.common.support.ResponseBodyVO;
@@ -60,5 +61,17 @@ public class SaasWxPayController {
             return ResponseBodyVO.generateResponseObject(-1, data, e.getMessage());
         }
         return ResponseBodyVO.generateResponseObject(0, data, "下单成功");
+    }
+
+
+    @PostMapping(value = "notify", produces = "application/json;charset=UTF-8")
+    @ApiOperation("支付成功回调")
+    public String notify(@RequestBody SaasWxNotifyReqVO saasWxNotifyReqVO) {
+        LOGGER.info("notify--->平安微信支付回调参数:{}", saasWxNotifyReqVO.toString());
+        Boolean flag = saasWxPayService.notify(saasWxNotifyReqVO);
+        if (flag) {
+            return "notify_success";
+        }
+        return "notify_error";
     }
 }
