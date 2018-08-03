@@ -5,6 +5,7 @@ import com.ih2ome.common.Exception.PinganApiException;
 import com.ih2ome.common.Exception.SaasWxPayException;
 import com.ih2ome.common.PageVO.*;
 import com.ih2ome.common.enums.FeeTypeEnum;
+import com.ih2ome.common.enums.PayTypeEnum;
 import com.ih2ome.common.utils.pingan.SerialNumUtil;
 import com.ih2ome.common.utils.pingan.SignUtil;
 import com.ih2ome.dao.lijiang.PayOrdersDao;
@@ -67,7 +68,7 @@ public class SaasWxPayServiceImpl implements SaasWxPayService {
         payOrders.setFeeType(reqVO.getFeeType());
         payOrders.setOrderId(orderId);
         payOrders.setPaid(0);
-        payOrders.setPayType("pinganwx");
+        payOrders.setPayType(PayTypeEnum.PINGANWX.getName());
         payOrders.setServer("GATEWAY");
         payOrders.setTitle(reqVO.getAddress());
         payOrders.setToken(reqVO.getToken());
