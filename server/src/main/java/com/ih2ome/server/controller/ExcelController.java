@@ -21,19 +21,17 @@ import java.util.List;
 @RequestMapping("/excel")
 public class ExcelController {
 
-    @RequestMapping(value = "/export", method = RequestMethod.GET)
+    @RequestMapping(value = "/export", method = RequestMethod.GET,produces = "application/octet-stream")
     public void excel(HttpServletResponse response) throws Exception {
         ExcelData data = new ExcelData();
         data.setName("哈哈");
-
         List<String> titles = new ArrayList();
-        //for(String title: excelInfo.getNames())
         titles.add("title1");
         titles.add("title2");
         titles.add("title3");
         data.setTitles(titles);
         List<List<Object>> rows = new ArrayList();
-        List<Object> row1 = new ArrayList<>();
+//        List<Object> row1 = new ArrayList<>();
         List<Object> row2 = new ArrayList<>();
         row2.add("a");
         row2.add("b");
@@ -42,7 +40,7 @@ public class ExcelController {
         row3.add("a");
         row3.add("b");
         row3.add("c");
-        rows.add(row1);
+//        rows.add(row1);
         rows.add(row2);
         rows.add(row3);
         data.setRows(rows);
