@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
+import com.ih2ome.common.PageVO.PinganWxPayOrderResVO;
 
 import java.util.Date;
 import java.util.List;
@@ -74,6 +75,7 @@ public class SaasWxPayServiceImpl implements SaasWxPayService {
         payOrders.setTitle(reqVO.getAddress());
         payOrders.setToken(reqVO.getToken());
         payOrders.setUserId(reqVO.getRenterId());
+
         //水滴子订单下单
 //        SubPayOrders subPayOrders = new SubPayOrders();
 //        subPayOrders.setUuid(UUID.randomUUID().toString().replace("-", ""));
@@ -84,6 +86,8 @@ public class SaasWxPayServiceImpl implements SaasWxPayService {
 //        subPayOrders.setTranFee(reqVO.getPayCharge());
 //        subPayOrders.setRemark(FeeTypeEnum.getNameByCode(reqVO.getFeeType()));
 //        subPayOrders.setRawData(JSONObject.toJSONString(subPayOrders));
+
+
         //第三方下单
         PinganWxPayOrderReqVO pinganWxPayOrderReqVO = new PinganWxPayOrderReqVO();
         pinganWxPayOrderReqVO.setOut_no(orderId);
@@ -98,6 +102,8 @@ public class SaasWxPayServiceImpl implements SaasWxPayService {
         pinganWxPayOrderReqVO.setSub_appid("wxed1a36ce3fa969f5");
         pinganWxPayOrderReqVO.setSub_openid(reqVO.getOpenId());
         pinganWxPayOrderReqVO.setJSAPI("1");
+
+
         //子订单信息拼装
 //        PinganWxPayOrderSubVO pinganWxPayOrderSubVO = new PinganWxPayOrderSubVO();
 //        pinganWxPayOrderSubVO.setSFJOrdertype("1");
@@ -114,6 +120,7 @@ public class SaasWxPayServiceImpl implements SaasWxPayService {
 //        pinganWxPayOrderSubDataVO.setObject(subPayOrders.getRemark());
 //        pinganWxPayOrderSubDataVO.setTranFee(String.valueOf(subPayOrders.getTranFee()));
 //        pinganWxPayOrderReqVO.setCmd(JSONObject.toJSONString(pinganWxPayOrderSubDataVO));
+
         PinganWxPayOrderResVO pinganWxPayOrderResVO = pinganApiService.payOrder(pinganWxPayOrderReqVO);
         //第三方下单成功,更新水滴订单信息
         payOrders.setRedirectUrl(pinganWxPayOrderResVO.getOrd_no());
