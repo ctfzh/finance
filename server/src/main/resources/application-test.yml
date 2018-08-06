@@ -96,8 +96,6 @@ spring:
     filters: stat,wall,log4j
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000;config.decrypt=true;config.decrypt.key=${publicKey}
 
-
-
 server:
   port: 9181
   max-http-header-size: 10000000
@@ -113,7 +111,7 @@ bigCustomersInfo: 2788
 pingan:
   sdkPrefix: test
   wxPay:
-    shuidiUrl: http://finance.ih2ome.cn/finance
+    shuidiUrl: http://finance.ih2ome.cn/finance/
     baseUrl: https://mixpayuat4.orangebank.com.cn/mct1/
     open_id: ee757f1f219759974563dc80acc43b77
     open_key: 333d153b8b16a5e07e297891e70552e8

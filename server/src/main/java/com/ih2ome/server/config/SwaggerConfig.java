@@ -39,7 +39,7 @@ public class SwaggerConfig {
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.ih2ome.server.controller"))
                 .paths(PathSelectors.any())
-                .build().globalOperationParameters(pars);
+                .build().globalOperationParameters(pars).enable(true);
     }
 
     private ApiInfo apiInfo() {
