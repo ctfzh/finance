@@ -32,7 +32,7 @@ public class PinganConfigController {
         PinganWxConfigAddReqVO pinganWxConfigAddReqVO = new PinganWxConfigAddReqVO();
         pinganWxConfigAddReqVO.setPmt_tag("WeixinOL");
 //        pinganWxConfigAddReqVO.setSub_appid("wxed1a36ce3fa969f5");
-        pinganWxConfigAddReqVO.setJsapi_path("https://fdwx.h2ome.cn/allinpay/confirm_wxpay/");
+        pinganWxConfigAddReqVO.setJsapi_path("https://fdwx.h2ome.cn/pinganpay/confirm_wxpay/");
         PinganWxConfigAddResVO pinganWxConfigAddResVO = pinganConfigService.addConfig(pinganWxConfigAddReqVO);
         System.out.println(pinganWxConfigAddResVO);
         return ResponseBodyVO.generateResponseObject(0, null, "success");

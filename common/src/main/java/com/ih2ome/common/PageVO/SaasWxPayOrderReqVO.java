@@ -26,11 +26,7 @@ public class SaasWxPayOrderReqVO {
     @ApiModelProperty("总金额")
     @NotNull(message = "总金额不能为空")
     private Double totalMoney;
-
-    @ApiModelProperty("租客id(lijiang,--user表uuid)")
-    @NotNull(message = "租客Id不能为空")
-    private String renterId;
-
+    
     @ApiModelProperty("主账号(房东)id")
     @NotNull(message = "主账号(房东)id不能为空")
     private String landlordId;
@@ -50,4 +46,8 @@ public class SaasWxPayOrderReqVO {
     @ApiModelProperty("用户在子商户appid下的唯一标识")
     @NotNull(message = "openId不能为空")
     private String openId;
+
+    @ApiModelProperty("pay_orders_id")
+    @NotNull(message = "saas订单Id不能为空")
+    private String payOrderId;
 }
