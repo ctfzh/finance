@@ -14,7 +14,7 @@ import lombok.Data;
 @ApiModel
 public class SaasWxNotifyReqVO {
     @ApiModelProperty("商户门店open_id")
-    private String Open_id;
+    private String open_id;
 
     @ApiModelProperty("订单号")
     private String ord_no;
@@ -46,7 +46,7 @@ public class SaasWxNotifyReqVO {
     @Override
     public String toString() {
         return "SaasWxNotifyReqVO{" +
-                "Open_id='" + Open_id + '\'' +
+                "open_id='" + open_id + '\'' +
                 ", ord_no='" + ord_no + '\'' +
                 ", timestamp='" + timestamp + '\'' +
                 ", rand_str='" + rand_str + '\'' +
