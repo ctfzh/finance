@@ -60,7 +60,7 @@ public class SaasWxPayServiceImpl implements SaasWxPayService {
     @Autowired
     private PinganApiService pinganApiService;
 
-    private String saasNotify = " http://pay.shuidiguanjia.com/pinganpay/wxnotify";
+    private String saasNotify = " http://pay.shuidiguanjia.com/pinganpay/wxnotify/";
 
     /**
      * 下单
