@@ -212,6 +212,7 @@ public class PinganApiServiceImpl implements PinganApiService {
 
     //请求数据处理(data数据AES加密,签名生成。)
     private PinganWxRequestVO getPinganWxRequestVO(Object object) {
+        System.out.println(JSONObject.toJSONString(object));
         //对pinganWxPayListVO进行AES加密
         String data = AESUtil.encrypt(JSONObject.toJSONString(object), open_key);
         //获取当前系统时间

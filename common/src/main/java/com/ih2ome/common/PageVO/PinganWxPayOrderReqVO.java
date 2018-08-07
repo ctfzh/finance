@@ -1,5 +1,6 @@
 package com.ih2ome.common.PageVO;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 
 /**
@@ -46,6 +47,7 @@ public class PinganWxPayOrderReqVO {
     private String sub_openid;
 
     //JSAPI返回必填值为1
+    @JSONField(name = "JSAPI")
     private String JSAPI;
 
 }
