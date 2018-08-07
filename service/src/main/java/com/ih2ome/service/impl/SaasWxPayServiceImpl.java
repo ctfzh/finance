@@ -163,23 +163,23 @@ public class SaasWxPayServiceImpl implements SaasWxPayService {
         example.createCriteria().andEqualTo("orderId", outNo);
         Orders order = ordersDao.selectOneByExample(example);
         order.setResult(JSONObject.toJSONString(saasWxNotifyReqVO));
-        Map<String, String> params = new HashMap<>();
-        params.put("cusorderid", order.getPayOrderId());
-        params.put("trxid", outNo);
+        JSONObject param = new JSONObject();
+        param.put("cusorderid", order.getPayOrderId());
+        param.put("trxid", outNo);
         //验证签名成功，修改订单状态
         if (bool) {
-            params.put("result", "success");
+            param.put("result", "success");
             //通知Saas微信端
-            String saasResult = HttpClientUtil.doPost(saasNotify, params);
+            String saasResult = HttpClientUtil.doPost(saasNotify, param);
             order.setSaasResult(saasResult);
             //支付状态(0未支付，1已支付)
             order.setPaid(1);
             String timestamp = saasWxNotifyReqVO.getTimestamp();
             order.setPaidAt(new Date(Long.valueOf(timestamp) * 1000));
         } else {
-            params.put("result", "error");
+            param.put("result", "error");
             //通知Saas微信端
-            String saasResult = HttpClientUtil.doPost(saasNotify, params);
+            String saasResult = HttpClientUtil.doPost(saasNotify, param);
             order.setSaasResult(saasResult);
         }
         ordersDao.updateByPrimaryKey(order);
