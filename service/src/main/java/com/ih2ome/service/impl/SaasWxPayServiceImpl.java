@@ -6,6 +6,7 @@ import com.ih2ome.common.Exception.SaasWxPayException;
 import com.ih2ome.common.PageVO.*;
 import com.ih2ome.common.enums.FeeTypeEnum;
 import com.ih2ome.common.enums.PayTypeEnum;
+import com.ih2ome.common.utils.client.HttpClientUtil;
 import com.ih2ome.common.utils.pingan.HttpUtil;
 import com.ih2ome.common.utils.pingan.SerialNumUtil;
 import com.ih2ome.common.utils.pingan.SignUtil;
@@ -169,7 +170,7 @@ public class SaasWxPayServiceImpl implements SaasWxPayService {
         if (bool) {
             params.put("result", "success");
             //通知Saas微信端
-            String saasResult = HttpUtil.httpMethodPost(saasNotify, params, null);
+            String saasResult = HttpClientUtil.doPost(saasNotify, params);
             order.setSaasResult(saasResult);
             //支付状态(0未支付，1已支付)
             order.setPaid(1);
@@ -178,7 +179,7 @@ public class SaasWxPayServiceImpl implements SaasWxPayService {
         } else {
             params.put("result", "error");
             //通知Saas微信端
-            String saasResult = HttpUtil.httpMethodPost(saasNotify, params, null);
+            String saasResult = HttpClientUtil.doPost(saasNotify, params);
             order.setSaasResult(saasResult);
         }
         ordersDao.updateByPrimaryKey(order);
