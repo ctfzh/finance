@@ -163,7 +163,7 @@ public class SaasWxPayServiceImpl implements SaasWxPayService {
         example.createCriteria().andEqualTo("orderId", outNo);
         Orders order = ordersDao.selectOneByExample(example);
         order.setResult(JSONObject.toJSONString(saasWxNotifyReqVO));
-        TreeMap<String, String> params = new TreeMap<>();
+        Map<String, String> params = new HashMap<>();
         params.put("cusorderid", order.getPayOrderId());
         params.put("trxid", outNo);
         //验证签名成功，修改订单状态
