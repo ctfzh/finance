@@ -66,7 +66,7 @@ public class SaasWxPayController {
 
     @PostMapping(value = "notify", produces = "application/json;charset=UTF-8")
     @ApiOperation("支付成功回调")
-    public String notify(@RequestBody SaasWxNotifyReqVO saasWxNotifyReqVO) {
+    public String notify(SaasWxNotifyReqVO saasWxNotifyReqVO) {
         LOGGER.info("notify--->平安微信支付回调参数:{}", saasWxNotifyReqVO.toString());
         Boolean flag = saasWxPayService.notify(saasWxNotifyReqVO);
         if (flag) {
