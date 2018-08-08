@@ -8,6 +8,7 @@ import com.ih2ome.common.enums.ConfigPayWayEnum;
 import com.ih2ome.common.support.ResponseBodyVO;
 import com.ih2ome.model.caspain.TerminalToken;
 import com.ih2ome.service.ConfigPaymentsService;
+import com.ih2ome.service.ConfigPaymentsUserService;
 import com.ih2ome.service.TerminalTokenService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -40,6 +41,9 @@ public class ConfigPaymentsController {
     @Autowired
     private ConfigPaymentsService configPaymentsService;
 
+    @Autowired
+    private ConfigPaymentsUserService configPaymentsUserService;
+
     @GetMapping(value = "get", produces = "application/json;charset=UTF-8")
     @ApiOperation("获取支付配置")
     public ResponseBodyVO getConfigPayments(HttpServletRequest request) {
@@ -49,9 +53,11 @@ public class ConfigPaymentsController {
         if (terminalToken != null) {
             Integer userId = terminalToken.getUserId();
             LOGGER.info("getConfigPayments-----登录成功token:{},userId:{}", authorization, userId);
+            //判断客户类型
+            Boolean bool = configPaymentsUserService.judgeUserType(userId);
             ConfigPaymentsVO configPaymentsVO = null;
             try {
-                configPaymentsVO = configPaymentsService.findConfigPaymentsInfo(userId);
+                configPaymentsVO = configPaymentsService.findConfigPaymentsInfo(userId, bool);
             } catch (Exception e) {
                 e.printStackTrace();
                 LOGGER.info("getConfigPayments-----findConfigPaymentsInfo()出错,错误:{}", e.getMessage());
@@ -74,8 +80,10 @@ public class ConfigPaymentsController {
         if (terminalToken != null) {
             Integer userId = terminalToken.getUserId();
             LOGGER.info("setConfigPayments-----登录成功token:{},userId:{}", authorization, userId);
+            //判断客户类型
+            Boolean bool = configPaymentsUserService.judgeUserType(userId);
             try {
-                configPaymentsService.setConfigPaymentsInfo(userId, assumePerson);
+                configPaymentsService.setConfigPaymentsInfo(userId, assumePerson, bool);
             } catch (Exception e) {
                 e.printStackTrace();
                 LOGGER.info("setConfigPayments-----setConfigPaymentsInfo({},{})出错,错误原因:{},", userId, assumePerson, e.getMessage());
@@ -95,10 +103,11 @@ public class ConfigPaymentsController {
                                           @ApiParam(value = "金额") @PathVariable("money") Double money) {
         LOGGER.info("calculateCharge-----用户id:{},支付方式:{},初始金额:{}", userId, payWay, money);
         JSONObject data = new JSONObject();
+        //判断客户类型
+        Boolean bool = configPaymentsUserService.judgeUserType(userId);
         //计算费用
         try {
-//            ConfigPayChannelsVO channelsVO = configPaymentsService.getConfigChannelInfo(userId);
-            CalculateChargeVO calculateChargeVO = configPaymentsService.calculateCharge(userId, payWay, money);
+            CalculateChargeVO calculateChargeVO = configPaymentsService.calculateCharge(userId, payWay, money, bool);
             LOGGER.info("calculateCharge-----计算结果:{}", JSONObject.toJSON(calculateChargeVO));
             data.put("calculateChargeVO", calculateChargeVO);
         } catch (Exception e) {
@@ -115,8 +124,10 @@ public class ConfigPaymentsController {
     public ResponseBodyVO getPayChannelsInfo(@ApiParam(value = "主账号id") @PathVariable("userId") Integer userId) {
         LOGGER.info("getPayChannelsInfo-----用户id:{}", userId);
         JSONObject data = new JSONObject();
+        //判断客户类型
+        Boolean bool = configPaymentsUserService.judgeUserType(userId);
         try {
-            ConfigPayChannelsVO channelsVO = configPaymentsService.getConfigChannelInfo(userId);
+            ConfigPayChannelsVO channelsVO = configPaymentsService.getConfigChannelInfo(userId, bool);
             data.put("channelsVO", channelsVO);
         } catch (Exception e) {
             e.printStackTrace();
