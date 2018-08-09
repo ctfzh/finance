@@ -1,7 +1,6 @@
 package com.ih2ome.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.ih2ome.common.Exception.PinganApiException;
 import com.ih2ome.common.PageVO.*;
 import com.ih2ome.common.utils.BeanMapUtil;
 import com.ih2ome.common.utils.pingan.AESUtil;
@@ -15,9 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.TreeMap;
 
 /**
@@ -29,7 +26,7 @@ import java.util.TreeMap;
 public class PinganConfigServiceImpl implements PinganConfigService {
 
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PinganApiServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PinganPayServiceImpl.class);
 
     //测试环境地址：https://mixpayuat4.orangebank.com.cn/mct1/
     //生产环境地址: https://api.orangebank.com.cn/mct1/

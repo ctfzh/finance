@@ -7,19 +7,13 @@ import com.ih2ome.common.PageVO.*;
 import com.ih2ome.common.enums.FeeTypeEnum;
 import com.ih2ome.common.enums.PayTypeEnum;
 import com.ih2ome.common.utils.client.HttpClientUtil;
-import com.ih2ome.common.utils.pingan.HttpUtil;
 import com.ih2ome.common.utils.pingan.SerialNumUtil;
 import com.ih2ome.common.utils.pingan.SignUtil;
 import com.ih2ome.dao.lijiang.OrdersDao;
-import com.ih2ome.dao.lijiang.PayOrdersDao;
 import com.ih2ome.dao.lijiang.SubOrdersDao;
 import com.ih2ome.model.lijiang.Orders;
-import com.ih2ome.model.lijiang.PayOrders;
-import com.ih2ome.model.lijiang.SubOrders;
-import com.ih2ome.model.lijiang.SubPayOrders;
-import com.ih2ome.service.PinganApiService;
+import com.ih2ome.service.PinganPayService;
 import com.ih2ome.service.SaasWxPayService;
-import org.apache.xpath.operations.Or;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -59,7 +53,7 @@ public class SaasWxPayServiceImpl implements SaasWxPayService {
 
     //平安第三方下单
     @Autowired
-    private PinganApiService pinganApiService;
+    private PinganPayService pinganPayService;
 
     private String saasNotify = "http://pay.shuidiguanjia.com/pinganpay/wxnotify/";
 
@@ -134,7 +128,7 @@ public class SaasWxPayServiceImpl implements SaasWxPayService {
 //        pinganWxPayOrderSubVO.setOrderList(orderLists);
 //        pinganWxPayOrderReqVO.setCmd(JSONObject.toJSONString(pinganWxPayOrderSubVO));
 
-        PinganWxPayOrderResVO pinganWxPayOrderResVO = pinganApiService.payOrder(pinganWxPayOrderReqVO);
+        PinganWxPayOrderResVO pinganWxPayOrderResVO = pinganPayService.payOrder(pinganWxPayOrderReqVO);
         //第三方下单成功,更新水滴订单信息
         orders.setRedirectUrl(pinganWxPayOrderResVO.getOrd_no());
         //存水滴订单信息

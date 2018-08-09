@@ -13,11 +13,10 @@ import com.ih2ome.dao.caspain.CaspainMoneyFlowDao;
 import com.ih2ome.dao.caspain.ConfigPaymentsChannelDao;
 import com.ih2ome.dao.lijiang.PayOrdersDao;
 import com.ih2ome.dao.volga.VolgaMoneyFlowDao;
-import com.ih2ome.model.caspain.ConfigPaymentsChannel;
 import com.ih2ome.model.lijiang.PayOrders;
 import com.ih2ome.model.volga.MoneyFlow;
 import com.ih2ome.server.pingan.sdk.InitConfiguration;
-import com.ih2ome.service.PinganApiService;
+import com.ih2ome.service.PinganPayService;
 import com.pabank.sdk.PABankSDK;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,7 +48,7 @@ public class TestMapperController {
     @Autowired
     private CaspainMoneyFlowDao caspainMoneyFlowDao;
     @Autowired
-    private PinganApiService pinganApiService;
+    private PinganPayService pinganPayService;
     @Autowired
     private PayOrdersDao payOrdersDao;
 
@@ -125,7 +124,7 @@ public class TestMapperController {
         PinganWxPayListReqVO pinganWxPayListReqVO = new PinganWxPayListReqVO();
         pinganWxPayListReqVO.setPmt_type("2,3,4,5");
         try {
-            List<PinganWxPayListResVO> paylist = pinganApiService.paylist(pinganWxPayListReqVO);
+            List<PinganWxPayListResVO> paylist = pinganPayService.paylist(pinganWxPayListReqVO);
             System.out.println(paylist);
         } catch (PinganApiException e) {
             e.printStackTrace();
@@ -139,7 +138,7 @@ public class TestMapperController {
     public ResponseBodyVO test06(HttpServletRequest request) throws IOException, InvocationTargetException, IllegalAccessException {
         PinganWxOrderReqVO pinganWxOrderReqVO = new PinganWxOrderReqVO();
         try {
-            PinganWxOrderResVO pinganWxOrderResVO = pinganApiService.queryOrderList(pinganWxOrderReqVO);
+            PinganWxOrderResVO pinganWxOrderResVO = pinganPayService.queryOrderList(pinganWxOrderReqVO);
             System.out.println(pinganWxOrderResVO);
         } catch (PinganApiException e) {
             e.printStackTrace();
@@ -154,7 +153,7 @@ public class TestMapperController {
         PinganWxOrderViewReqVO pinganWxOrderViewReqVO = new PinganWxOrderViewReqVO();
         pinganWxOrderViewReqVO.setOut_no("20009043412018072692671423");
         try {
-            PinganWxOrderViewResVO pinganWxOrderViewResVO = pinganApiService.queryOrderView(pinganWxOrderViewReqVO);
+            PinganWxOrderViewResVO pinganWxOrderViewResVO = pinganPayService.queryOrderView(pinganWxOrderViewReqVO);
             System.out.println(pinganWxOrderViewResVO);
         } catch (PinganApiException e) {
             e.printStackTrace();
@@ -182,7 +181,7 @@ public class TestMapperController {
         pinganWxPayOrderReqVO.setJSAPI("1");
         System.out.println(pinganWxPayOrderReqVO);
         try {
-            PinganWxPayOrderResVO pinganWxPayOrderResVO = pinganApiService.payOrder(pinganWxPayOrderReqVO);
+            PinganWxPayOrderResVO pinganWxPayOrderResVO = pinganPayService.payOrder(pinganWxPayOrderReqVO);
             System.out.println(pinganWxPayOrderResVO);
         } catch (PinganApiException e) {
             e.printStackTrace();
