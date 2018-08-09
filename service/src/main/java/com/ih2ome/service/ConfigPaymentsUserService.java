@@ -1,5 +1,9 @@
 package com.ih2ome.service;
 
+import com.ih2ome.model.caspain.ConfigPaymentsUser;
+
+import java.util.Map;
+
 /**
  * @author Sky
  * create 2018/08/07
@@ -14,4 +18,12 @@ public interface ConfigPaymentsUserService {
      * @return
      */
     Boolean judgeUserType(Integer userId);
+
+    /**
+     * 根据用户id查询用户支付方式展示，使用渠道展示
+     *
+     * @param userId
+     * @return
+     */
+    Map<String, Integer> selectUserType(Integer userId);
 }

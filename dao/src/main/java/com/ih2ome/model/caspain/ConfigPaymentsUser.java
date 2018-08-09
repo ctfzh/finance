@@ -31,5 +31,10 @@ public class ConfigPaymentsUser {
     private Integer isDelete;
     @Column(name = "user_type")
     private Integer userType;
-
+    @Column(name = "wx_show")
+    private Integer wxShow;
+    @Column(name = "ali_show")
+    private Integer aliShow;
+    @Column(name = "card_show")
+    private Integer cardShow;
 }
