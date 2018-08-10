@@ -124,16 +124,29 @@
         </encoder>
     </appender>
 
-    <appender name="pinganMac" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+    <appender name="pinganMch" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${log_dir}/power/%d{yyyy-MM-dd}_pinganMac.log</fileNamePattern>
+            <fileNamePattern>${log_dir}/pinganMch/%d{yyyy-MM-dd}_pinganMch.log</fileNamePattern>
         </rollingPolicy>
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n</pattern>
         </encoder>
     </appender>
     <logger name="com.ih2ome.service.impl.PinganMchServiceImpl" additivity="true">
-        <appender-ref ref="pinganMac"/>
+        <appender-ref ref="pinganMch"/>
+    </logger>
+
+    <appender name="pinganPay" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log_dir}/pinganPay/%d{yyyy-MM-dd}_pinganPay.log</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <logger name="com.ih2ome.service.impl.PinganPayServiceImpl" additivity="true">
+        <appender-ref ref="pinganPay"/>
     </logger>
 
     <!-- root¼¶±ð DEBUG -->
