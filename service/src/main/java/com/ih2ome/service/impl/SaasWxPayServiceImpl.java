@@ -1,7 +1,7 @@
 package com.ih2ome.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.ih2ome.common.Exception.PinganApiException;
+import com.ih2ome.common.Exception.PinganWxPayException;
 import com.ih2ome.common.Exception.SaasWxPayException;
 import com.ih2ome.common.PageVO.*;
 import com.ih2ome.common.PageVO.PinganWxPayVO.PinganWxPayOrderReqVO;
@@ -65,7 +65,7 @@ public class SaasWxPayServiceImpl implements SaasWxPayService {
      * @return
      */
     @Override
-    public SaasWxPayOrderResVO placeOrder(SaasWxPayOrderReqVO reqVO) throws SaasWxPayException, PinganApiException {
+    public SaasWxPayOrderResVO placeOrder(SaasWxPayOrderReqVO reqVO) throws SaasWxPayException, PinganWxPayException {
         //生成水滴订单号
         String orderId = uid + SerialNumUtil.generateSerial();
         //水滴总订单下单

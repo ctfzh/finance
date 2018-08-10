@@ -1,7 +1,7 @@
 package com.ih2ome.server.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.ih2ome.common.Exception.PinganApiException;
+import com.ih2ome.common.Exception.PinganWxPayException;
 import com.ih2ome.common.Exception.SaasWxPayException;
 import com.ih2ome.common.PageVO.SaasWxNotifyReqVO;
 import com.ih2ome.common.PageVO.SaasWxPayOrderReqVO;
@@ -51,7 +51,7 @@ public class SaasWxPayController {
             e.printStackTrace();
             LOGGER.error("placeOrder--->水滴下单失败,请求参数:{},失败原因:{}", reqVO.toString(), e.getMessage());
             return ResponseBodyVO.generateResponseObject(-1, data, e.getMessage());
-        } catch (PinganApiException e) {
+        } catch (PinganWxPayException e) {
             e.printStackTrace();
             LOGGER.error("placeOrder--->平安下单失败,请求参数:{},信息:{}", reqVO.toString(), e.getMessage());
             return ResponseBodyVO.generateResponseObject(-1, data, e.getMessage());

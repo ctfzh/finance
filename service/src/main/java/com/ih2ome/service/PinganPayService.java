@@ -1,6 +1,6 @@
 package com.ih2ome.service;
 
-import com.ih2ome.common.Exception.PinganApiException;
+import com.ih2ome.common.Exception.PinganWxPayException;
 import com.ih2ome.common.PageVO.PinganWxPayVO.*;
 
 import java.util.List;
@@ -16,9 +16,9 @@ public interface PinganPayService {
      *
      * @param pinganWxPayListReqVO
      * @return
-     * @throws PinganApiException
+     * @throws PinganWxPayException
      */
-    public List<PinganWxPayListResVO> paylist(PinganWxPayListReqVO pinganWxPayListReqVO) throws PinganApiException;
+    public List<PinganWxPayListResVO> paylist(PinganWxPayListReqVO pinganWxPayListReqVO) throws PinganWxPayException;
 
 
     /**
@@ -26,25 +26,25 @@ public interface PinganPayService {
      *
      * @param pinganWxOrderReqVO
      * @return
-     * @throws PinganApiException
+     * @throws PinganWxPayException
      */
-    public PinganWxOrderResVO queryOrderList(PinganWxOrderReqVO pinganWxOrderReqVO) throws PinganApiException;
+    public PinganWxOrderResVO queryOrderList(PinganWxOrderReqVO pinganWxOrderReqVO) throws PinganWxPayException;
 
     /**
      * 查询订单明细
      *
      * @param pinganWxOrderViewReqVO
      * @return
-     * @throws PinganApiException
+     * @throws PinganWxPayException
      */
-    public PinganWxOrderViewResVO queryOrderView(PinganWxOrderViewReqVO pinganWxOrderViewReqVO) throws PinganApiException;
+    public PinganWxOrderViewResVO queryOrderView(PinganWxOrderViewReqVO pinganWxOrderViewReqVO) throws PinganWxPayException;
 
     /**
      * 下订单
      *
      * @param pinganWxPayOrderReqVO
      * @return
-     * @throws PinganApiException
+     * @throws PinganWxPayException
      */
-    public PinganWxPayOrderResVO payOrder(PinganWxPayOrderReqVO pinganWxPayOrderReqVO) throws PinganApiException;
+    public PinganWxPayOrderResVO payOrder(PinganWxPayOrderReqVO pinganWxPayOrderReqVO) throws PinganWxPayException;
 }

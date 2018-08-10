@@ -3,8 +3,7 @@ package com.ih2ome.server.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.google.common.io.Resources;
-import com.ih2ome.common.Exception.PinganApiException;
-import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterReqVO;
+import com.ih2ome.common.Exception.PinganWxPayException;
 import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterResVO;
 import com.ih2ome.common.PageVO.PinganWxPayVO.*;
 import com.ih2ome.common.support.ResponseBodyVO;
@@ -125,7 +124,7 @@ public class TestMapperController {
         try {
             List<PinganWxPayListResVO> paylist = pinganPayService.paylist(pinganWxPayListReqVO);
             System.out.println(paylist);
-        } catch (PinganApiException e) {
+        } catch (PinganWxPayException e) {
             e.printStackTrace();
         }
         return ResponseBodyVO.generateResponseObject(0, null, "success");
@@ -139,7 +138,7 @@ public class TestMapperController {
         try {
             PinganWxOrderResVO pinganWxOrderResVO = pinganPayService.queryOrderList(pinganWxOrderReqVO);
             System.out.println(pinganWxOrderResVO);
-        } catch (PinganApiException e) {
+        } catch (PinganWxPayException e) {
             e.printStackTrace();
         }
         return ResponseBodyVO.generateResponseObject(0, null, "success");
@@ -154,7 +153,7 @@ public class TestMapperController {
         try {
             PinganWxOrderViewResVO pinganWxOrderViewResVO = pinganPayService.queryOrderView(pinganWxOrderViewReqVO);
             System.out.println(pinganWxOrderViewResVO);
-        } catch (PinganApiException e) {
+        } catch (PinganWxPayException e) {
             e.printStackTrace();
         }
         return ResponseBodyVO.generateResponseObject(0, null, "success");
@@ -182,7 +181,7 @@ public class TestMapperController {
         try {
             PinganWxPayOrderResVO pinganWxPayOrderResVO = pinganPayService.payOrder(pinganWxPayOrderReqVO);
             System.out.println(pinganWxPayOrderResVO);
-        } catch (PinganApiException e) {
+        } catch (PinganWxPayException e) {
             e.printStackTrace();
         }
         return ResponseBodyVO.generateResponseObject(0, null, "success");

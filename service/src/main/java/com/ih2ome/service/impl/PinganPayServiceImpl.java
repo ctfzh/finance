@@ -2,7 +2,7 @@ package com.ih2ome.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
-import com.ih2ome.common.Exception.PinganApiException;
+import com.ih2ome.common.Exception.PinganWxPayException;
 import com.ih2ome.common.PageVO.PinganWxPayVO.*;
 import com.ih2ome.common.utils.BeanMapUtil;
 import com.ih2ome.common.utils.pingan.AESUtil;
@@ -45,10 +45,10 @@ public class PinganPayServiceImpl implements PinganPayService {
      *
      * @param pinganWxPayListReqVO
      * @return
-     * @throws PinganApiException
+     * @throws PinganWxPayException
      */
     @Override
-    public List<PinganWxPayListResVO> paylist(PinganWxPayListReqVO pinganWxPayListReqVO) throws PinganApiException {
+    public List<PinganWxPayListResVO> paylist(PinganWxPayListReqVO pinganWxPayListReqVO) throws PinganWxPayException {
         //请求对象PinganWxRequestVO生成。
         PinganWxRequestVO pinganWxRequestVO = getPinganWxRequestVO(pinganWxPayListReqVO);
         String url = baseUrl + "paylist";
@@ -69,14 +69,14 @@ public class PinganPayServiceImpl implements PinganPayService {
                     return pinganWxPayListResVO;
                 } else {
                     LOGGER.error("签名校验失败,签名信息:{}", pinganWxSignVerifyVO.getSign());
-                    throw new PinganApiException("签名校验失败");
+                    throw new PinganWxPayException("签名校验失败");
                 }
             } else {
                 LOGGER.info("无data数据,无需验签!");
             }
         } else {
             LOGGER.error("请求失败,失败原因:{}", pinganWxSignVerifyVO.toString());
-            throw new PinganApiException("第三方请求失败:" + pinganWxSignVerifyVO.getMsg());
+            throw new PinganWxPayException("第三方请求失败:" + pinganWxSignVerifyVO.getMsg());
         }
         return null;
     }
@@ -86,10 +86,10 @@ public class PinganPayServiceImpl implements PinganPayService {
      *
      * @param pinganWxOrderReqVO
      * @return
-     * @throws PinganApiException
+     * @throws PinganWxPayException
      */
     @Override
-    public PinganWxOrderResVO queryOrderList(PinganWxOrderReqVO pinganWxOrderReqVO) throws PinganApiException {
+    public PinganWxOrderResVO queryOrderList(PinganWxOrderReqVO pinganWxOrderReqVO) throws PinganWxPayException {
         //请求对象PinganWxRequestVO生成。
         PinganWxRequestVO pinganWxRequestVO = getPinganWxRequestVO(pinganWxOrderReqVO);
         String url = baseUrl + "order";
@@ -111,14 +111,14 @@ public class PinganPayServiceImpl implements PinganPayService {
                     return pinganWxOrderResVO;
                 } else {
                     LOGGER.error("签名校验失败,签名信息:{}", pinganWxSignVerifyVO.getSign());
-                    throw new PinganApiException("签名校验失败");
+                    throw new PinganWxPayException("签名校验失败");
                 }
             } else {
                 LOGGER.info("无data数据,无需验签!");
             }
         } else {
             LOGGER.error("请求失败,失败原因:{}", pinganWxSignVerifyVO.toString());
-            throw new PinganApiException("第三方请求失败:" + pinganWxSignVerifyVO.getMsg());
+            throw new PinganWxPayException("第三方请求失败:" + pinganWxSignVerifyVO.getMsg());
         }
         return null;
     }
@@ -128,10 +128,10 @@ public class PinganPayServiceImpl implements PinganPayService {
      *
      * @param pinganWxOrderViewReqVO
      * @return
-     * @throws PinganApiException
+     * @throws PinganWxPayException
      */
     @Override
-    public PinganWxOrderViewResVO queryOrderView(PinganWxOrderViewReqVO pinganWxOrderViewReqVO) throws PinganApiException {
+    public PinganWxOrderViewResVO queryOrderView(PinganWxOrderViewReqVO pinganWxOrderViewReqVO) throws PinganWxPayException {
         //请求对象PinganWxRequestVO生成。
         PinganWxRequestVO pinganWxRequestVO = getPinganWxRequestVO(pinganWxOrderViewReqVO);
         String url = baseUrl + "order/view";
@@ -152,14 +152,14 @@ public class PinganPayServiceImpl implements PinganPayService {
                     return pinganWxOrderViewResVO;
                 } else {
                     LOGGER.error("签名校验失败,签名信息:{}", pinganWxSignVerifyVO.getSign());
-                    throw new PinganApiException("签名校验失败");
+                    throw new PinganWxPayException("签名校验失败");
                 }
             } else {
                 LOGGER.info("无data数据,无需验签!");
             }
         } else {
             LOGGER.error("请求失败,失败原因:{}", pinganWxSignVerifyVO.toString());
-            throw new PinganApiException("第三方请求失败:" + pinganWxSignVerifyVO.getMsg());
+            throw new PinganWxPayException("第三方请求失败:" + pinganWxSignVerifyVO.getMsg());
         }
         return null;
     }
@@ -170,10 +170,10 @@ public class PinganPayServiceImpl implements PinganPayService {
      *
      * @param pinganWxPayOrderReqVO
      * @return
-     * @throws PinganApiException
+     * @throws PinganWxPayException
      */
     @Override
-    public PinganWxPayOrderResVO payOrder(PinganWxPayOrderReqVO pinganWxPayOrderReqVO) throws PinganApiException {
+    public PinganWxPayOrderResVO payOrder(PinganWxPayOrderReqVO pinganWxPayOrderReqVO) throws PinganWxPayException {
         //请求对象PinganWxRequestVO生成。
         PinganWxRequestVO pinganWxRequestVO = getPinganWxRequestVO(pinganWxPayOrderReqVO);
         String url = baseUrl + "payorder";
@@ -196,14 +196,14 @@ public class PinganPayServiceImpl implements PinganPayService {
                     return pinganWxPayOrderResVO;
                 } else {
                     LOGGER.error("签名校验失败,签名信息:{}", pinganWxSignVerifyVO.getSign());
-                    throw new PinganApiException("签名校验失败,请求参数:" + pinganWxRequestVO.toString() + ",签名信息:" + pinganWxSignVerifyVO.getSign());
+                    throw new PinganWxPayException("签名校验失败,请求参数:" + pinganWxRequestVO.toString() + ",签名信息:" + pinganWxSignVerifyVO.getSign());
                 }
             } else {
                 LOGGER.info("无data数据,无需验签!");
             }
         } else {
             LOGGER.error("请求失败,失败原因:{}", pinganWxSignVerifyVO.toString());
-            throw new PinganApiException("平安第三方下单失败,失败原因:" + pinganWxSignVerifyVO.getMsg() + ",请求参数:" + pinganWxRequestVO.toString());
+            throw new PinganWxPayException("平安第三方下单失败,失败原因:" + pinganWxSignVerifyVO.getMsg() + ",请求参数:" + pinganWxRequestVO.toString());
         }
         return null;
 

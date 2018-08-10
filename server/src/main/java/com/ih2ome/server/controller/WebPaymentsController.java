@@ -35,7 +35,7 @@ public class WebPaymentsController {
         //获取用户id
         TerminalToken terminalToken = terminalTokenService.findByToken(authorization.split(" ")[1]);
         Integer userId = terminalToken.getUserId();
-        
+
         return null;
     }
 
