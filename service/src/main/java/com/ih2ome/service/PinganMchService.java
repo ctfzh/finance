@@ -7,4 +7,6 @@ package com.ih2ome.service;
  **/
 public interface PinganMchService {
 
+//    String registerAccount()
+
 }

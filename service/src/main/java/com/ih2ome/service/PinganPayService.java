@@ -1,7 +1,7 @@
 package com.ih2ome.service;
 
 import com.ih2ome.common.Exception.PinganApiException;
-import com.ih2ome.common.PageVO.*;
+import com.ih2ome.common.PageVO.PinganWxPayVO.*;
 
 import java.util.List;
 

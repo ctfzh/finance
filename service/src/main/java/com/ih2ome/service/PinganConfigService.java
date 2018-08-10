@@ -1,7 +1,7 @@
 package com.ih2ome.service;
 
-import com.ih2ome.common.PageVO.PinganWxConfigAddReqVO;
-import com.ih2ome.common.PageVO.PinganWxConfigAddResVO;
+import com.ih2ome.common.PageVO.PinganWxPayVO.PinganWxConfigAddReqVO;
+import com.ih2ome.common.PageVO.PinganWxPayVO.PinganWxConfigAddResVO;
 
 /**
  * @author Sky

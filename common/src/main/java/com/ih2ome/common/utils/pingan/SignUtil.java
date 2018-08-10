@@ -1,11 +1,9 @@
 package com.ih2ome.common.utils.pingan;
 
 import com.alibaba.fastjson.JSONObject;
-import com.ih2ome.common.PageVO.PinganWxSignBuildVO;
-import com.ih2ome.common.PageVO.PinganWxSignVerifyVO;
-import org.apache.commons.codec.digest.DigestUtils;
+import com.ih2ome.common.PageVO.PinganWxPayVO.PinganWxSignBuildVO;
+import com.ih2ome.common.PageVO.PinganWxPayVO.PinganWxSignVerifyVO;
 
-import java.security.MessageDigest;
 import java.util.Iterator;
 import java.util.Map;
 

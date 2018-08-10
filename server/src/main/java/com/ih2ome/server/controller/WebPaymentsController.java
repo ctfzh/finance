@@ -2,6 +2,7 @@ package com.ih2ome.server.controller;
 
 import com.ih2ome.model.caspain.TerminalToken;
 import com.ih2ome.service.TerminalTokenService;
+import com.ih2ome.service.impl.PinganMchServiceImpl;
 import io.swagger.annotations.Api;
 import net.bytebuddy.asm.Advice;
 import org.slf4j.Logger;
@@ -26,12 +27,15 @@ public class WebPaymentsController {
     @Autowired
     private TerminalTokenService terminalTokenService;
 
+    @Autowired
+    private PinganMchServiceImpl pinganMchService;
+
     @RequestMapping("register")
     public Integer registerMerchant(@RequestHeader("Authorization") String authorization) {
         //获取用户id
         TerminalToken terminalToken = terminalTokenService.findByToken(authorization.split(" ")[1]);
         Integer userId = terminalToken.getUserId();
-
+        
         return null;
     }
 

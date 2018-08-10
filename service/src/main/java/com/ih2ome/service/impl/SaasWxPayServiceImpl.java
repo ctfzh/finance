@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.Exception.PinganApiException;
 import com.ih2ome.common.Exception.SaasWxPayException;
 import com.ih2ome.common.PageVO.*;
+import com.ih2ome.common.PageVO.PinganWxPayVO.PinganWxPayOrderReqVO;
 import com.ih2ome.common.enums.FeeTypeEnum;
 import com.ih2ome.common.enums.PayTypeEnum;
 import com.ih2ome.common.utils.client.HttpClientUtil;
@@ -20,7 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
-import com.ih2ome.common.PageVO.PinganWxPayOrderResVO;
+import com.ih2ome.common.PageVO.PinganWxPayVO.PinganWxPayOrderResVO;
 
 import java.util.*;
 

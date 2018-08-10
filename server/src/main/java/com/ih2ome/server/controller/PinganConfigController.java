@@ -1,7 +1,7 @@
 package com.ih2ome.server.controller;
 
-import com.ih2ome.common.PageVO.PinganWxConfigAddReqVO;
-import com.ih2ome.common.PageVO.PinganWxConfigAddResVO;
+import com.ih2ome.common.PageVO.PinganWxPayVO.PinganWxConfigAddReqVO;
+import com.ih2ome.common.PageVO.PinganWxPayVO.PinganWxConfigAddResVO;
 import com.ih2ome.common.support.ResponseBodyVO;
 import com.ih2ome.service.PinganConfigService;
 import io.swagger.annotations.Api;

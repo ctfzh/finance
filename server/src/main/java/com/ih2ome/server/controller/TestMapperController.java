@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.google.common.io.Resources;
 import com.ih2ome.common.Exception.PinganApiException;
-import com.ih2ome.common.PageVO.*;
+import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterReqVO;
+import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterResVO;
+import com.ih2ome.common.PageVO.PinganWxPayVO.*;
 import com.ih2ome.common.support.ResponseBodyVO;
 import com.ih2ome.common.utils.ip.IPUtil;
 import com.ih2ome.common.utils.ip.IPWhiteListUtil;
@@ -19,10 +21,7 @@ import com.ih2ome.server.pingan.sdk.InitConfiguration;
 import com.ih2ome.service.PinganPayService;
 import com.pabank.sdk.PABankSDK;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.servlet.http.HttpServletRequest;
@@ -186,6 +185,14 @@ public class TestMapperController {
         } catch (PinganApiException e) {
             e.printStackTrace();
         }
+        return ResponseBodyVO.generateResponseObject(0, null, "success");
+    }
+
+
+    @PostMapping("nine")
+    @ResponseBody
+    public ResponseBodyVO test09(@RequestBody PinganMchRegisterResVO resVO) throws IOException, InvocationTargetException, IllegalAccessException {
+        System.out.println(resVO);
         return ResponseBodyVO.generateResponseObject(0, null, "success");
     }
 

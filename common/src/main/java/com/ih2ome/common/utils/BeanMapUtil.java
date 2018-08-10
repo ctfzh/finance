@@ -1,14 +1,10 @@
 package com.ih2ome.common.utils;
 
-import com.ih2ome.common.PageVO.PinganWxRequestVO;
+import com.ih2ome.common.PageVO.PinganWxPayVO.PinganWxRequestVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Modifier;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.TreeMap;
 
 /**
