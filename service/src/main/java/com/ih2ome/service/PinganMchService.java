@@ -1,5 +1,11 @@
 package com.ih2ome.service;
 
+import com.ih2ome.common.Exception.PinganMchException;
+import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterReqVO;
+import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterResVO;
+
+import java.io.IOException;
+
 /**
  * @author Sky
  * create 2018/08/09
@@ -7,6 +13,13 @@ package com.ih2ome.service;
  **/
 public interface PinganMchService {
 
-//    String registerAccount()
+    /**
+     * 开通商户子账户
+     *
+     * @param pinganMchRegisterReqVO
+     * @return
+     * @throws PinganMchException
+     */
+    PinganMchRegisterResVO registerAccount(PinganMchRegisterReqVO pinganMchRegisterReqVO) throws PinganMchException, IOException;
 
 }

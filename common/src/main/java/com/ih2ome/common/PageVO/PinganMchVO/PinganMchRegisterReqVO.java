@@ -10,7 +10,7 @@ import lombok.Data;
  * 会员子账户开户请求对象
  **/
 @Data
-public class PinganMchRegisterReqVO {
+public class PinganMchRegisterReqVO extends PinganMchBaseReqVO {
     //功能标志 1.开户，3销户
     @JSONField(name = "FunctionFlag")
     private String FunctionFlag;

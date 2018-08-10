@@ -7,12 +7,14 @@ import lombok.Data;
  * @author Sky
  * create 2018/08/10
  * email sky.li@ixiaoshuidi.com
- * 会员子账户开户返回对象
  **/
 @Data
-public class PinganMchRegisterResVO extends PinganMchBaseResVO {
-    //子账户账号
-    private String SubAcctNo;
-    //保留域
-    private String ReservedMsg;
+public class PinganMchBaseReqVO {
+    //交易流水号
+    @JSONField(name = "CnsmrSeqNo")
+    private String CnsmrSeqNo;
+    //商户号
+    @JSONField(name = "MrchCode")
+    private String MrchCode;
+
 }
