@@ -5,14 +5,15 @@ import com.ih2ome.common.Exception.PinganMchException;
 import com.ih2ome.common.Exception.WebPaymentsException;
 import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterReqVO;
 import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterResVO;
+import com.ih2ome.common.PageVO.WebSearchCnapsVO;
 import com.ih2ome.common.support.ResponseBodyVO;
 import com.ih2ome.common.utils.pingan.SerialNumUtil;
 import com.ih2ome.model.caspain.TerminalToken;
+import com.ih2ome.model.lijiang.PubPayCity;
+import com.ih2ome.model.lijiang.PubPayNode;
 import com.ih2ome.model.lijiang.SubAccount;
 import com.ih2ome.model.lijiang.ZjjzCnapsBanktype;
-import com.ih2ome.service.TerminalTokenService;
-import com.ih2ome.service.WebPaymentsService;
-import com.ih2ome.service.ZjjzCnapsBanktypeService;
+import com.ih2ome.service.*;
 import com.ih2ome.service.impl.PinganMchServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -41,15 +42,18 @@ public class WebPaymentsController {
 
     @Autowired
     private TerminalTokenService terminalTokenService;
-
     @Autowired
     private PinganMchServiceImpl pinganMchService;
-
     @Autowired
     private WebPaymentsService webPaymentsService;
-
     @Autowired
     private ZjjzCnapsBanktypeService banktypeService;
+    @Autowired
+    private PubPayNodeService pubPayNodeService;
+    @Autowired
+    private PubPayCityService pubPayCityService;
+    @Autowired
+    private ZjjzCnapsBankinfoService bankinfoService;
 
 
     @RequestMapping(value = "register", method = RequestMethod.POST)
@@ -86,6 +90,38 @@ public class WebPaymentsController {
         List<ZjjzCnapsBanktype> banktypes = banktypeService.getBankType();
         data.put("banktypes", banktypes);
         return ResponseBodyVO.generateResponseObject(0, data, "获取银行类别成功");
+    }
+
+    @GetMapping(value = "province", produces = "application/json;charset=UTF-8")
+    @ApiOperation("获取省份")
+    public ResponseBodyVO getProvince() {
+        JSONObject data = new JSONObject();
+        List<PubPayNode> provinces = pubPayNodeService.getProvinces();
+        data.put("provinces", provinces);
+        return ResponseBodyVO.generateResponseObject(0, data, "获取省份成功");
+    }
+
+    @GetMapping(value = "city/{province}", produces = "application/json;charset=UTF-8")
+    @ApiOperation("根据省份获取城市")
+    public ResponseBodyVO getCity(@ApiParam(value = "省nodecode") @PathVariable("province") String province) {
+        JSONObject data = new JSONObject();
+        List<PubPayCity> cities = pubPayCityService.getCitiesByProvince(province);
+        data.put("cities", cities);
+        return ResponseBodyVO.generateResponseObject(0, data, "获取城市成功");
+    }
+
+    @GetMapping(value = "search/cnaps", produces = "application/json;charset=UTF-8")
+    @ApiOperation("获取大小额银联号")
+    public ResponseBodyVO searchCnaps(@ApiParam("银行类别code") @RequestParam("bankCode") String bankCode,
+                                      @ApiParam("城市code") @RequestParam("cityCode") String cityCode,
+                                      @ApiParam("支行名称") @RequestParam("bankName") String bankName) {
+        if (bankCode == null || cityCode == null || bankName == null) {
+            return ResponseBodyVO.generateResponseObject(-1, null, "参数错误");
+        }
+        JSONObject data = new JSONObject();
+        List<WebSearchCnapsVO> cnaps = bankinfoService.searchCnaps(bankCode, cityCode, bankName);
+        data.put("cnaps", cnaps);
+        return ResponseBodyVO.generateResponseObject(0, data, "获取大小额银联号成功");
     }
 
 }

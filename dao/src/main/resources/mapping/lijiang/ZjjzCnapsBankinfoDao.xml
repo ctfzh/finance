@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ih2ome.dao.lijiang.ZjjzCnapsBankinfoDao">
+
+    <!--查询大小额行号和名称-->
+    <select id="selectCnapsVOByExample" resultType="com.ih2ome.common.PageVO.WebSearchCnapsVO">
+    SELECT
+        bankno AS cnapsCode,
+        bankname AS cnapsName
+    FROM
+        zjjz_cnaps_bankinfo
+    WHERE
+        bankclscode = #{bankCode} and citycode=#{cityCode} and bankname like concat(concat('%',#{bankName}),'%');
+    </select>
+</mapper>
