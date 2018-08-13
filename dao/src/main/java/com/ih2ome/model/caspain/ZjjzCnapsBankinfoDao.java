@@ -1,0 +1,14 @@
+package com.ih2ome.model.caspain;
+
+import com.ih2ome.dao.BaseDao;
+import com.ih2ome.model.lijiang.ZjjzCnapsBankinfo;
+import org.springframework.stereotype.Repository;
+
+/**
+ * @author Sky
+ * create 2018/08/13
+ * email sky.li@ixiaoshuidi.com
+ **/
+@Repository
+public interface ZjjzCnapsBankinfoDao extends BaseDao<ZjjzCnapsBankinfo> {
+}

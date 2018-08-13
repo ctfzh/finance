@@ -45,13 +45,6 @@ public class WebPaymentsController {
     @Autowired
     private WebPaymentsService webPaymentsService;
 
-    //资金汇总账号
-    @Value("${pingan.mch.mainAcctNo}")
-    private String mainAcctNo;
-
-    //文件传输用户短号
-    @Value("${pingan.wxPay.uid}")
-    private String uid;
 
     @RequestMapping(value = "register", method = RequestMethod.POST)
 
@@ -60,6 +53,7 @@ public class WebPaymentsController {
         TerminalToken terminalToken = terminalTokenService.findByToken(authorization.split(" ")[1]);
         Integer userId = terminalToken.getUserId();
         try {
+            //判断是否有商户子账号
             SubAccount subAccount = webPaymentsService.findAccountByUserId(userId);
             if (subAccount != null) {
                 return ResponseBodyVO.generateResponseObject(0, null, "该用户已开通子账号");
@@ -78,6 +72,7 @@ public class WebPaymentsController {
         }
         return new ResponseBodyVO(0, null, "注册成功");
     }
+
 
 }
 
