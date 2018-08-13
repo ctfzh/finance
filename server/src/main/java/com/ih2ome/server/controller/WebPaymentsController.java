@@ -1,15 +1,22 @@
 package com.ih2ome.server.controller;
 
 import com.ih2ome.common.Exception.PinganMchException;
+import com.ih2ome.common.Exception.WebPaymentsException;
 import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterReqVO;
+import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterResVO;
+import com.ih2ome.common.support.ResponseBodyVO;
+import com.ih2ome.common.utils.pingan.SerialNumUtil;
 import com.ih2ome.model.caspain.TerminalToken;
+import com.ih2ome.model.lijiang.SubAccount;
 import com.ih2ome.service.TerminalTokenService;
+import com.ih2ome.service.WebPaymentsService;
 import com.ih2ome.service.impl.PinganMchServiceImpl;
 import io.swagger.annotations.Api;
 import net.bytebuddy.asm.Advice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,18 +42,41 @@ public class WebPaymentsController {
     @Autowired
     private PinganMchServiceImpl pinganMchService;
 
+    @Autowired
+    private WebPaymentsService webPaymentsService;
+
+    //资金汇总账号
+    @Value("${pingan.mch.mainAcctNo}")
+    private String mainAcctNo;
+
+    //文件传输用户短号
+    @Value("${pingan.wxPay.uid}")
+    private String uid;
+
     @RequestMapping(value = "register", method = RequestMethod.POST)
-    public Integer registerMerchant(@RequestHeader("Authorization") String authorization) {
+
+    public ResponseBodyVO registerMerchant(@RequestHeader("Authorization") String authorization) {
         //获取用户id
         TerminalToken terminalToken = terminalTokenService.findByToken(authorization.split(" ")[1]);
         Integer userId = terminalToken.getUserId();
         try {
-            pinganMchService.registerAccount(new PinganMchRegisterReqVO());
+            SubAccount subAccount = webPaymentsService.findAccountByUserId(userId);
+            if (subAccount != null) {
+                return ResponseBodyVO.generateResponseObject(0, null, "该用户已开通子账号");
+            }
+            PinganMchRegisterResVO resVO = pinganMchService.registerAccount(userId);
+            String subAcctNo = resVO.getSubAcctNo();
+            webPaymentsService.registerAccount(userId, subAcctNo);
         } catch (PinganMchException | IOException e) {
             e.printStackTrace();
-            LOGGER.info("registerMerchant--->注册商户子账号失败:{}", e.getMessage());
+            LOGGER.info("registerMerchant--->注册商户子账号失败,用户id:{},失败原因:{}", userId, e.getMessage());
+            return new ResponseBodyVO(-1, null, e.getMessage());
+        } catch (WebPaymentsException e) {
+            e.printStackTrace();
+            LOGGER.info("registerMerchant--->添加商户子账号失败,用户id:{},失败原因:{}", userId, e.getMessage());
+            return new ResponseBodyVO(-1, null, e.getMessage());
         }
-        return null;
+        return new ResponseBodyVO(0, null, "注册成功");
     }
 
 }

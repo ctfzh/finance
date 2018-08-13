@@ -117,4 +117,6 @@ pingan:
     open_key: 333d153b8b16a5e07e297891e70552e8
     #文件传输用户短号
     uid: M39479
+  mch:
+    mainAcctNo: 15000092363946
 

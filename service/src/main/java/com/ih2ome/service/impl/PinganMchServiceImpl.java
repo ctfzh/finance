@@ -5,10 +5,12 @@ import com.ih2ome.common.Exception.PinganMchException;
 import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterReqVO;
 import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterResVO;
 import com.ih2ome.common.utils.BeanMapUtil;
+import com.ih2ome.common.utils.pingan.SerialNumUtil;
 import com.ih2ome.service.PinganMchService;
 import com.pabank.sdk.PABankSDK;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,15 +28,29 @@ public class PinganMchServiceImpl implements PinganMchService {
     private static final Logger LOGGER = LoggerFactory.getLogger(PinganMchServiceImpl.class);
 
 
+    //资金汇总账号
+    @Value("${pingan.mch.mainAcctNo}")
+    private String mainAcctNo;
+
+    //文件传输用户短号
+    @Value("${pingan.wxPay.uid}")
+    private String uid;
+
     /**
      * 平安开通商户子账户
      *
-     * @param pinganMchRegisterReqVO
+     * @param userId
      * @return
      * @throws PinganMchException
      */
     @Override
-    public PinganMchRegisterResVO registerAccount(PinganMchRegisterReqVO pinganMchRegisterReqVO) throws PinganMchException, IOException {
+    public PinganMchRegisterResVO registerAccount(Integer userId) throws PinganMchException, IOException {
+        PinganMchRegisterReqVO pinganMchRegisterReqVO = new PinganMchRegisterReqVO();
+        pinganMchRegisterReqVO.setCnsmrSeqNo(uid + SerialNumUtil.generateSerial());
+        pinganMchRegisterReqVO.setFunctionFlag("1");
+        pinganMchRegisterReqVO.setFundSummaryAcctNo(mainAcctNo);
+        pinganMchRegisterReqVO.setTranNetMemberCode(userId.toString());
+        pinganMchRegisterReqVO.setMemberProperty("00");
         //开通商户子账户请求数据报文
         String reqJson = JSONObject.toJSONString(pinganMchRegisterReqVO);
         LOGGER.info("registerAccount--->请求数据:{}", reqJson);

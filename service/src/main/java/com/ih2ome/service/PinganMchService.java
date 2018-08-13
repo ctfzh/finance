@@ -16,10 +16,10 @@ public interface PinganMchService {
     /**
      * 开通商户子账户
      *
-     * @param pinganMchRegisterReqVO
+     * @param userId
      * @return
      * @throws PinganMchException
      */
-    PinganMchRegisterResVO registerAccount(PinganMchRegisterReqVO pinganMchRegisterReqVO) throws PinganMchException, IOException;
+    PinganMchRegisterResVO registerAccount(Integer userId) throws PinganMchException, IOException;
 
 }
