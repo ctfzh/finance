@@ -1,7 +1,6 @@
 package com.ih2ome.service.impl;
 
-import com.ih2ome.model.caspain.PubPayNodeDao;
-import com.ih2ome.model.lijiang.PubPayNode;
+import com.ih2ome.dao.lijiang.PubPayNodeDao;
 import com.ih2ome.service.PubPayNodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

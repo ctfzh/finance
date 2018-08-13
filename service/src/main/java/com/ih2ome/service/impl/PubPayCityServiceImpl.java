@@ -1,6 +1,6 @@
 package com.ih2ome.service.impl;
 
-import com.ih2ome.model.caspain.PubPayCityDao;
+import com.ih2ome.dao.lijiang.PubPayCityDao;
 import com.ih2ome.service.PubPayCityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
