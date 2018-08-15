@@ -19,4 +19,12 @@ public interface ZjjzCnapsBankinfoService {
      * @return
      */
     List<WebSearchCnapsVO> searchCnaps(String bankCode, String cityCode, String bankName);
+
+    /**
+     * 根据大小额行号判断是否是平安银行（1是平安银行，2.其他银行）
+     *
+     * @param bankCnapsNo
+     * @return
+     */
+    String judgeBankTypeIsPingan(String bankCnapsNo);
 }

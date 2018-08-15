@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.Exception.PinganMchException;
 import com.ih2ome.common.Exception.WebPaymentsException;
 import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterResVO;
+import com.ih2ome.common.PageVO.WebVO.WebBindCardGetCodeReqVO;
 import com.ih2ome.common.PageVO.WebVO.WebRegisterResVO;
 import com.ih2ome.common.PageVO.WebVO.WebSearchCnapsVO;
 import com.ih2ome.common.support.ResponseBodyVO;
@@ -15,13 +16,16 @@ import com.ih2ome.model.lijiang.ZjjzCnapsBanktype;
 import com.ih2ome.service.*;
 import com.ih2ome.service.impl.PinganMchServiceImpl;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
@@ -73,11 +77,11 @@ public class WebPaymentsController {
         } catch (PinganMchException | IOException e) {
             e.printStackTrace();
             LOGGER.info("registerMerchant--->注册商户子账号失败,用户id:{},失败原因:{}", userId, e.getMessage());
-            return new ResponseBodyVO(-1, null, e.getMessage());
+            return new ResponseBodyVO(-1, data, e.getMessage());
         } catch (WebPaymentsException e) {
             e.printStackTrace();
             LOGGER.info("registerMerchant--->添加商户子账号失败,用户id:{},失败原因:{}", userId, e.getMessage());
-            return new ResponseBodyVO(-1, null, e.getMessage());
+            return new ResponseBodyVO(-1, data, e.getMessage());
         }
         return new ResponseBodyVO(0, data, "注册成功");
     }
@@ -124,7 +128,7 @@ public class WebPaymentsController {
                                       @ApiParam("市或者(区、县)code") @RequestParam("cityCode") String cityCode,
                                       @ApiParam("支行名称") @RequestParam(value = "bankName", required = false) String bankName) {
         if (bankCode == null || cityCode == null) {
-            return ResponseBodyVO.generateResponseObject(-1, null, "参数错误");
+            return ResponseBodyVO.generateResponseObject(-1, null, "请求参数错误");
         }
         JSONObject data = new JSONObject();
         List<WebSearchCnapsVO> cnaps = bankinfoService.searchCnaps(bankCode, cityCode, bankName);
@@ -132,7 +136,27 @@ public class WebPaymentsController {
         return ResponseBodyVO.generateResponseObject(0, data, "获取大小额银联号成功");
     }
 
-
+    @PostMapping(value = "bindCard/code", produces = "application/json;charset=UTF-8")
+    @ApiOperation("个人账户绑定发送短信验证码")
+    public ResponseBodyVO sendMessage(@RequestBody @Valid WebBindCardGetCodeReqVO codeReqVO, BindingResult bindingResult) {
+        JSONObject data = new JSONObject();
+        if (bindingResult.hasErrors()) {
+            return ResponseBodyVO.generateResponseObject(-1, data, "请求参数错误");
+        }
+        try {
+            //根据用户id获取会员子账号和交易网会员代码
+            SubAccount subAccount = webPaymentsService.findAccountByUserId(codeReqVO.getUserId());
+            //判断银行是否是平安银行
+            String bankType = bankinfoService.judgeBankTypeIsPingan(codeReqVO.getBankCnapsNo());
+            //发送短信鉴权
+            pinganMchService.bindCardSendMessage(subAccount, bankType, codeReqVO);
+        } catch (PinganMchException | IOException e) {
+            e.printStackTrace();
+            LOGGER.info("sendMessage--->绑卡发送短信验证码失败,请求数据:{},失败原因:{}", codeReqVO.toString(), e.getMessage());
+            return new ResponseBodyVO(-1, data, e.getMessage());
+        }
+        return ResponseBodyVO.generateResponseObject(0, data, "鉴权成功,成功发送短信");
+    }
 }
 
 
