@@ -9,7 +9,11 @@
         bankname AS cnapsName
     FROM
         zjjz_cnaps_bankinfo
-    WHERE
-        bankclscode = #{bankCode} and citycode=#{cityCode} and bankname like concat(concat('%',#{bankName}),'%');
+    <where>
+        bankclscode = #{bankCode} and citycode=#{cityCode} and status='1'
+        <if test="bankName!=null and bankName.trim()!=''">
+            and bankname like concat(concat('%',#{bankName}),'%')
+        </if>
+    </where>
     </select>
 </mapper>

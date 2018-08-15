@@ -102,20 +102,29 @@ public class WebPaymentsController {
     }
 
     @GetMapping(value = "city/{province}", produces = "application/json;charset=UTF-8")
-    @ApiOperation("根据省份获取城市")
-    public ResponseBodyVO getCity(@ApiParam(value = "省nodecode") @PathVariable("province") String province) {
+    @ApiOperation("根据省份获取市")
+    public ResponseBodyVO getCity(@ApiParam(value = "省code") @PathVariable("province") String province) {
         JSONObject data = new JSONObject();
         List<PubPayCity> cities = pubPayCityService.getCitiesByProvince(province);
         data.put("cities", cities);
         return ResponseBodyVO.generateResponseObject(0, data, "获取城市成功");
     }
 
+    @GetMapping(value = "district/{city}", produces = "application/json;charset=UTF-8")
+    @ApiOperation("根据市获取县、区")
+    public ResponseBodyVO getDistrict(@ApiParam(value = "市code") @PathVariable("city") String city) {
+        JSONObject data = new JSONObject();
+        List<PubPayCity> districts = pubPayCityService.getDistrictsByCity(city);
+        data.put("districts", districts);
+        return ResponseBodyVO.generateResponseObject(0, data, "获取区/县成功");
+    }
+
     @GetMapping(value = "search/cnaps", produces = "application/json;charset=UTF-8")
     @ApiOperation("获取大小额银联号")
     public ResponseBodyVO searchCnaps(@ApiParam("银行类别code") @RequestParam("bankCode") String bankCode,
-                                      @ApiParam("城市code") @RequestParam("cityCode") String cityCode,
-                                      @ApiParam("支行名称") @RequestParam("bankName") String bankName) {
-        if (bankCode == null || cityCode == null || bankName == null) {
+                                      @ApiParam("市或者(区、县)code") @RequestParam("cityCode") String cityCode,
+                                      @ApiParam("支行名称") @RequestParam(value = "bankName", required = false) String bankName) {
+        if (bankCode == null || cityCode == null) {
             return ResponseBodyVO.generateResponseObject(-1, null, "参数错误");
         }
         JSONObject data = new JSONObject();

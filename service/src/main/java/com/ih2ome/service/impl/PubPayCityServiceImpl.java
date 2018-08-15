@@ -29,8 +29,25 @@ public class PubPayCityServiceImpl implements PubPayCityService {
     @Override
     public List<PubPayCity> getCitiesByProvince(String province) {
         Example example = new Example(PubPayCity.class);
-        example.createCriteria().andEqualTo("cityNodecode", province);
+        example.createCriteria().andEqualTo("cityNodecode", province).andEqualTo("cityAreatype", "2");
         List<PubPayCity> cities = pubPayCityDao.selectByExample(example);
         return cities;
+    }
+
+    /**
+     * 根据城市获取区/县
+     *
+     * @param city
+     * @return
+     */
+    @Override
+    public List<PubPayCity> getDistrictsByCity(String city) {
+        Example example = new Example(PubPayCity.class);
+        PubPayCity pubPayCity = new PubPayCity();
+        pubPayCity.setCityTopareacode2(city);
+        pubPayCity.setCityAreatype("3");
+        example.createCriteria().andEqualTo(pubPayCity);
+        List<PubPayCity> districts = pubPayCityDao.selectByExample(example);
+        return districts;
     }
 }

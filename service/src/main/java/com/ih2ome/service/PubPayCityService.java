@@ -17,4 +17,12 @@ public interface PubPayCityService {
      * @return
      */
     List<PubPayCity> getCitiesByProvince(String province);
+
+    /**
+     * 根据城市获取区/县
+     *
+     * @param city
+     * @return
+     */
+    List<PubPayCity> getDistrictsByCity(String city);
 }
