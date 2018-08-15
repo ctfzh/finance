@@ -1,6 +1,6 @@
 package com.ih2ome.dao.lijiang;
 
-import com.ih2ome.common.PageVO.WebSearchCnapsVO;
+import com.ih2ome.common.PageVO.WebVO.WebSearchCnapsVO;
 import com.ih2ome.dao.BaseDao;
 import com.ih2ome.model.lijiang.ZjjzCnapsBankinfo;
 import org.apache.ibatis.annotations.Param;

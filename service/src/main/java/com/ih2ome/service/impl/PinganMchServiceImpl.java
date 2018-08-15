@@ -57,7 +57,7 @@ public class PinganMchServiceImpl implements PinganMchService {
         Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "OpenCustAcctId");
         LOGGER.info("registerAccount--->响应数据:{}", result);
         String code = (String) result.get("TxnReturnCode");
-        if (!code.equals("OPEN-E-000000")) {
+        if (!code.equals("000000")) {
             String txnReturnMsg = (String) result.get("TxnReturnMsg");
             LOGGER.error("registerAccount--->平安开通商户子账户失败,失败原因:{}", txnReturnMsg);
             throw new PinganMchException(txnReturnMsg);

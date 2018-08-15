@@ -15,6 +15,6 @@ public class PinganMchBaseReqVO {
     private String CnsmrSeqNo;
     //商户号
     @JSONField(name = "MrchCode")
-    private String MrchCode;
+    private String MrchCode = "4004";
 
 }

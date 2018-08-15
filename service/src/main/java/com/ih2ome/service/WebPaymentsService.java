@@ -1,7 +1,7 @@
 package com.ih2ome.service;
 
 import com.ih2ome.common.Exception.WebPaymentsException;
-import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterResVO;
+import com.ih2ome.common.PageVO.WebVO.WebRegisterResVO;
 import com.ih2ome.model.lijiang.SubAccount;
 
 /**
@@ -17,7 +17,7 @@ public interface WebPaymentsService {
      * @param userId
      * @param subAccountNo
      */
-    public void registerAccount(Integer userId, String subAccountNo) throws WebPaymentsException;
+    WebRegisterResVO registerAccount(Integer userId, String subAccountNo) throws WebPaymentsException;
 
     /**
      * 根据用户id查询商户子账号

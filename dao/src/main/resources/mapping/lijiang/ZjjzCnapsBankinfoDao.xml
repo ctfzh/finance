@@ -3,7 +3,7 @@
 <mapper namespace="com.ih2ome.dao.lijiang.ZjjzCnapsBankinfoDao">
 
     <!--查询大小额行号和名称-->
-    <select id="selectCnapsVOByExample" resultType="com.ih2ome.common.PageVO.WebSearchCnapsVO">
+    <select id="selectCnapsVOByExample" resultType="com.ih2ome.common.PageVO.WebVO.WebSearchCnapsVO">
     SELECT
         bankno AS cnapsCode,
         bankname AS cnapsName

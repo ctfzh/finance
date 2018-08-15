@@ -1,6 +1,6 @@
 package com.ih2ome.service.impl;
 
-import com.ih2ome.common.PageVO.WebSearchCnapsVO;
+import com.ih2ome.common.PageVO.WebVO.WebSearchCnapsVO;
 import com.ih2ome.dao.lijiang.ZjjzCnapsBankinfoDao;
 import com.ih2ome.service.ZjjzCnapsBankinfoService;
 import org.springframework.beans.factory.annotation.Autowired;

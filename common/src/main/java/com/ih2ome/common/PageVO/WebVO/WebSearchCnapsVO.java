@@ -1,4 +1,4 @@
-package com.ih2ome.common.PageVO;
+package com.ih2ome.common.PageVO.WebVO;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

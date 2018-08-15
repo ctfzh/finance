@@ -1,6 +1,6 @@
 package com.ih2ome.service;
 
-import com.ih2ome.common.PageVO.WebSearchCnapsVO;
+import com.ih2ome.common.PageVO.WebVO.WebSearchCnapsVO;
 
 import java.util.List;
 

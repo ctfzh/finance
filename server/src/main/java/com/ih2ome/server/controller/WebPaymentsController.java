@@ -3,11 +3,10 @@ package com.ih2ome.server.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.Exception.PinganMchException;
 import com.ih2ome.common.Exception.WebPaymentsException;
-import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterReqVO;
 import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterResVO;
-import com.ih2ome.common.PageVO.WebSearchCnapsVO;
+import com.ih2ome.common.PageVO.WebVO.WebRegisterResVO;
+import com.ih2ome.common.PageVO.WebVO.WebSearchCnapsVO;
 import com.ih2ome.common.support.ResponseBodyVO;
-import com.ih2ome.common.utils.pingan.SerialNumUtil;
 import com.ih2ome.model.caspain.TerminalToken;
 import com.ih2ome.model.lijiang.PubPayCity;
 import com.ih2ome.model.lijiang.PubPayNode;
@@ -18,11 +17,9 @@ import com.ih2ome.service.impl.PinganMchServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import net.bytebuddy.asm.Advice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -59,6 +56,7 @@ public class WebPaymentsController {
     @RequestMapping(value = "register", method = RequestMethod.POST)
     @ApiOperation("注册商户子账户")
     public ResponseBodyVO registerMerchant(@RequestHeader("Authorization") String authorization) {
+        JSONObject data = new JSONObject();
         //获取用户id
         TerminalToken terminalToken = terminalTokenService.findByToken(authorization.split(" ")[1]);
         Integer userId = terminalToken.getUserId();
@@ -70,7 +68,8 @@ public class WebPaymentsController {
             }
             PinganMchRegisterResVO resVO = pinganMchService.registerAccount(userId);
             String subAcctNo = resVO.getSubAcctNo();
-            webPaymentsService.registerAccount(userId, subAcctNo);
+            WebRegisterResVO registerResVO = webPaymentsService.registerAccount(userId, subAcctNo);
+            data.put("registerResVO", registerResVO);
         } catch (PinganMchException | IOException e) {
             e.printStackTrace();
             LOGGER.info("registerMerchant--->注册商户子账号失败,用户id:{},失败原因:{}", userId, e.getMessage());
@@ -80,7 +79,7 @@ public class WebPaymentsController {
             LOGGER.info("registerMerchant--->添加商户子账号失败,用户id:{},失败原因:{}", userId, e.getMessage());
             return new ResponseBodyVO(-1, null, e.getMessage());
         }
-        return new ResponseBodyVO(0, null, "注册成功");
+        return new ResponseBodyVO(0, data, "注册成功");
     }
 
     @GetMapping(value = "bank/type", produces = "application/json;charset=UTF-8")
@@ -132,6 +131,7 @@ public class WebPaymentsController {
         data.put("cnaps", cnaps);
         return ResponseBodyVO.generateResponseObject(0, data, "获取大小额银联号成功");
     }
+
 
 }
 

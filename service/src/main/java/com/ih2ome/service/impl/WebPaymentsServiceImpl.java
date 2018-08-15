@@ -1,9 +1,8 @@
 package com.ih2ome.service.impl;
 
 import com.ih2ome.common.Exception.WebPaymentsException;
-import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterResVO;
+import com.ih2ome.common.PageVO.WebVO.WebRegisterResVO;
 import com.ih2ome.dao.lijiang.SubAccountDao;
-import com.ih2ome.dao.lijiang.SubOrdersDao;
 import com.ih2ome.model.lijiang.SubAccount;
 import com.ih2ome.service.WebPaymentsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +31,7 @@ public class WebPaymentsServiceImpl implements WebPaymentsService {
      * @param subAccountNo
      */
     @Override
-    public void registerAccount(Integer userId, String subAccountNo) throws WebPaymentsException {
+    public WebRegisterResVO registerAccount(Integer userId, String subAccountNo) throws WebPaymentsException {
         SubAccount subAccount = new SubAccount();
         subAccount.setCreatedAt(new Date());
         subAccount.setCreatedById(userId);
@@ -41,6 +40,10 @@ public class WebPaymentsServiceImpl implements WebPaymentsService {
         subAccount.setVersion(0);
         subAccount.setAccount(subAccountNo);
         subAccountDao.insert(subAccount);
+        WebRegisterResVO webRegisterResVO = new WebRegisterResVO();
+        webRegisterResVO.setUserId(userId);
+        webRegisterResVO.setSubAccountNo(subAccountNo);
+        return webRegisterResVO;
     }
 
     /**
