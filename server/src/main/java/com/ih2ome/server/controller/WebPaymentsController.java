@@ -177,7 +177,7 @@ public class WebPaymentsController {
             LOGGER.info("submitPersonalBindInfo--->绑卡信息提交失败,请求数据:{},失败原因:{}", reqVO.toString(), e.getMessage());
             return new ResponseBodyVO(-1, data, e.getMessage());
         }
-        return null;
+        return ResponseBodyVO.generateResponseObject(0, data, "绑定成功");
     }
 }
 

@@ -43,7 +43,7 @@ public interface PinganMchService {
     void bindPersonalCardVertify(SubAccount subAccount, WebBindCardPersonalReqVO reqVO) throws PinganMchException, IOException;
 
     /**
-     * 查询会员绑定信息
+     * 查询会员绑定信息(测试)
      *
      * @throws PinganMchException
      */

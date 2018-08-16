@@ -135,7 +135,7 @@ public class PinganMchServiceImpl implements PinganMchService {
     }
 
     /**
-     * 查询会员绑定信息
+     * 查询会员绑定信息(测试)
      *
      * @throws PinganMchException
      */
