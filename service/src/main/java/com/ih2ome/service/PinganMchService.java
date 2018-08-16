@@ -41,4 +41,11 @@ public interface PinganMchService {
      * @param reqVO
      */
     void bindPersonalCardVertify(SubAccount subAccount, WebBindCardPersonalReqVO reqVO) throws PinganMchException, IOException;
+
+    /**
+     * 查询会员绑定信息
+     *
+     * @throws PinganMchException
+     */
+    void queryMemberBindInfo() throws PinganMchException, IOException;
 }

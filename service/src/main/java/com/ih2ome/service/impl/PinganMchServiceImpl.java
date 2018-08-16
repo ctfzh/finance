@@ -2,10 +2,7 @@ package com.ih2ome.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.Exception.PinganMchException;
-import com.ih2ome.common.PageVO.PinganMchVO.PinganMchBindCardGetCodeReqVO;
-import com.ih2ome.common.PageVO.PinganMchVO.PinganMchBindPersonalCardReqVO;
-import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterReqVO;
-import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterResVO;
+import com.ih2ome.common.PageVO.PinganMchVO.*;
 import com.ih2ome.common.PageVO.WebVO.WebBindCardPersonalReqVO;
 import com.ih2ome.common.utils.BeanMapUtil;
 import com.ih2ome.common.utils.pingan.SerialNumUtil;
@@ -135,6 +132,33 @@ public class PinganMchServiceImpl implements PinganMchService {
             LOGGER.error("registerAccount--->会员绑定提现账户(个人)-回填验证码失败,失败原因:{}", txnReturnMsg);
             throw new PinganMchException(txnReturnMsg);
         }
+    }
+
+    /**
+     * 查询会员绑定信息
+     *
+     * @throws PinganMchException
+     */
+    @Override
+    public void queryMemberBindInfo() throws PinganMchException, IOException {
+        PinganMchQueryBindInfoReqVO bindInfoReqVO = new PinganMchQueryBindInfoReqVO();
+        bindInfoReqVO.setCnsmrSeqNo(uid + SerialNumUtil.generateSerial());
+        bindInfoReqVO.setFundSummaryAcctNo(mainAcctNo);
+        bindInfoReqVO.setSubAcctNo("4004000000001030");
+        bindInfoReqVO.setQueryFlag("2");
+        bindInfoReqVO.setPageNum("1");
+        String reqJson = JSONObject.toJSONString(bindInfoReqVO);
+        LOGGER.info("queryMemberBindInfo--->请求数据:{}", reqJson);
+        Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "MemberBindQuery");
+        LOGGER.info("queryMemberBindInfo--->响应数据:{}", result);
+        String code = (String) result.get("TxnReturnCode");
+        if (!code.equals("000000")) {
+            String txnReturnMsg = (String) result.get("TxnReturnMsg");
+            LOGGER.error("queryMemberBindInfo--->会员绑定信息查询失败,失败原因:{}", txnReturnMsg);
+            throw new PinganMchException(txnReturnMsg);
+        }
+
+
     }
 
 

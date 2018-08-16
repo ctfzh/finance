@@ -3,6 +3,7 @@ package com.ih2ome.server.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.google.common.io.Resources;
+import com.ih2ome.common.Exception.PinganMchException;
 import com.ih2ome.common.Exception.PinganWxPayException;
 import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterResVO;
 import com.ih2ome.common.PageVO.PinganWxPayVO.*;
@@ -17,6 +18,7 @@ import com.ih2ome.dao.volga.VolgaMoneyFlowDao;
 import com.ih2ome.model.lijiang.PayOrders;
 import com.ih2ome.model.volga.MoneyFlow;
 import com.ih2ome.server.pingan.sdk.InitConfiguration;
+import com.ih2ome.service.PinganMchService;
 import com.ih2ome.service.PinganPayService;
 import com.pabank.sdk.PABankSDK;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +51,8 @@ public class TestMapperController {
     private PinganPayService pinganPayService;
     @Autowired
     private PayOrdersDao payOrdersDao;
+    @Autowired
+    private PinganMchService pinganMchService;
 
     @GetMapping("/one")
     @ResponseBody
@@ -190,8 +194,12 @@ public class TestMapperController {
 
     @PostMapping("nine")
     @ResponseBody
-    public ResponseBodyVO test09(@RequestBody PinganMchRegisterResVO resVO) throws IOException, InvocationTargetException, IllegalAccessException {
-        System.out.println(resVO);
+    public ResponseBodyVO test09() throws IOException, InvocationTargetException, IllegalAccessException {
+        try {
+            pinganMchService.queryMemberBindInfo();
+        } catch (PinganMchException e) {
+            e.printStackTrace();
+        }
         return ResponseBodyVO.generateResponseObject(0, null, "success");
     }
 
