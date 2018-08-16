@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.Exception.PinganMchException;
 import com.ih2ome.common.Exception.WebPaymentsException;
 import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterResVO;
-import com.ih2ome.common.PageVO.WebVO.WebBindCardGetCodeReqVO;
+import com.ih2ome.common.PageVO.WebVO.WebBindCardPersonalReqVO;
 import com.ih2ome.common.PageVO.WebVO.WebRegisterResVO;
 import com.ih2ome.common.PageVO.WebVO.WebSearchCnapsVO;
 import com.ih2ome.common.support.ResponseBodyVO;
@@ -19,6 +19,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,26 +137,47 @@ public class WebPaymentsController {
         return ResponseBodyVO.generateResponseObject(0, data, "获取大小额银联号成功");
     }
 
-    @PostMapping(value = "bindCard/code", produces = "application/json;charset=UTF-8")
+    @PostMapping(value = "personal/bindCard/code", produces = "application/json;charset=UTF-8")
     @ApiOperation("个人账户绑定发送短信验证码")
-    public ResponseBodyVO sendMessage(@RequestBody @Valid WebBindCardGetCodeReqVO codeReqVO, BindingResult bindingResult) {
+    public ResponseBodyVO sendMessage(@RequestBody @Valid WebBindCardPersonalReqVO reqVO, BindingResult bindingResult) {
         JSONObject data = new JSONObject();
         if (bindingResult.hasErrors()) {
             return ResponseBodyVO.generateResponseObject(-1, data, "请求参数错误");
         }
         try {
             //根据用户id获取会员子账号和交易网会员代码
-            SubAccount subAccount = webPaymentsService.findAccountByUserId(codeReqVO.getUserId());
+            SubAccount subAccount = webPaymentsService.findAccountByUserId(reqVO.getUserId());
             //判断银行是否是平安银行
-            String bankType = bankinfoService.judgeBankTypeIsPingan(codeReqVO.getBankCnapsNo());
+            String bankType = bankinfoService.judgeBankTypeIsPingan(reqVO.getBankCnapsNo());
             //发送短信鉴权
-            pinganMchService.bindCardSendMessage(subAccount, bankType, codeReqVO);
+            pinganMchService.bindCardSendMessage(subAccount, bankType, reqVO);
         } catch (PinganMchException | IOException e) {
             e.printStackTrace();
-            LOGGER.info("sendMessage--->绑卡发送短信验证码失败,请求数据:{},失败原因:{}", codeReqVO.toString(), e.getMessage());
+            LOGGER.info("sendMessage--->绑卡发送短信验证码失败,请求数据:{},失败原因:{}", reqVO.toString(), e.getMessage());
             return new ResponseBodyVO(-1, data, e.getMessage());
         }
         return ResponseBodyVO.generateResponseObject(0, data, "鉴权成功,成功发送短信");
+    }
+
+    @PostMapping(value = "personal/bindCard/submit", produces = "application/json;charset=UTF-8")
+    @ApiModelProperty("个人账户绑定银行卡提交")
+    public ResponseBodyVO submitPersonalBindInfo(@RequestBody @Valid WebBindCardPersonalReqVO reqVO, BindingResult bindingResult) {
+        JSONObject data = new JSONObject();
+        if (bindingResult.hasErrors() || StringUtils.isBlank(reqVO.getMessageCode())) {
+            return ResponseBodyVO.generateResponseObject(-1, data, "请求参数错误");
+        }
+        try {
+            //根据用户id获取会员子账号和交易网会员代码
+            SubAccount subAccount = webPaymentsService.findAccountByUserId(reqVO.getUserId());
+            //回填平安短信验证码
+            pinganMchService.bindPersonalCardVertify(subAccount, reqVO);
+
+        } catch (PinganMchException | IOException e) {
+            e.printStackTrace();
+            LOGGER.info("submitPersonalBindInfo--->绑卡信息提交失败,请求数据:{},失败原因:{}", reqVO.toString(), e.getMessage());
+            return new ResponseBodyVO(-1, data, e.getMessage());
+        }
+        return null;
     }
 }
 

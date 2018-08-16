@@ -2,7 +2,7 @@ package com.ih2ome.service;
 
 import com.ih2ome.common.Exception.PinganMchException;
 import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterResVO;
-import com.ih2ome.common.PageVO.WebVO.WebBindCardGetCodeReqVO;
+import com.ih2ome.common.PageVO.WebVO.WebBindCardPersonalReqVO;
 import com.ih2ome.model.lijiang.SubAccount;
 
 import java.io.IOException;
@@ -32,6 +32,13 @@ public interface PinganMchService {
      * @param codeReqVO  @throws PinganMchException
      * @throws IOException
      */
-    void bindCardSendMessage(SubAccount subAccount, String bankType, WebBindCardGetCodeReqVO codeReqVO) throws PinganMchException, IOException;
+    void bindCardSendMessage(SubAccount subAccount, String bankType, WebBindCardPersonalReqVO codeReqVO) throws PinganMchException, IOException;
 
+    /**
+     * 绑定个人银行卡(短信校验)
+     *
+     * @param subAccount
+     * @param reqVO
+     */
+    void bindPersonalCardVertify(SubAccount subAccount, WebBindCardPersonalReqVO reqVO) throws PinganMchException, IOException;
 }

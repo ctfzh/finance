@@ -12,8 +12,8 @@ import javax.validation.constraints.NotNull;
  * email sky.li@ixiaoshuidi.com
  **/
 @Data
-@ApiModel("个人绑卡短信验证码请求对象")
-public class WebBindCardGetCodeReqVO {
+@ApiModel("个人绑卡请求对象")
+public class WebBindCardPersonalReqVO {
     @ApiModelProperty("用户Id")
     @NotNull(message = "用户id不能为空")
     private Integer userId;
@@ -41,6 +41,9 @@ public class WebBindCardGetCodeReqVO {
     @ApiModelProperty("手机号码")
     @NotNull(message = "手机号码不能为空")
     private String mobile;
+
+    @ApiModelProperty("短信验证码")
+    private String messageCode;
 
 
 }

@@ -5,7 +5,7 @@ import com.ih2ome.common.Exception.PinganMchException;
 import com.ih2ome.common.PageVO.PinganMchVO.PinganMchBindCardGetCodeReqVO;
 import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterReqVO;
 import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterResVO;
-import com.ih2ome.common.PageVO.WebVO.WebBindCardGetCodeReqVO;
+import com.ih2ome.common.PageVO.WebVO.WebBindCardPersonalReqVO;
 import com.ih2ome.common.utils.BeanMapUtil;
 import com.ih2ome.common.utils.pingan.SerialNumUtil;
 import com.ih2ome.model.lijiang.SubAccount;
@@ -74,27 +74,27 @@ public class PinganMchServiceImpl implements PinganMchService {
      *
      * @param subAccount
      * @param bankType
-     * @param codeReqVO  @throws PinganMchException
+     * @param personalReqVO @throws PinganMchException
      * @throws IOException
      */
     @Override
-    public void bindCardSendMessage(SubAccount subAccount, String bankType, WebBindCardGetCodeReqVO codeReqVO) throws PinganMchException, IOException {
+    public void bindCardSendMessage(SubAccount subAccount, String bankType, WebBindCardPersonalReqVO personalReqVO) throws PinganMchException, IOException {
         PinganMchBindCardGetCodeReqVO reqVO = new PinganMchBindCardGetCodeReqVO();
         reqVO.setCnsmrSeqNo(uid + SerialNumUtil.generateSerial());
         reqVO.setFundSummaryAcctNo(mainAcctNo);
         reqVO.setSubAcctNo(subAccount.getAccount());
         reqVO.setTranNetMemberCode(subAccount.getUserId().toString());
-        reqVO.setMemberName(codeReqVO.getUserName());
+        reqVO.setMemberName(personalReqVO.getUserName());
         reqVO.setMemberGlobalType("1");
-        reqVO.setMemberGlobalId(codeReqVO.getIdCardNo());
-        reqVO.setMemberAcctNo(codeReqVO.getBankCardNo());
+        reqVO.setMemberGlobalId(personalReqVO.getIdCardNo());
+        reqVO.setMemberAcctNo(personalReqVO.getBankCardNo());
         reqVO.setBankType(bankType);
         //其他银行，需要传递大小额行号和支行名称
         if ("2".equals(bankType)) {
-            reqVO.setAcctOpenBranchName(codeReqVO.getBankName());
-            reqVO.setCnapsBranchId(codeReqVO.getBankCnapsNo());
+            reqVO.setAcctOpenBranchName(personalReqVO.getBankName());
+            reqVO.setCnapsBranchId(personalReqVO.getBankCnapsNo());
         }
-        reqVO.setMobile(codeReqVO.getMobile());
+        reqVO.setMobile(personalReqVO.getMobile());
         //个人绑卡(短信验证)请求数据报文
         String reqJson = JSONObject.toJSONString(reqVO);
         LOGGER.info("bindCardSendMessage--->请求数据:{}", reqJson);
@@ -106,6 +106,17 @@ public class PinganMchServiceImpl implements PinganMchService {
             LOGGER.error("registerAccount--->会员绑定提现账户(个人)-银联鉴权,失败原因:{}", txnReturnMsg);
             throw new PinganMchException(txnReturnMsg);
         }
+    }
+
+    /**
+     * 绑定个人银行卡(短信校验)
+     *
+     * @param subAccount
+     * @param reqVO
+     */
+    @Override
+    public void bindPersonalCardVertify(SubAccount subAccount, WebBindCardPersonalReqVO reqVO) throws PinganMchException, IOException {
+
     }
 
 
