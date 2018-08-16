@@ -3,6 +3,7 @@ package com.ih2ome.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.Exception.PinganMchException;
 import com.ih2ome.common.PageVO.PinganMchVO.PinganMchBindCardGetCodeReqVO;
+import com.ih2ome.common.PageVO.PinganMchVO.PinganMchBindPersonalCardReqVO;
 import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterReqVO;
 import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterResVO;
 import com.ih2ome.common.PageVO.WebVO.WebBindCardPersonalReqVO;
@@ -99,7 +100,7 @@ public class PinganMchServiceImpl implements PinganMchService {
         String reqJson = JSONObject.toJSONString(reqVO);
         LOGGER.info("bindCardSendMessage--->请求数据:{}", reqJson);
         Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "BindRelateAcctUnionPay");
-        LOGGER.info("registerAccount--->响应数据:{}", result);
+        LOGGER.info("bindCardSendMessage--->响应数据:{}", result);
         String code = (String) result.get("TxnReturnCode");
         if (!code.equals("000000")) {
             String txnReturnMsg = (String) result.get("TxnReturnMsg");
@@ -116,7 +117,24 @@ public class PinganMchServiceImpl implements PinganMchService {
      */
     @Override
     public void bindPersonalCardVertify(SubAccount subAccount, WebBindCardPersonalReqVO reqVO) throws PinganMchException, IOException {
-
+        PinganMchBindPersonalCardReqVO personalCardReqVO = new PinganMchBindPersonalCardReqVO();
+        personalCardReqVO.setCnsmrSeqNo(uid + SerialNumUtil.generateSerial());
+        personalCardReqVO.setFundSummaryAcctNo(mainAcctNo);
+        personalCardReqVO.setTranNetMemberCode(subAccount.getUserId().toString());
+        personalCardReqVO.setMemberAcctNo(reqVO.getBankCardNo());
+        personalCardReqVO.setSubAcctNo(subAccount.getAccount());
+        personalCardReqVO.setMessageCheckCode(reqVO.getMessageCode());
+        //个人绑卡(短信验证码回填)请求数据报文
+        String reqJson = JSONObject.toJSONString(personalCardReqVO);
+        LOGGER.info("bindPersonalCardVertify--->请求数据:{}", reqJson);
+        Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "BindRelateAccReUnionPay");
+        LOGGER.info("bindPersonalCardVertify--->响应数据:{}", result);
+        String code = (String) result.get("TxnReturnCode");
+        if (!code.equals("000000")) {
+            String txnReturnMsg = (String) result.get("TxnReturnMsg");
+            LOGGER.error("registerAccount--->会员绑定提现账户(个人)-回填验证码失败,失败原因:{}", txnReturnMsg);
+            throw new PinganMchException(txnReturnMsg);
+        }
     }
 
 

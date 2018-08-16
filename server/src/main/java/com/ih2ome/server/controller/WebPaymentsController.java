@@ -9,10 +9,7 @@ import com.ih2ome.common.PageVO.WebVO.WebRegisterResVO;
 import com.ih2ome.common.PageVO.WebVO.WebSearchCnapsVO;
 import com.ih2ome.common.support.ResponseBodyVO;
 import com.ih2ome.model.caspain.TerminalToken;
-import com.ih2ome.model.lijiang.PubPayCity;
-import com.ih2ome.model.lijiang.PubPayNode;
-import com.ih2ome.model.lijiang.SubAccount;
-import com.ih2ome.model.lijiang.ZjjzCnapsBanktype;
+import com.ih2ome.model.lijiang.*;
 import com.ih2ome.service.*;
 import com.ih2ome.service.impl.PinganMchServiceImpl;
 import io.swagger.annotations.Api;
@@ -56,6 +53,8 @@ public class WebPaymentsController {
     private PubPayCityService pubPayCityService;
     @Autowired
     private ZjjzCnapsBankinfoService bankinfoService;
+    @Autowired
+    private SubAccountCardService subAccountCardService;
 
 
     @RequestMapping(value = "register", method = RequestMethod.POST)
@@ -171,7 +170,8 @@ public class WebPaymentsController {
             SubAccount subAccount = webPaymentsService.findAccountByUserId(reqVO.getUserId());
             //回填平安短信验证码
             pinganMchService.bindPersonalCardVertify(subAccount, reqVO);
-
+            //回填验证成功，将银行卡信息存入数据库
+            subAccountCardService.insertCardInfo(subAccount, reqVO);
         } catch (PinganMchException | IOException e) {
             e.printStackTrace();
             LOGGER.info("submitPersonalBindInfo--->绑卡信息提交失败,请求数据:{},失败原因:{}", reqVO.toString(), e.getMessage());
