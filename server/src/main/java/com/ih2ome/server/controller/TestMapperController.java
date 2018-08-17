@@ -201,6 +201,7 @@ public class TestMapperController {
     public ResponseBodyVO test09() throws IOException, InvocationTargetException, IllegalAccessException {
         try {
             pinganMchService.queryMemberBindInfo();
+//            pinganMchService.queryTransferinfo();
         } catch (PinganMchException e) {
             e.printStackTrace();
         }

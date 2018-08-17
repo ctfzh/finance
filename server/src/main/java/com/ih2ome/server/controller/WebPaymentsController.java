@@ -172,7 +172,7 @@ public class WebPaymentsController {
             //回填平安短信验证码
             pinganMchService.bindPersonalCardVertify(subAccount, reqVO);
             //回填验证成功，将银行卡信息存入数据库
-            subAccountCardService.insertCardInfo(subAccount, reqVO);
+            subAccountCardService.insertPersonalCardInfo(subAccount, reqVO);
         } catch (PinganMchException | IOException e) {
             e.printStackTrace();
             LOGGER.info("submitPersonalBindInfo--->绑卡信息提交失败,请求数据:{},失败原因:{}", reqVO.toString(), e.getMessage());
@@ -202,9 +202,30 @@ public class WebPaymentsController {
             return new ResponseBodyVO(-1, data, e.getMessage());
         }
         return ResponseBodyVO.generateResponseObject(0, data, "鉴权成功,成功发送金额");
-
     }
 
+
+    @PostMapping(value = "company/bindCard/submit", produces = "application/json;charset=UTF-8")
+    @ApiModelProperty("企业账户绑定银行卡提交")
+    public ResponseBodyVO submitCompanyBindInfo(@RequestBody @Valid WebBindCardCompanyReqVO reqVO, BindingResult bindingResult) {
+        JSONObject data = new JSONObject();
+        if (bindingResult.hasErrors() || StringUtils.isBlank(reqVO.getVertifyAmount())) {
+            return ResponseBodyVO.generateResponseObject(-1, data, "请求参数错误");
+        }
+        try {
+            //根据用户id获取会员子账号和交易网会员代码
+            SubAccount subAccount = webPaymentsService.findAccountByUserId(reqVO.getUserId());
+            //回填平安小额鉴权金额
+            pinganMchService.bindCompanyCardVertify(subAccount, reqVO);
+            //回填验证成功，将银行卡信息存入数据库
+            subAccountCardService.insertCompanyCardInfo(subAccount, reqVO);
+        } catch (PinganMchException | IOException e) {
+            e.printStackTrace();
+            LOGGER.info("submitPersonalBindInfo--->绑卡信息提交失败,请求数据:{},失败原因:{}", reqVO.toString(), e.getMessage());
+            return new ResponseBodyVO(-1, data, e.getMessage());
+        }
+        return ResponseBodyVO.generateResponseObject(0, data, "绑定成功");
+    }
 
 }
 

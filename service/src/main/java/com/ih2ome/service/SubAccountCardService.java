@@ -1,5 +1,6 @@
 package com.ih2ome.service;
 
+import com.ih2ome.common.PageVO.WebVO.WebBindCardCompanyReqVO;
 import com.ih2ome.common.PageVO.WebVO.WebBindCardPersonalReqVO;
 import com.ih2ome.model.lijiang.SubAccount;
 
@@ -10,10 +11,18 @@ import com.ih2ome.model.lijiang.SubAccount;
  **/
 public interface SubAccountCardService {
     /**
-     * 绑定银行卡到账号
+     * 绑定个人银行卡到账号
      *
      * @param subAccount
      * @param reqVO
      */
-    void insertCardInfo(SubAccount subAccount, WebBindCardPersonalReqVO reqVO);
+    void insertPersonalCardInfo(SubAccount subAccount, WebBindCardPersonalReqVO reqVO);
+
+    /**
+     * 绑定企业银行卡到账号
+     *
+     * @param subAccount
+     * @param reqVO
+     */
+    void insertCompanyCardInfo(SubAccount subAccount, WebBindCardCompanyReqVO reqVO);
 }

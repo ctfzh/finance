@@ -31,6 +31,8 @@ public class SubAccountCard {
     private Integer isDelete;
     @Column(name = "is_bind")
     private Integer isBind;
+    @Column(name = "bind_type")
+    private String bindType;
     @Column(name = "cnaps_no")
     private String cnapsNo;
     @Column(name = "bank_name")

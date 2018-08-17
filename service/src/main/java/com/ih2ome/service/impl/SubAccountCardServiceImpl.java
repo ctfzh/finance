@@ -1,5 +1,6 @@
 package com.ih2ome.service.impl;
 
+import com.ih2ome.common.PageVO.WebVO.WebBindCardCompanyReqVO;
 import com.ih2ome.common.PageVO.WebVO.WebBindCardPersonalReqVO;
 import com.ih2ome.dao.lijiang.SubAccountCardDao;
 import com.ih2ome.dao.lijiang.SubAccountDao;
@@ -31,7 +32,7 @@ public class SubAccountCardServiceImpl implements SubAccountCardService {
      * @param reqVO
      */
     @Override
-    public void insertCardInfo(SubAccount subAccount, WebBindCardPersonalReqVO reqVO) {
+    public void insertPersonalCardInfo(SubAccount subAccount, WebBindCardPersonalReqVO reqVO) {
         SubAccountCard subAccountCard = new SubAccountCard();
         subAccountCard.setCreatedAt(new Date());
         subAccountCard.setCreatedById(reqVO.getUserId());
@@ -41,6 +42,35 @@ public class SubAccountCardServiceImpl implements SubAccountCardService {
         subAccountCard.setCnapsNo(reqVO.getBankCnapsNo());
         subAccountCard.setIdCardNo(reqVO.getIdCardNo());
         subAccountCard.setIdCardName(reqVO.getUserName());
+        //personal:个人绑卡  company:企业绑卡
+        subAccountCard.setBindType("personal");
+        //绑定状态 0未绑定，1绑定
+        subAccountCard.setIsBind(1);
+        subAccountCard.setVersion(0);
+        subAccountCard.setIsDelete(0);
+        subAccountCard.setSubAccountId(subAccount.getId());
+        subAccountCardDao.insert(subAccountCard);
+    }
+
+    /**
+     * 绑定企业银行卡到账号
+     *
+     * @param subAccount
+     * @param reqVO
+     */
+    @Override
+    public void insertCompanyCardInfo(SubAccount subAccount, WebBindCardCompanyReqVO reqVO) {
+        SubAccountCard subAccountCard = new SubAccountCard();
+        subAccountCard.setCreatedAt(new Date());
+        subAccountCard.setCreatedById(reqVO.getUserId());
+        subAccountCard.setBankName(reqVO.getBankName());
+        subAccountCard.setBankNo(reqVO.getBankCardNo());
+        subAccountCard.setBindMobile(reqVO.getMobile());
+        subAccountCard.setCnapsNo(reqVO.getBankCnapsNo());
+        subAccountCard.setIdCardNo(reqVO.getIdCardNo());
+        subAccountCard.setIdCardName(reqVO.getUserName());
+        //personal:个人绑卡  company:企业绑卡
+        subAccountCard.setBindType("company");
         //绑定状态 0未绑定，1绑定
         subAccountCard.setIsBind(1);
         subAccountCard.setVersion(0);

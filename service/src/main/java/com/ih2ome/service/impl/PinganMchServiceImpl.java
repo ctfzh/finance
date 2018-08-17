@@ -56,7 +56,7 @@ public class PinganMchServiceImpl implements PinganMchService {
         String reqJson = JSONObject.toJSONString(pinganMchRegisterReqVO);
         LOGGER.info("registerAccount--->请求数据:{}", reqJson);
         Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "OpenCustAcctId");
-        LOGGER.info("registerAccount--->响应数据:{}", result);
+        LOGGER.info("registerAccount--->响应数据:{}", JSONObject.toJSON(result));
         String code = (String) result.get("TxnReturnCode");
         if (!code.equals("000000")) {
             String txnReturnMsg = (String) result.get("TxnReturnMsg");
@@ -99,7 +99,7 @@ public class PinganMchServiceImpl implements PinganMchService {
         String reqJson = JSONObject.toJSONString(reqVO);
         LOGGER.info("bindCardSendMessage--->请求数据:{}", reqJson);
         Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "BindRelateAcctUnionPay");
-        LOGGER.info("bindCardSendMessage--->响应数据:{}", result);
+        LOGGER.info("bindCardSendMessage--->响应数据:{}", JSONObject.toJSON(result));
         String code = (String) result.get("TxnReturnCode");
         if (!code.equals("000000")) {
             String txnReturnMsg = (String) result.get("TxnReturnMsg");
@@ -127,39 +127,13 @@ public class PinganMchServiceImpl implements PinganMchService {
         String reqJson = JSONObject.toJSONString(personalCardReqVO);
         LOGGER.info("bindPersonalCardVertify--->请求数据:{}", reqJson);
         Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "BindRelateAccReUnionPay");
-        LOGGER.info("bindPersonalCardVertify--->响应数据:{}", result);
+        LOGGER.info("bindPersonalCardVertify--->响应数据:{}", JSONObject.toJSON(result));
         String code = (String) result.get("TxnReturnCode");
         if (!code.equals("000000")) {
             String txnReturnMsg = (String) result.get("TxnReturnMsg");
             LOGGER.error("bindPersonalCardVertify--->会员绑定提现账户(个人)-回填验证码失败,失败原因:{}", txnReturnMsg);
             throw new PinganMchException(txnReturnMsg);
         }
-    }
-
-    /**
-     * 查询会员绑定信息(测试)
-     *
-     * @throws PinganMchException
-     */
-    @Override
-    public void queryMemberBindInfo() throws PinganMchException, IOException {
-        PinganMchQueryBindInfoReqVO bindInfoReqVO = new PinganMchQueryBindInfoReqVO();
-        bindInfoReqVO.setCnsmrSeqNo(uid + SerialNumUtil.generateSerial());
-        bindInfoReqVO.setFundSummaryAcctNo(mainAcctNo);
-        bindInfoReqVO.setSubAcctNo("4004000000001030");
-        bindInfoReqVO.setQueryFlag("2");
-        bindInfoReqVO.setPageNum("1");
-        String reqJson = JSONObject.toJSONString(bindInfoReqVO);
-        LOGGER.info("queryMemberBindInfo--->请求数据:{}", reqJson);
-        Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "MemberBindQuery");
-        LOGGER.info("queryMemberBindInfo--->响应数据:{}", result);
-        String code = (String) result.get("TxnReturnCode");
-        if (!code.equals("000000")) {
-            String txnReturnMsg = (String) result.get("TxnReturnMsg");
-            LOGGER.error("queryMemberBindInfo--->会员绑定信息查询失败,失败原因:{}", txnReturnMsg);
-            throw new PinganMchException(txnReturnMsg);
-        }
-
     }
 
     /**
@@ -192,7 +166,7 @@ public class PinganMchServiceImpl implements PinganMchService {
         String reqJson = JSONObject.toJSONString(reqVO);
         LOGGER.info("bindCardSendAmount--->请求数据:{}", reqJson);
         Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "BindRelateAcctSmallAmount");
-        LOGGER.info("bindCardSendAmount--->响应数据:{}", result);
+        LOGGER.info("bindCardSendAmount--->响应数据:{}", JSONObject.toJSON(result));
         String code = (String) result.get("TxnReturnCode");
         if (!code.equals("000000")) {
             String txnReturnMsg = (String) result.get("TxnReturnMsg");
@@ -202,5 +176,86 @@ public class PinganMchServiceImpl implements PinganMchService {
 
     }
 
+    /**
+     * 查询会员绑定信息(测试)
+     *
+     * @throws PinganMchException
+     */
+    @Override
+    public void queryMemberBindInfo() throws PinganMchException, IOException {
+        PinganMchQueryBindInfoReqVO bindInfoReqVO = new PinganMchQueryBindInfoReqVO();
+        bindInfoReqVO.setCnsmrSeqNo(uid + SerialNumUtil.generateSerial());
+        bindInfoReqVO.setFundSummaryAcctNo(mainAcctNo);
+//        bindInfoReqVO.setSubAcctNo("4004000000001030");
+        bindInfoReqVO.setQueryFlag("1");
+        bindInfoReqVO.setPageNum("1");
+        String reqJson = JSONObject.toJSONString(bindInfoReqVO);
+        LOGGER.info("queryMemberBindInfo--->请求数据:{}", reqJson);
+        Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "MemberBindQuery");
+        LOGGER.info("queryMemberBindInfo--->响应数据:{}", JSONObject.toJSON(result));
+        String code = (String) result.get("TxnReturnCode");
+        if (!code.equals("000000")) {
+            String txnReturnMsg = (String) result.get("TxnReturnMsg");
+            LOGGER.error("queryMemberBindInfo--->会员绑定信息查询失败,失败原因:{}", txnReturnMsg);
+            throw new PinganMchException(txnReturnMsg);
+        }
+
+    }
+
+    /**
+     * 查询小额鉴权转账结果（测试）
+     *
+     * @throws PinganMchException
+     * @throws IOException
+     */
+    @Override
+    public void queryTransferinfo() throws PinganMchException, IOException {
+        PinganMchQueryTransferInfoReqVO transferInfoReqVO = new PinganMchQueryTransferInfoReqVO();
+        transferInfoReqVO.setCnsmrSeqNo(uid + SerialNumUtil.generateSerial());
+        transferInfoReqVO.setOldTranSeqNo("M394791808174423564712");
+        transferInfoReqVO.setFundSummaryAcctNo(mainAcctNo);
+        transferInfoReqVO.setTranDate("20180817");
+        String reqJson = JSONObject.toJSONString(transferInfoReqVO);
+        LOGGER.info("queryTransferinfo--->请求数据:{}", reqJson);
+        Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "SmallAmountTransferQuery");
+        LOGGER.info("queryTransferinfo--->响应数据:{}", result);
+        String code = (String) result.get("TxnReturnCode");
+        if (!code.equals("000000")) {
+            String txnReturnMsg = (String) result.get("TxnReturnMsg");
+            LOGGER.error("queryTransferinfo--->小额鉴权转账查询失败,失败原因:{}", txnReturnMsg);
+            throw new PinganMchException(txnReturnMsg);
+        }
+    }
+
+
+    /**
+     * 绑定企业银行卡(金额校验)
+     *
+     * @param subAccount
+     * @param reqVO
+     * @throws PinganMchException
+     * @throws IOException
+     */
+    @Override
+    public void bindCompanyCardVertify(SubAccount subAccount, WebBindCardCompanyReqVO reqVO) throws PinganMchException, IOException {
+        PinganMchBindCompanyCardReqVO companyCardReqVO = new PinganMchBindCompanyCardReqVO();
+        companyCardReqVO.setCnsmrSeqNo(uid + SerialNumUtil.generateSerial());
+        companyCardReqVO.setFundSummaryAcctNo(mainAcctNo);
+        companyCardReqVO.setTranNetMemberCode(subAccount.getUserId().toString());
+        companyCardReqVO.setTakeCashAcctNo(reqVO.getBankCardNo());
+        companyCardReqVO.setSubAcctNo(subAccount.getAccount());
+        companyCardReqVO.setAuthAmt(reqVO.getVertifyAmount());
+        //个人绑卡(短信验证码回填)请求数据报文
+        String reqJson = JSONObject.toJSONString(companyCardReqVO);
+        LOGGER.info("bindCompanyCardVertify--->请求数据:{}", reqJson);
+        Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "CheckAmount");
+        LOGGER.info("bindCompanyCardVertify--->响应数据:{}", result);
+        String code = (String) result.get("TxnReturnCode");
+        if (!code.equals("000000")) {
+            String txnReturnMsg = (String) result.get("TxnReturnMsg");
+            LOGGER.error("bindCompanyCardVertify--->会员绑定提现账户(企业)-回填金额失败,失败原因:{}", txnReturnMsg);
+            throw new PinganMchException(txnReturnMsg);
+        }
+    }
 
 }
