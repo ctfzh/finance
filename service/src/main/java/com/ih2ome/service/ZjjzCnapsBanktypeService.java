@@ -16,4 +16,10 @@ public interface ZjjzCnapsBanktypeService {
      * @return
      */
     List<ZjjzCnapsBanktype> getBankType();
+
+
+    /**
+     * 读取ftp superBankCode.txt文件，将内容插入数据库
+     */
+    void insertBankType();
 }

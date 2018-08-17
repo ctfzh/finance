@@ -20,6 +20,8 @@ import com.ih2ome.model.volga.MoneyFlow;
 import com.ih2ome.server.pingan.sdk.InitConfiguration;
 import com.ih2ome.service.PinganMchService;
 import com.ih2ome.service.PinganPayService;
+import com.ih2ome.service.WebPaymentsService;
+import com.ih2ome.service.ZjjzCnapsBanktypeService;
 import com.pabank.sdk.PABankSDK;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -53,6 +55,8 @@ public class TestMapperController {
     private PayOrdersDao payOrdersDao;
     @Autowired
     private PinganMchService pinganMchService;
+    @Autowired
+    private ZjjzCnapsBanktypeService banktypeService;
 
     @GetMapping("/one")
     @ResponseBody
@@ -201,6 +205,13 @@ public class TestMapperController {
             e.printStackTrace();
         }
         return ResponseBodyVO.generateResponseObject(0, null, "success");
+    }
+
+    @GetMapping("readftpFileName")
+    @ResponseBody
+    public ResponseBodyVO test10() {
+        banktypeService.insertBankType();
+        return ResponseBodyVO.generateResponseObject(0, null, "成功");
     }
 
 }

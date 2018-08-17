@@ -8,12 +8,13 @@ import javax.validation.constraints.NotNull;
 
 /**
  * @author Sky
- * create 2018/08/15
+ * create 2018/08/16
  * email sky.li@ixiaoshuidi.com
  **/
 @Data
-@ApiModel("个人绑卡请求对象")
-public class WebBindCardPersonalReqVO {
+@ApiModel("企业绑卡请求对象")
+public class WebBindCardCompanyReqVO {
+
     @ApiModelProperty("用户Id")
     @NotNull(message = "用户id不能为空")
     private Integer userId;
@@ -34,19 +35,18 @@ public class WebBindCardPersonalReqVO {
     @NotNull(message = "开户行名称不能为空")
     private String bankName;
 
-    @ApiModelProperty("超级网银号")
-    private String bankSupNo;
-
     @ApiModelProperty("大小额行号")
     @NotNull(message = "大小额行号不能为空")
     private String bankCnapsNo;
+
+    @ApiModelProperty("超级网银号")
+    private String bankSupNo;
 
     @ApiModelProperty("手机号码")
     @NotNull(message = "手机号码不能为空")
     private String mobile;
 
-    @ApiModelProperty("短信验证码")
-    private String messageCode;
-
+    @ApiModelProperty("银行卡验证金额")
+    private String vertifyAmount;
 
 }

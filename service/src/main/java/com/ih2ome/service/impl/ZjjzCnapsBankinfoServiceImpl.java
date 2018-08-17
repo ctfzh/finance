@@ -49,6 +49,7 @@ public class ZjjzCnapsBankinfoServiceImpl implements ZjjzCnapsBankinfoService {
         example.createCriteria().andEqualTo("bankno", bankCnapsNo).andEqualTo("status", "1");
         ZjjzCnapsBankinfo zjjzCnapsBankinfos = zjjzCnapsBankinfoDao.selectOneByExample(example);
         String bankclscode = zjjzCnapsBankinfos.getBankclscode();
+        //平安银行的银行代码code 是 307
         if ("307".equals(bankclscode)) {
             return "1";
         } else {

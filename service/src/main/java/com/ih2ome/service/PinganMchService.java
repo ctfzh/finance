@@ -2,6 +2,7 @@ package com.ih2ome.service;
 
 import com.ih2ome.common.Exception.PinganMchException;
 import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterResVO;
+import com.ih2ome.common.PageVO.WebVO.WebBindCardCompanyReqVO;
 import com.ih2ome.common.PageVO.WebVO.WebBindCardPersonalReqVO;
 import com.ih2ome.model.lijiang.SubAccount;
 
@@ -48,4 +49,13 @@ public interface PinganMchService {
      * @throws PinganMchException
      */
     void queryMemberBindInfo() throws PinganMchException, IOException;
+
+    /**
+     * 绑定银行卡发送金额验证码(鉴权)
+     *
+     * @param subAccount
+     * @param bankType
+     * @param companyReqVO
+     */
+    void bindCardSendAmount(SubAccount subAccount, String bankType, WebBindCardCompanyReqVO companyReqVO) throws IOException, PinganMchException;
 }

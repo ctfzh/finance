@@ -3,6 +3,7 @@ package com.ih2ome.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.Exception.PinganMchException;
 import com.ih2ome.common.PageVO.PinganMchVO.*;
+import com.ih2ome.common.PageVO.WebVO.WebBindCardCompanyReqVO;
 import com.ih2ome.common.PageVO.WebVO.WebBindCardPersonalReqVO;
 import com.ih2ome.common.utils.BeanMapUtil;
 import com.ih2ome.common.utils.pingan.SerialNumUtil;
@@ -87,10 +88,11 @@ public class PinganMchServiceImpl implements PinganMchService {
         reqVO.setMemberGlobalId(personalReqVO.getIdCardNo());
         reqVO.setMemberAcctNo(personalReqVO.getBankCardNo());
         reqVO.setBankType(bankType);
-        //其他银行，需要传递大小额行号和支行名称
+        //其他银行，需要传递大小额行号和支行名称,超级网银号
         if ("2".equals(bankType)) {
             reqVO.setAcctOpenBranchName(personalReqVO.getBankName());
             reqVO.setCnapsBranchId(personalReqVO.getBankCnapsNo());
+            reqVO.setEiconBankBranchId(personalReqVO.getBankSupNo());
         }
         reqVO.setMobile(personalReqVO.getMobile());
         //个人绑卡(短信验证)请求数据报文
@@ -101,7 +103,7 @@ public class PinganMchServiceImpl implements PinganMchService {
         String code = (String) result.get("TxnReturnCode");
         if (!code.equals("000000")) {
             String txnReturnMsg = (String) result.get("TxnReturnMsg");
-            LOGGER.error("registerAccount--->会员绑定提现账户(个人)-银联鉴权,失败原因:{}", txnReturnMsg);
+            LOGGER.error("bindCardSendMessage--->会员绑定提现账户(个人)-银联鉴权,失败原因:{}", txnReturnMsg);
             throw new PinganMchException(txnReturnMsg);
         }
     }
@@ -129,7 +131,7 @@ public class PinganMchServiceImpl implements PinganMchService {
         String code = (String) result.get("TxnReturnCode");
         if (!code.equals("000000")) {
             String txnReturnMsg = (String) result.get("TxnReturnMsg");
-            LOGGER.error("registerAccount--->会员绑定提现账户(个人)-回填验证码失败,失败原因:{}", txnReturnMsg);
+            LOGGER.error("bindPersonalCardVertify--->会员绑定提现账户(个人)-回填验证码失败,失败原因:{}", txnReturnMsg);
             throw new PinganMchException(txnReturnMsg);
         }
     }
@@ -158,6 +160,45 @@ public class PinganMchServiceImpl implements PinganMchService {
             throw new PinganMchException(txnReturnMsg);
         }
 
+    }
+
+    /**
+     * 绑定银行卡发送金额验证码(鉴权)
+     *
+     * @param subAccount
+     * @param bankType
+     * @param companyReqVO
+     */
+    @Override
+    public void bindCardSendAmount(SubAccount subAccount, String bankType, WebBindCardCompanyReqVO companyReqVO) throws IOException, PinganMchException {
+        PinganMchBindCardGetAmountReqVO reqVO = new PinganMchBindCardGetAmountReqVO();
+        reqVO.setCnsmrSeqNo(uid + SerialNumUtil.generateSerial());
+        reqVO.setFundSummaryAcctNo(mainAcctNo);
+        reqVO.setSubAcctNo(subAccount.getAccount());
+        reqVO.setTranNetMemberCode(subAccount.getUserId().toString());
+        reqVO.setMemberName(companyReqVO.getUserName());
+        reqVO.setMemberGlobalType("1");
+        reqVO.setMemberGlobalId(companyReqVO.getIdCardNo());
+        reqVO.setMemberAcctNo(companyReqVO.getBankCardNo());
+        reqVO.setBankType(bankType);
+        //其他银行，需要传递大小额行号和支行名称
+        if ("2".equals(bankType)) {
+            reqVO.setAcctOpenBranchName(companyReqVO.getBankName());
+            reqVO.setCnapsBranchId(companyReqVO.getBankCnapsNo());
+            reqVO.setEiconBankBranchId(companyReqVO.getBankSupNo());
+        }
+        reqVO.setMobile(companyReqVO.getMobile());
+        //企业绑卡(金额验证)请求数据报文
+        String reqJson = JSONObject.toJSONString(reqVO);
+        LOGGER.info("bindCardSendAmount--->请求数据:{}", reqJson);
+        Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "BindRelateAcctSmallAmount");
+        LOGGER.info("bindCardSendAmount--->响应数据:{}", result);
+        String code = (String) result.get("TxnReturnCode");
+        if (!code.equals("000000")) {
+            String txnReturnMsg = (String) result.get("TxnReturnMsg");
+            LOGGER.error("bindCardSendAmount--->会员绑定提现账户(企业)-银联鉴权,失败原因:{}", txnReturnMsg);
+            throw new PinganMchException(txnReturnMsg);
+        }
 
     }
 

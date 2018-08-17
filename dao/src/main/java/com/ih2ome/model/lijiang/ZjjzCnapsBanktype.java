@@ -10,9 +10,13 @@ import javax.persistence.*;
 @Table(name = "zjjz_cnaps_banktype")
 public class ZjjzCnapsBanktype {
 
-    @Column(name = "bank_code")
-    private String bankCode;
-    @Column(name = "bank_name")
-    private String bankName;
+    @Column(name = "bankno")
+    private String bankno;
+    @Column(name = "status")
+    private String status;
+    @Column(name = "bankclscode")
+    private String bankclscode;
+    @Column(name = "bankname")
+    private String bankname;
 
 }

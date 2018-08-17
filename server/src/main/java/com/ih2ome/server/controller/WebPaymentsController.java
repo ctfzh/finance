@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.Exception.PinganMchException;
 import com.ih2ome.common.Exception.WebPaymentsException;
 import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterResVO;
+import com.ih2ome.common.PageVO.WebVO.WebBindCardCompanyReqVO;
 import com.ih2ome.common.PageVO.WebVO.WebBindCardPersonalReqVO;
 import com.ih2ome.common.PageVO.WebVO.WebRegisterResVO;
 import com.ih2ome.common.PageVO.WebVO.WebSearchCnapsVO;
@@ -179,6 +180,32 @@ public class WebPaymentsController {
         }
         return ResponseBodyVO.generateResponseObject(0, data, "绑定成功");
     }
+
+
+    @PostMapping(value = "company/bindCard/amount", produces = "application/json;charset=UTF-8")
+    @ApiOperation("企业账户绑定发送金额验证码")
+    public ResponseBodyVO sendAmount(@RequestBody @Valid WebBindCardCompanyReqVO reqVO, BindingResult bindingResult) {
+        JSONObject data = new JSONObject();
+        if (bindingResult.hasErrors()) {
+            return ResponseBodyVO.generateResponseObject(-1, data, "请求参数错误");
+        }
+        try {
+            //根据用户id获取会员子账号和交易网会员代码
+            SubAccount subAccount = webPaymentsService.findAccountByUserId(reqVO.getUserId());
+            //判断银行是否是平安银行
+            String bankType = bankinfoService.judgeBankTypeIsPingan(reqVO.getBankCnapsNo());
+            //发送金额鉴权
+            pinganMchService.bindCardSendAmount(subAccount, bankType, reqVO);
+        } catch (PinganMchException | IOException e) {
+            e.printStackTrace();
+            LOGGER.info("sendAmount--->绑卡发送金额验证码失败,请求数据:{},失败原因:{}", reqVO.toString(), e.getMessage());
+            return new ResponseBodyVO(-1, data, e.getMessage());
+        }
+        return ResponseBodyVO.generateResponseObject(0, data, "鉴权成功,成功发送金额");
+
+    }
+
+
 }
 
 
