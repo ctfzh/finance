@@ -10,6 +10,7 @@ import com.ih2ome.service.SubAccountCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
 
@@ -77,5 +78,21 @@ public class SubAccountCardServiceImpl implements SubAccountCardService {
         subAccountCard.setIsDelete(0);
         subAccountCard.setSubAccountId(subAccount.getId());
         subAccountCardDao.insert(subAccountCard);
+    }
+
+
+    /**
+     * 根据会员子账号查询绑定银行卡信息
+     *
+     * @param accountId
+     * @return
+     */
+    @Override
+    public SubAccountCard findSubAccountByAccountId(Integer accountId) {
+        Example example = new Example(SubAccountCard.class);
+        example.createCriteria().andEqualTo("isDelete", 0).andEqualTo("isBind", 1)
+                .andEqualTo("subAccountId", accountId);
+        SubAccountCard subAccountCard = subAccountCardDao.selectOneByExample(example);
+        return subAccountCard;
     }
 }

@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.Exception.PinganMchException;
 import com.ih2ome.common.Exception.WebPaymentsException;
 import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterResVO;
-import com.ih2ome.common.PageVO.WebVO.WebBindCardCompanyReqVO;
-import com.ih2ome.common.PageVO.WebVO.WebBindCardPersonalReqVO;
-import com.ih2ome.common.PageVO.WebVO.WebRegisterResVO;
-import com.ih2ome.common.PageVO.WebVO.WebSearchCnapsVO;
+import com.ih2ome.common.PageVO.WebVO.*;
 import com.ih2ome.common.support.ResponseBodyVO;
 import com.ih2ome.model.caspain.TerminalToken;
 import com.ih2ome.model.lijiang.*;
@@ -206,7 +203,7 @@ public class WebPaymentsController {
 
 
     @PostMapping(value = "company/bindCard/submit", produces = "application/json;charset=UTF-8")
-    @ApiModelProperty("企业账户绑定银行卡提交")
+    @ApiOperation("企业账户绑定银行卡提交")
     public ResponseBodyVO submitCompanyBindInfo(@RequestBody @Valid WebBindCardCompanyReqVO reqVO, BindingResult bindingResult) {
         JSONObject data = new JSONObject();
         if (bindingResult.hasErrors() || StringUtils.isBlank(reqVO.getVertifyAmount())) {
@@ -225,6 +222,26 @@ public class WebPaymentsController {
             return new ResponseBodyVO(-1, data, e.getMessage());
         }
         return ResponseBodyVO.generateResponseObject(0, data, "绑定成功");
+    }
+
+
+    @GetMapping(value = "bankcard/info/{userid}", produces = "application/json;charset=UTF-8")
+    @ApiOperation("根据登录用户id查询绑定银行卡信息")
+    public ResponseBodyVO getTMoneyBankInfo(@ApiParam("登录id") @PathVariable("userId") Integer userId) {
+        JSONObject data = new JSONObject();
+        //判断是主账号还是子账号,
+
+
+        //根据用户查询会员子账号信息
+        SubAccount subAccount = webPaymentsService.findAccountByUserId(userId);
+        Integer accountId = subAccount.getId();
+        //根据会员子账号主键查询绑定银行卡信息
+        SubAccountCard subAccountCard = subAccountCardService.findSubAccountByAccountId(accountId);
+        WebTMoneyBankCardInfoVO bankCardInfo = new WebTMoneyBankCardInfoVO();
+        bankCardInfo.setBankName(subAccountCard.getBankName());
+        bankCardInfo.setBankNo(subAccountCard.getBankNo());
+        return null;
+
     }
 
 }
