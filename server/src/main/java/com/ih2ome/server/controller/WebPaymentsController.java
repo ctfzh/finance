@@ -241,7 +241,6 @@ public class WebPaymentsController {
         bankCardInfo.setBankName(subAccountCard.getBankName());
         bankCardInfo.setBankNo(subAccountCard.getBankNo());
         return null;
-
     }
 
 }

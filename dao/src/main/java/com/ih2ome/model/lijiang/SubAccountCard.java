@@ -47,5 +47,9 @@ public class SubAccountCard {
     private String idCardName;
     @Column(name = "sub_account_id")
     private Integer subAccountId;
+    @Column(name = "sup_internet_no")
+    private String supInternetNo;
+    @Column(name = "bank_branch_name")
+    private String bankBranchName;
 
 }

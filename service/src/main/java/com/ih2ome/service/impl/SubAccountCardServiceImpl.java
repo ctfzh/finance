@@ -38,6 +38,8 @@ public class SubAccountCardServiceImpl implements SubAccountCardService {
         subAccountCard.setCreatedAt(new Date());
         subAccountCard.setCreatedById(reqVO.getUserId());
         subAccountCard.setBankName(reqVO.getBankName());
+        subAccountCard.setBankBranchName(reqVO.getBankBranchName());
+        subAccountCard.setSupInternetNo(reqVO.getBankSupNo());
         subAccountCard.setBankNo(reqVO.getBankCardNo());
         subAccountCard.setBindMobile(reqVO.getMobile());
         subAccountCard.setCnapsNo(reqVO.getBankCnapsNo());
@@ -70,6 +72,8 @@ public class SubAccountCardServiceImpl implements SubAccountCardService {
         subAccountCard.setCnapsNo(reqVO.getBankCnapsNo());
         subAccountCard.setIdCardNo(reqVO.getIdCardNo());
         subAccountCard.setIdCardName(reqVO.getUserName());
+        subAccountCard.setBankBranchName(reqVO.getBankBranchName());
+        subAccountCard.setSupInternetNo(reqVO.getBankSupNo());
         //personal:个人绑卡  company:企业绑卡
         subAccountCard.setBindType("company");
         //绑定状态 0未绑定，1绑定

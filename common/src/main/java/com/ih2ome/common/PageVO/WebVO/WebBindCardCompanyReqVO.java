@@ -35,6 +35,10 @@ public class WebBindCardCompanyReqVO {
     @NotNull(message = "开户行名称不能为空")
     private String bankName;
 
+    @ApiModelProperty("开户行支行名称")
+    @NotNull(message = "开户行支行名称不能为空")
+    private String bankBranchName;
+
     @ApiModelProperty("大小额行号")
     @NotNull(message = "大小额行号不能为空")
     private String bankCnapsNo;
