@@ -53,6 +53,8 @@ public class WebPaymentsController {
     private ZjjzCnapsBankinfoService bankinfoService;
     @Autowired
     private SubAccountCardService subAccountCardService;
+    @Autowired
+    private LandlordBankCardService landlordBankCardService;
 
 
     @RequestMapping(value = "register", method = RequestMethod.POST)
@@ -170,6 +172,7 @@ public class WebPaymentsController {
             pinganMchService.bindPersonalCardVertify(subAccount, reqVO);
             //回填验证成功，将银行卡信息存入数据库
             subAccountCardService.insertPersonalCardInfo(subAccount, reqVO);
+            landlordBankCardService.insertPersonalCardInfo(subAccount, reqVO);
         } catch (PinganMchException | IOException e) {
             e.printStackTrace();
             LOGGER.info("submitPersonalBindInfo--->绑卡信息提交失败,请求数据:{},失败原因:{}", reqVO.toString(), e.getMessage());
@@ -216,9 +219,10 @@ public class WebPaymentsController {
             pinganMchService.bindCompanyCardVertify(subAccount, reqVO);
             //回填验证成功，将银行卡信息存入数据库
             subAccountCardService.insertCompanyCardInfo(subAccount, reqVO);
+            landlordBankCardService.insertCompanyCardInfo(subAccount, reqVO);
         } catch (PinganMchException | IOException e) {
             e.printStackTrace();
-            LOGGER.info("submitPersonalBindInfo--->绑卡信息提交失败,请求数据:{},失败原因:{}", reqVO.toString(), e.getMessage());
+            LOGGER.info("submitCompanyBindInfo--->绑卡信息提交失败,请求数据:{},失败原因:{}", reqVO.toString(), e.getMessage());
             return new ResponseBodyVO(-1, data, e.getMessage());
         }
         return ResponseBodyVO.generateResponseObject(0, data, "绑定成功");
@@ -230,8 +234,6 @@ public class WebPaymentsController {
     public ResponseBodyVO getTMoneyBankInfo(@ApiParam("登录id") @PathVariable("userId") Integer userId) {
         JSONObject data = new JSONObject();
         //判断是主账号还是子账号,
-
-
         //根据用户查询会员子账号信息
         SubAccount subAccount = webPaymentsService.findAccountByUserId(userId);
         Integer accountId = subAccount.getId();
@@ -240,8 +242,9 @@ public class WebPaymentsController {
         WebTMoneyBankCardInfoVO bankCardInfo = new WebTMoneyBankCardInfoVO();
         bankCardInfo.setBankName(subAccountCard.getBankName());
         bankCardInfo.setBankNo(subAccountCard.getBankNo());
-        return null;
+        return ResponseBodyVO.generateResponseObject(0, null, "成功");
     }
+
 
 }
 
