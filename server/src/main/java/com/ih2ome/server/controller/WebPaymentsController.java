@@ -59,6 +59,8 @@ public class WebPaymentsController {
     private LandlordBankCardService landlordBankCardService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private SubWithdrawRecordService subWithdrawRecordService;
 
 
     @RequestMapping(value = "register", method = RequestMethod.POST)
@@ -263,12 +265,27 @@ public class WebPaymentsController {
             PinganMchQueryBalanceResVO queryBalanceResVO = pinganMchService.queryBalance(subAccount);
             PinganMchQueryBalanceAcctArray balanceAcct = queryBalanceResVO.getAcctArray().get(0);
             SubAccountCard subAccountCard = subAccountCardService.findSubAccountByAccountId(subAccount.getId());
+            //提现手续费默认一笔5.0
+            Double withdrawCharge = 0.0;
+            String cashAmt = balanceAcct.getCashAmt();
+            Double withdrawMoney = 0.0;
+            Double initMoney = Double.valueOf(money);
+            Double cashMoney = Double.valueOf(cashAmt);
+            if (initMoney > (cashMoney - withdrawCharge)) {
+                withdrawMoney = Double.valueOf(cashAmt);
+            } else {
+                withdrawMoney = Double.valueOf(money);
+            }
             //平安提现
-            pinganMchService.withDrawCash(subAccount, subAccountCard, balanceAcct, money);
+            String serialNo = pinganMchService.withDrawCash(subAccount, subAccountCard, withdrawMoney, withdrawCharge);
+            //提现记录保存到数据库
+            subWithdrawRecordService.insertWithdrawRecord(userId, subAccount, subAccountCard, withdrawMoney, withdrawCharge, serialNo);
         } catch (PinganMchException | IOException e) {
             e.printStackTrace();
+            LOGGER.info("withdrawMoney--->提现请求失败,用户id:{},提现金额:{},失败原因:{}", userId, money, e.getMessage());
+            return new ResponseBodyVO(-1, data, e.getMessage());
         }
-        return ResponseBodyVO.generateResponseObject(0, data, "成功");
+        return ResponseBodyVO.generateResponseObject(0, data, "提现请求成功");
 
     }
 }

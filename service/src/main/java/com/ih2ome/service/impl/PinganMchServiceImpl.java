@@ -291,29 +291,22 @@ public class PinganMchServiceImpl implements PinganMchService {
         return queryBalanceResVO;
     }
 
+
     /**
      * 提现
      *
      * @param subAccount
      * @param subAccountCard
-     * @param balanceAcct
-     * @param money
+     * @param withdrawMoney
+     * @param withdrawCharge
+     * @throws PinganMchException
+     * @throws IOException
      */
     @Override
-    public void withDrawCash(SubAccount subAccount, SubAccountCard subAccountCard, PinganMchQueryBalanceAcctArray balanceAcct, String money) throws PinganMchException, IOException {
-        //提现手续费默认一笔5.0
-        Double withdrawCharge = 5.0;
-        String cashAmt = balanceAcct.getCashAmt();
-        Double withdrawMoney = 0.0;
-        Double initMoney = Double.valueOf(money);
-        Double cashMoney = Double.valueOf(cashAmt);
-        if (initMoney > (cashMoney - withdrawCharge)) {
-            withdrawMoney = Double.valueOf(cashAmt);
-        } else {
-            withdrawMoney = Double.valueOf(money);
-        }
+    public String withDrawCash(SubAccount subAccount, SubAccountCard subAccountCard, Double withdrawMoney, Double withdrawCharge) throws PinganMchException, IOException {
         PinganMchWithDrawCashReqVO withDrawCashReqVO = new PinganMchWithDrawCashReqVO();
         withDrawCashReqVO.setFundSummaryAcctNo(mainAcctNo);
+        withDrawCashReqVO.setCnsmrSeqNo(uid + SerialNumUtil.generateSerial());
         withDrawCashReqVO.setSubAcctNo(subAccount.getAccount());
         withDrawCashReqVO.setTranNetMemberCode(subAccount.getUserId().toString());
         withDrawCashReqVO.setSubAcctName("");
@@ -333,6 +326,8 @@ public class PinganMchServiceImpl implements PinganMchService {
             LOGGER.error("withDrawCash--->会员提现请求失败,失败原因:{}", txnReturnMsg);
             throw new PinganMchException(txnReturnMsg);
         }
+        String cnsmrSeqNo = (String) result.get("CnsmrSeqNo");
+        return cnsmrSeqNo;
     }
 
 

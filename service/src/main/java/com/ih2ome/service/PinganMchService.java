@@ -1,7 +1,6 @@
 package com.ih2ome.service;
 
 import com.ih2ome.common.Exception.PinganMchException;
-import com.ih2ome.common.PageVO.PinganMchVO.PinganMchQueryBalanceAcctArray;
 import com.ih2ome.common.PageVO.PinganMchVO.PinganMchQueryBalanceResVO;
 import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterResVO;
 import com.ih2ome.common.PageVO.WebVO.WebBindCardCompanyReqVO;
@@ -91,10 +90,13 @@ public interface PinganMchService {
 
     /**
      * 提现
-     *  @param subAccount
+     *
+     * @param subAccount
      * @param subAccountCard
-     * @param balanceAcct
-     * @param money
+     * @param withdrawMoney
+     * @param withdrawCharge
+     * @throws PinganMchException
+     * @throws IOException
      */
-    void withDrawCash(SubAccount subAccount, SubAccountCard subAccountCard, PinganMchQueryBalanceAcctArray balanceAcct, String money) throws PinganMchException, IOException;
+    String withDrawCash(SubAccount subAccount, SubAccountCard subAccountCard, Double withdrawMoney, Double withdrawCharge) throws PinganMchException, IOException;
 }
