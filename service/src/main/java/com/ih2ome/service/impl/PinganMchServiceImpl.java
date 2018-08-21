@@ -309,7 +309,7 @@ public class PinganMchServiceImpl implements PinganMchService {
         withDrawCashReqVO.setCnsmrSeqNo(uid + SerialNumUtil.generateSerial());
         withDrawCashReqVO.setSubAcctNo(subAccount.getAccount());
         withDrawCashReqVO.setTranNetMemberCode(subAccount.getUserId().toString());
-        withDrawCashReqVO.setSubAcctName("");
+        withDrawCashReqVO.setSubAcctName(subAccountCard.getIdCardName());
         withDrawCashReqVO.setTakeCashAcctNo(subAccountCard.getBankNo());
         withDrawCashReqVO.setTakeCashAcctName(subAccountCard.getIdCardName());
         withDrawCashReqVO.setCcy("RMB");
@@ -328,6 +328,36 @@ public class PinganMchServiceImpl implements PinganMchService {
         }
         String cnsmrSeqNo = (String) result.get("CnsmrSeqNo");
         return cnsmrSeqNo;
+    }
+
+    /**
+     * 查询转账交易状态
+     *
+     * @param tranSeqNo
+     * @return
+     * @throws PinganMchException
+     * @throws IOException
+     */
+    @Override
+    public PinganMchQueryTranStatusResVO queryTranStatus(String tranSeqNo) throws PinganMchException, IOException {
+        PinganMchQueryTranStatusReqVO tranStatusReqVO = new PinganMchQueryTranStatusReqVO();
+        tranStatusReqVO.setFundSummaryAcctNo(mainAcctNo);
+        tranStatusReqVO.setCnsmrSeqNo(uid + SerialNumUtil.generateSerial());
+        tranStatusReqVO.setFunctionFlag("3");
+        tranStatusReqVO.setTranNetSeqNo(tranSeqNo);
+        String reqJson = JSONObject.toJSONString(tranStatusReqVO);
+        LOGGER.info("queryTranStatus--->请求数据:{}", reqJson);
+        Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "SingleTransactionStatusQuery");
+        String resultJson = JSONObject.toJSONString(result);
+        LOGGER.info("queryTranStatus--->响应数据:{}", resultJson);
+        String code = (String) result.get("TxnReturnCode");
+        if (!code.equals("000000") && !code.equals("ERR020")) {
+            String txnReturnMsg = (String) result.get("TxnReturnMsg");
+            LOGGER.error("queryTranStatus--->查询提现交易失败,失败原因:{}", txnReturnMsg);
+            throw new PinganMchException(txnReturnMsg);
+        }
+        PinganMchQueryTranStatusResVO tranStatusResVO = JSONObject.parseObject(resultJson, PinganMchQueryTranStatusResVO.class);
+        return tranStatusResVO;
     }
 
 

@@ -286,8 +286,10 @@ public class WebPaymentsController {
             return new ResponseBodyVO(-1, data, e.getMessage());
         }
         return ResponseBodyVO.generateResponseObject(0, data, "提现请求成功");
-
     }
+
+
+
 }
 
 
