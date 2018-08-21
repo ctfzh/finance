@@ -8,6 +8,7 @@ import com.ih2ome.common.PageVO.WebVO.WebBindCardPersonalReqVO;
 import com.ih2ome.common.utils.BeanMapUtil;
 import com.ih2ome.common.utils.pingan.SerialNumUtil;
 import com.ih2ome.model.lijiang.SubAccount;
+import com.ih2ome.model.lijiang.SubAccountCard;
 import com.ih2ome.service.PinganMchService;
 import com.pabank.sdk.PABankSDK;
 import org.slf4j.Logger;
@@ -218,7 +219,7 @@ public class PinganMchServiceImpl implements PinganMchService {
         String reqJson = JSONObject.toJSONString(transferInfoReqVO);
         LOGGER.info("queryTransferinfo--->请求数据:{}", reqJson);
         Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "SmallAmountTransferQuery");
-        LOGGER.info("queryTransferinfo--->响应数据:{}", result);
+        LOGGER.info("queryTransferinfo--->响应数据:{}", JSONObject.toJSON(result));
         String code = (String) result.get("TxnReturnCode");
         if (!code.equals("000000")) {
             String txnReturnMsg = (String) result.get("TxnReturnMsg");
@@ -249,7 +250,7 @@ public class PinganMchServiceImpl implements PinganMchService {
         String reqJson = JSONObject.toJSONString(companyCardReqVO);
         LOGGER.info("bindCompanyCardVertify--->请求数据:{}", reqJson);
         Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "CheckAmount");
-        LOGGER.info("bindCompanyCardVertify--->响应数据:{}", result);
+        LOGGER.info("bindCompanyCardVertify--->响应数据:{}", JSONObject.toJSON(result));
         String code = (String) result.get("TxnReturnCode");
         if (!code.equals("000000")) {
             String txnReturnMsg = (String) result.get("TxnReturnMsg");
@@ -257,5 +258,82 @@ public class PinganMchServiceImpl implements PinganMchService {
             throw new PinganMchException(txnReturnMsg);
         }
     }
+
+    /**
+     * 查询子账户可用余额
+     *
+     * @param subAccount
+     * @return
+     * @throws PinganMchException
+     * @throws IOException
+     */
+    @Override
+    public PinganMchQueryBalanceResVO queryBalance(SubAccount subAccount) throws PinganMchException, IOException {
+        PinganMchQueryBalanceReqVO queryBalanceReqVO = new PinganMchQueryBalanceReqVO();
+        queryBalanceReqVO.setCnsmrSeqNo(uid + SerialNumUtil.generateSerial());
+        queryBalanceReqVO.setFundSummaryAcctNo(mainAcctNo);
+        queryBalanceReqVO.setSubAcctNo(subAccount.getAccount());
+        //2：普通会员子账号 3：功能子账号
+        queryBalanceReqVO.setQueryFlag("2");
+        queryBalanceReqVO.setPageNum("1");
+        String reqJson = JSONObject.toJSONString(queryBalanceReqVO);
+        LOGGER.info("queryBalance--->请求数据:{}", reqJson);
+        Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "CustAcctIdBalanceQuery");
+        String resultJson = JSONObject.toJSONString(result);
+        LOGGER.info("queryBalance--->响应数据:{}", resultJson);
+        String code = (String) result.get("TxnReturnCode");
+        if (!code.equals("000000")) {
+            String txnReturnMsg = (String) result.get("TxnReturnMsg");
+            LOGGER.error("queryBalance--->会员查询子账户余额,失败原因:{}", txnReturnMsg);
+            throw new PinganMchException(txnReturnMsg);
+        }
+        PinganMchQueryBalanceResVO queryBalanceResVO = JSONObject.parseObject(resultJson, PinganMchQueryBalanceResVO.class);
+        return queryBalanceResVO;
+    }
+
+    /**
+     * 提现
+     *
+     * @param subAccount
+     * @param subAccountCard
+     * @param balanceAcct
+     * @param money
+     */
+    @Override
+    public void withDrawCash(SubAccount subAccount, SubAccountCard subAccountCard, PinganMchQueryBalanceAcctArray balanceAcct, String money) throws PinganMchException, IOException {
+        //提现手续费默认一笔5.0
+        Double withdrawCharge = 5.0;
+        String cashAmt = balanceAcct.getCashAmt();
+        Double withdrawMoney = 0.0;
+        Double initMoney = Double.valueOf(money);
+        Double cashMoney = Double.valueOf(cashAmt);
+        if (initMoney > (cashMoney - withdrawCharge)) {
+            withdrawMoney = Double.valueOf(cashAmt);
+        } else {
+            withdrawMoney = Double.valueOf(money);
+        }
+        PinganMchWithDrawCashReqVO withDrawCashReqVO = new PinganMchWithDrawCashReqVO();
+        withDrawCashReqVO.setFundSummaryAcctNo(mainAcctNo);
+        withDrawCashReqVO.setSubAcctNo(subAccount.getAccount());
+        withDrawCashReqVO.setTranNetMemberCode(subAccount.getUserId().toString());
+        withDrawCashReqVO.setSubAcctName("");
+        withDrawCashReqVO.setTakeCashAcctNo(subAccountCard.getBankNo());
+        withDrawCashReqVO.setTakeCashAcctName(subAccountCard.getIdCardName());
+        withDrawCashReqVO.setCcy("RMB");
+        withDrawCashReqVO.setCashAmt(String.valueOf(withdrawMoney));
+        withDrawCashReqVO.setTakeCashCommission(String.valueOf(withdrawCharge));
+        String reqJson = JSONObject.toJSONString(withDrawCashReqVO);
+        LOGGER.info("withDrawCash--->请求数据:{}", reqJson);
+        Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "MemberWithdrawCash");
+        String resultJson = JSONObject.toJSONString(result);
+        LOGGER.info("withDrawCash--->响应数据:{}", resultJson);
+        String code = (String) result.get("TxnReturnCode");
+        if (!code.equals("000000")) {
+            String txnReturnMsg = (String) result.get("TxnReturnMsg");
+            LOGGER.error("withDrawCash--->会员提现请求失败,失败原因:{}", txnReturnMsg);
+            throw new PinganMchException(txnReturnMsg);
+        }
+    }
+
 
 }

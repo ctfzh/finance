@@ -11,4 +11,12 @@ import org.springframework.stereotype.Repository;
  **/
 @Repository
 public interface UserProfileDao extends BaseDao<UserProfile> {
+
+    /**
+     * 根据主键查询主账号id
+     *
+     * @param id
+     * @return
+     */
+    Integer selectUserIdByPrimaryKey(Integer id);
 }

@@ -3,6 +3,8 @@ package com.ih2ome.server.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.ih2ome.common.Exception.PinganMchException;
 import com.ih2ome.common.Exception.WebPaymentsException;
+import com.ih2ome.common.PageVO.PinganMchVO.PinganMchQueryBalanceAcctArray;
+import com.ih2ome.common.PageVO.PinganMchVO.PinganMchQueryBalanceResVO;
 import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterResVO;
 import com.ih2ome.common.PageVO.WebVO.*;
 import com.ih2ome.common.support.ResponseBodyVO;
@@ -55,6 +57,8 @@ public class WebPaymentsController {
     private SubAccountCardService subAccountCardService;
     @Autowired
     private LandlordBankCardService landlordBankCardService;
+    @Autowired
+    private UserService userService;
 
 
     @RequestMapping(value = "register", method = RequestMethod.POST)
@@ -229,23 +233,44 @@ public class WebPaymentsController {
     }
 
 
-    @GetMapping(value = "bankcard/info/{userid}", produces = "application/json;charset=UTF-8")
-    @ApiOperation("根据登录用户id查询绑定银行卡信息")
-    public ResponseBodyVO getTMoneyBankInfo(@ApiParam("登录id") @PathVariable("userId") Integer userId) {
+//    @GetMapping(value = "bankcard/info/{userid}", produces = "application/json;charset=UTF-8")
+//    @ApiOperation("根据登录用户id查询绑定银行卡信息")
+//    public ResponseBodyVO getTMoneyBankInfo(@ApiParam("登录id") @PathVariable("userId") Integer userId) {
+//        JSONObject data = new JSONObject();
+//        //判断是主账号还是子账号,
+//        //根据用户查询会员子账号信息
+//        SubAccount subAccount = webPaymentsService.findAccountByUserId(userId);
+//        Integer accountId = subAccount.getId();
+//        //根据会员子账号主键查询绑定银行卡信息
+//        SubAccountCard subAccountCard = subAccountCardService.findSubAccountByAccountId(accountId);
+//        WebTMoneyBankCardInfoVO bankCardInfo = new WebTMoneyBankCardInfoVO();
+//        bankCardInfo.setBankName(subAccountCard.getBankName());
+//        bankCardInfo.setBankNo(subAccountCard.getBankNo());
+//        return ResponseBodyVO.generateResponseObject(0, null, "成功");
+//    }
+
+
+    @GetMapping(value = "bankcard/withdrawMoney/{userId}/{money}", produces = "application/json;charset=UTF-8")
+    @ApiOperation("用户平安提现")
+    public ResponseBodyVO withdrawMoney(@ApiParam("登录Id") @PathVariable("userId") Integer userId,
+                                        @ApiParam("提现金额") @PathVariable("money") String money) {
         JSONObject data = new JSONObject();
-        //判断是主账号还是子账号,
-        //根据用户查询会员子账号信息
-        SubAccount subAccount = webPaymentsService.findAccountByUserId(userId);
-        Integer accountId = subAccount.getId();
-        //根据会员子账号主键查询绑定银行卡信息
-        SubAccountCard subAccountCard = subAccountCardService.findSubAccountByAccountId(accountId);
-        WebTMoneyBankCardInfoVO bankCardInfo = new WebTMoneyBankCardInfoVO();
-        bankCardInfo.setBankName(subAccountCard.getBankName());
-        bankCardInfo.setBankNo(subAccountCard.getBankNo());
-        return ResponseBodyVO.generateResponseObject(0, null, "成功");
+        try {
+            //判断提现账号是主账号还是子账号，若是子账号则查询出对应的主账号
+            Integer landlordId = userService.findLandlordId(userId);
+            //根据用户id获取会员子账号和交易网会员代码
+            SubAccount subAccount = webPaymentsService.findAccountByUserId(landlordId);
+            PinganMchQueryBalanceResVO queryBalanceResVO = pinganMchService.queryBalance(subAccount);
+            PinganMchQueryBalanceAcctArray balanceAcct = queryBalanceResVO.getAcctArray().get(0);
+            SubAccountCard subAccountCard = subAccountCardService.findSubAccountByAccountId(subAccount.getId());
+            //平安提现
+            pinganMchService.withDrawCash(subAccount, subAccountCard, balanceAcct, money);
+        } catch (PinganMchException | IOException e) {
+            e.printStackTrace();
+        }
+        return ResponseBodyVO.generateResponseObject(0, data, "成功");
+
     }
-
-
 }
 
 
