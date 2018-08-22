@@ -8,8 +8,10 @@ import com.ih2ome.service.SubWithdrawRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Sky
@@ -51,5 +53,30 @@ public class SubWithdrawRecordServiceImpl implements SubWithdrawRecordService {
         //提现状态：0提现中，1提现成功 2提现失败
         withdrawRecord.setWithdrawStatus(0);
         withdrawRecordDao.insert(withdrawRecord);
+    }
+
+
+    /**
+     * 根据主账号id查询该账号下所有的提现状态为提现中
+     *
+     * @param landlordId
+     * @return
+     */
+    @Override
+    public List<SubWithdrawRecord> queryWithdrawRecords(Integer landlordId) {
+        Example example = new Example(SubWithdrawRecord.class);
+        example.createCriteria().andEqualTo("landlordId", landlordId).andEqualTo("isDelete", 0).andEqualTo("withdrawStatus", 0);
+        List<SubWithdrawRecord> withdrawRecords = withdrawRecordDao.selectByExample(example);
+        return withdrawRecords;
+    }
+
+    /**
+     * 修改订单状态
+     *
+     * @param withdrawRecord
+     */
+    @Override
+    public void updateWithdrawStatus(SubWithdrawRecord withdrawRecord) {
+        withdrawRecordDao.updateByPrimaryKey(withdrawRecord);
     }
 }

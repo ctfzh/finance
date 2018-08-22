@@ -34,4 +34,12 @@ public interface SubAccountCardService {
      * @return
      */
     SubAccountCard findSubAccountByAccountId(Integer accountId);
+
+    /**
+     * 根据子账号id查询绑定银行卡
+     *
+     * @param landlordId
+     * @return
+     */
+    SubAccountCard findSubaccountByLandlordId(Integer landlordId);
 }

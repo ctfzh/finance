@@ -5,6 +5,7 @@ import com.ih2ome.common.Exception.PinganMchException;
 import com.ih2ome.common.Exception.WebPaymentsException;
 import com.ih2ome.common.PageVO.PinganMchVO.PinganMchQueryBalanceAcctArray;
 import com.ih2ome.common.PageVO.PinganMchVO.PinganMchQueryBalanceResVO;
+import com.ih2ome.common.PageVO.PinganMchVO.PinganMchQueryTranStatusResVO;
 import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterResVO;
 import com.ih2ome.common.PageVO.WebVO.*;
 import com.ih2ome.common.support.ResponseBodyVO;
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.jnlp.IntegrationService;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
@@ -61,18 +63,40 @@ public class WebPaymentsController {
     private UserService userService;
     @Autowired
     private SubWithdrawRecordService subWithdrawRecordService;
+    @Autowired
+    private ConfigPaymentsUserService paymentsUserService;
 
+    @GetMapping(value = "show/openbutton/{userId}", produces = "application/json;charset=UTF-8")
+    @ApiOperation("开通子账户按钮")
+    public ResponseBodyVO getUserType(@ApiParam("用户登录id") @PathVariable("userId") Integer userId) {
+        JSONObject data = new JSONObject();
+        //判断登录账号是主账号还是子账号，若是子账号则查询出对应的主账号
+        Integer landlordId = userService.findLandlordId(userId);
+        Integer flag = -1;
+        //主账号
+        if (landlordId.equals(userId)) {
+            Boolean bool = paymentsUserService.judgeUserType(landlordId);
+//            flag = bool ? 0 : -1;
+            if (bool) {
+                //是否开通账户并绑卡
+                SubAccountCard subAccountCard = subAccountCardService.findSubaccountByLandlordId(landlordId);
+                flag = (subAccountCard == null ? 0 : -1);
+            }
+        }
+        return ResponseBodyVO.generateResponseObject(flag, data, "查询成功");
+    }
 
-    @RequestMapping(value = "register", method = RequestMethod.POST)
+    @RequestMapping(value = "register/{userId}", method = RequestMethod.GET)
     @ApiOperation("注册商户子账户")
-    public ResponseBodyVO registerMerchant(@RequestHeader("Authorization") String authorization) {
+    public ResponseBodyVO registerMerchant(@ApiParam("用户登录id") @PathVariable("userId") Integer userId) {
         JSONObject data = new JSONObject();
         //获取用户id
-        TerminalToken terminalToken = terminalTokenService.findByToken(authorization.split(" ")[1]);
-        Integer userId = terminalToken.getUserId();
+//        TerminalToken terminalToken = terminalTokenService.findByToken(authorization.split(" ")[1]);
+//        Integer userId = terminalToken.getUserId();
+        Integer landlordId = userService.findLandlordId(userId);
         try {
             //判断是否有商户子账号
-            SubAccount subAccount = webPaymentsService.findAccountByUserId(userId);
+            SubAccount subAccount = webPaymentsService.findAccountByUserId(landlordId);
             if (subAccount != null) {
                 return ResponseBodyVO.generateResponseObject(0, null, "该用户已开通子账号");
             }
@@ -165,7 +189,7 @@ public class WebPaymentsController {
     }
 
     @PostMapping(value = "personal/bindCard/submit", produces = "application/json;charset=UTF-8")
-    @ApiModelProperty("个人账户绑定银行卡提交")
+    @ApiOperation("个人账户绑定银行卡提交")
     public ResponseBodyVO submitPersonalBindInfo(@RequestBody @Valid WebBindCardPersonalReqVO reqVO, BindingResult bindingResult) {
         JSONObject data = new JSONObject();
         if (bindingResult.hasErrors() || StringUtils.isBlank(reqVO.getMessageCode())) {
@@ -288,6 +312,39 @@ public class WebPaymentsController {
         return ResponseBodyVO.generateResponseObject(0, data, "提现请求成功");
     }
 
+
+    @GetMapping(value = "refresh/withdraw/status", produces = "application/json;charset=UTF-8")
+    @ApiOperation("进入账户页面刷新提现状态")
+    public ResponseBodyVO refreshWithdrawStatus(@ApiParam("登录Id") @PathVariable("userId") Integer userId) {
+        JSONObject data = new JSONObject();
+        Integer landlordId = 0;
+        try {
+            //判断提现账号是主账号还是子账号，若是子账号则查询出对应的主账号
+            landlordId = userService.findLandlordId(userId);
+            //根据主账号id查询所有的提现中的记录
+            List<SubWithdrawRecord> withdrawRecords = subWithdrawRecordService.queryWithdrawRecords(landlordId);
+            for (SubWithdrawRecord withdrawRecord : withdrawRecords) {
+                String serialNo = withdrawRecord.getSerialNo();
+                PinganMchQueryTranStatusResVO tranStatusResVO = pinganMchService.queryTranStatus(serialNo);
+                String tranStatus = tranStatusResVO.getTranStatus();
+                //0成功，1失败(平安)
+                if ("0".equals(tranStatus)) {
+                    //修改提现状态（1:成功）
+                    withdrawRecord.setWithdrawStatus(1);
+                    subWithdrawRecordService.updateWithdrawStatus(withdrawRecord);
+                } else if ("1".equals(tranStatus)) {
+                    //修改提现状态(2:失败)
+                    withdrawRecord.setWithdrawStatus(2);
+                    subWithdrawRecordService.updateWithdrawStatus(withdrawRecord);
+                }
+            }
+        } catch (PinganMchException | IOException e) {
+            e.printStackTrace();
+            LOGGER.info("refreshWithdrawStatus--->刷新提现状态失败,登录用户id:{},主账户id:{},失败原因:{}", userId, landlordId, e.getMessage());
+            return new ResponseBodyVO(-1, data, e.getMessage());
+        }
+        return ResponseBodyVO.generateResponseObject(0, data, "提现状态刷新成功");
+    }
 
 
 }

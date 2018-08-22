@@ -99,4 +99,19 @@ public class SubAccountCardServiceImpl implements SubAccountCardService {
         SubAccountCard subAccountCard = subAccountCardDao.selectOneByExample(example);
         return subAccountCard;
     }
+
+    /**
+     * 根据子账号id查询绑定银行卡
+     *
+     * @param landlordId
+     * @return
+     */
+    @Override
+    public SubAccountCard findSubaccountByLandlordId(Integer landlordId) {
+        Example example = new Example(SubAccountCard.class);
+        example.createCriteria().andEqualTo("isDelete", 0).andEqualTo("isBind", 1)
+                .andEqualTo("createdById", landlordId);
+        SubAccountCard subAccountCard = subAccountCardDao.selectOneByExample(example);
+        return subAccountCard;
+    }
 }
