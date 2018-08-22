@@ -24,9 +24,6 @@ import javax.servlet.ServletException;
 @ComponentScan(basePackages = {"com.ih2ome"})
 public class ServerApplication extends SpringBootServletInitializer {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ConfigPaymentsController.class);
-
-
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(ServerApplication.class);
