@@ -69,20 +69,27 @@ public class WebPaymentsController {
     @ApiOperation("开通子账户按钮")
     public ResponseBodyVO getUserType(@ApiParam("用户登录id") @PathVariable("userId") Integer userId) {
         JSONObject data = new JSONObject();
-        //判断登录账号是主账号还是子账号，若是子账号则查询出对应的主账号
-        Integer landlordId = userService.findLandlordId(userId);
-        Integer flag = -1;
-        //主账号
-        if (landlordId.equals(userId)) {
-            Boolean bool = paymentsUserService.judgeUserType(landlordId);
-//            flag = bool ? 0 : -1;
-            if (bool) {
-                //是否开通账户并绑卡
-                SubAccountCard subAccountCard = subAccountCardService.findSubaccountByLandlordId(landlordId);
-                flag = (subAccountCard == null ? 0 : -1);
+        try {
+            //判断登录账号是主账号还是子账号，若是子账号则查询出对应的主账号
+            Integer landlordId = userService.findLandlordId(userId);
+            Integer flag = -1;
+            //主账号
+            if (landlordId.equals(userId)) {
+                Boolean bool = paymentsUserService.judgeUserType(landlordId);
+                //            flag = bool ? 0 : -1;
+                if (bool) {
+                    //是否开通账户并绑卡
+                    SubAccountCard subAccountCard = subAccountCardService.findSubaccountByLandlordId(landlordId);
+                    flag = (subAccountCard == null ? 0 : -1);
+                }
             }
+            data.put("status", flag);
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.info("registerMerchant--->开通子账户按钮查询失败,用户id:{},失败原因:{}", userId, e.getMessage());
+            return new ResponseBodyVO(-1, data, e.getMessage());
         }
-        return ResponseBodyVO.generateResponseObject(flag, data, "查询成功");
+        return ResponseBodyVO.generateResponseObject(0, data, "查询成功");
     }
 
     @RequestMapping(value = "register/{userId}", method = RequestMethod.GET)

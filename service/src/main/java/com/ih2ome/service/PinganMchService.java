@@ -112,4 +112,16 @@ public interface PinganMchService {
      * @throws IOException
      */
     PinganMchQueryTranStatusResVO queryTranStatus(String tranSeqNo) throws PinganMchException, IOException;
+
+    /**
+     * 子账户解绑银行卡
+     *
+     * @param subAccount
+     * @param subAccountCard
+     * @throws PinganMchException
+     * @throws IOException
+     */
+    void unbindBankCard(SubAccount subAccount, SubAccountCard subAccountCard) throws PinganMchException, IOException;
+
+
 }

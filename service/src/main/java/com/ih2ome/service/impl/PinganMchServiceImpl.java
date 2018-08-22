@@ -361,4 +361,25 @@ public class PinganMchServiceImpl implements PinganMchService {
     }
 
 
+    /**
+     * 子账户解绑银行卡
+     *
+     * @param subAccount
+     * @param subAccountCard
+     * @throws PinganMchException
+     * @throws IOException
+     */
+    @Override
+    public void unbindBankCard(SubAccount subAccount, SubAccountCard subAccountCard) throws PinganMchException, IOException {
+        PinganMchUnbindCardReqVO unbindCardReqVO = new PinganMchUnbindCardReqVO();
+        unbindCardReqVO.setFundSummaryAcctNo(mainAcctNo);
+        unbindCardReqVO.setCnsmrSeqNo(uid + SerialNumUtil.generateSerial());
+        unbindCardReqVO.setFunctionFlag("1");
+        unbindCardReqVO.setTranNetMemberCode(subAccount.getUserId().toString());
+        unbindCardReqVO.setSubAcctNo(subAccount.getAccount());
+        unbindCardReqVO.setMemberAcctNo(subAccountCard.getBankNo());
+
+    }
+
+
 }
