@@ -16,6 +16,7 @@ import com.ih2ome.dao.caspain.ConfigPaymentsChannelDao;
 import com.ih2ome.dao.lijiang.PayOrdersDao;
 import com.ih2ome.dao.volga.VolgaMoneyFlowDao;
 import com.ih2ome.model.lijiang.PayOrders;
+import com.ih2ome.model.lijiang.ZjjzCnapsBanktype;
 import com.ih2ome.model.volga.MoneyFlow;
 import com.ih2ome.server.pingan.sdk.InitConfiguration;
 import com.ih2ome.service.PinganMchService;
@@ -202,8 +203,9 @@ public class TestMapperController {
         try {
 //            pinganMchService.queryMemberBindInfo();
 //            pinganMchService.queryTransferinfo();
-            pinganMchService.queryTranStatus("M394791808218285023854");
-        } catch (PinganMchException e) {
+//            pinganMchService.queryTranStatus("M394791808218285023854");
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ResponseBodyVO.generateResponseObject(0, null, "success");

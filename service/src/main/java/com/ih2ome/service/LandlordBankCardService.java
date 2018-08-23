@@ -25,4 +25,11 @@ public interface LandlordBankCardService {
      * @param reqVO
      */
     void insertCompanyCardInfo(SubAccount subAccount, WebBindCardCompanyReqVO reqVO);
+
+    /**
+     * landlord_bank_card 解绑银行卡
+     *
+     * @param bankNo
+     */
+    void unbindLandlordBankCard(String bankNo);
 }

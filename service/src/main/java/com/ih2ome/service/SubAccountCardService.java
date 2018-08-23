@@ -42,4 +42,11 @@ public interface SubAccountCardService {
      * @return
      */
     SubAccountCard findSubaccountByLandlordId(Integer landlordId);
+
+    /**
+     * lijiang 数据库解绑子账户银行卡
+     *
+     * @param subAccountCard
+     */
+    void unbindSubAccountCard(SubAccountCard subAccountCard);
 }

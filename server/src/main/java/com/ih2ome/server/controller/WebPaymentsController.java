@@ -9,6 +9,7 @@ import com.ih2ome.common.PageVO.PinganMchVO.PinganMchQueryTranStatusResVO;
 import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterResVO;
 import com.ih2ome.common.PageVO.WebVO.*;
 import com.ih2ome.common.support.ResponseBodyVO;
+import com.ih2ome.dao.lijiang.SubAccountDao;
 import com.ih2ome.model.caspain.TerminalToken;
 import com.ih2ome.model.lijiang.*;
 import com.ih2ome.service.*;
@@ -41,11 +42,9 @@ public class WebPaymentsController {
     private static final Logger LOGGER = LoggerFactory.getLogger(WebPaymentsController.class);
 
     @Autowired
-    private TerminalTokenService terminalTokenService;
-    @Autowired
     private PinganMchServiceImpl pinganMchService;
     @Autowired
-    private WebPaymentsService webPaymentsService;
+    private SubAccountService subAccountService;
     @Autowired
     private ZjjzCnapsBanktypeService banktypeService;
     @Autowired
@@ -76,7 +75,7 @@ public class WebPaymentsController {
             //主账号
             if (landlordId.equals(userId)) {
                 Boolean bool = paymentsUserService.judgeUserType(landlordId);
-                //            flag = bool ? 0 : -1;
+                //flag = bool ? 0 : -1;
                 if (bool) {
                     //是否开通账户并绑卡
                     SubAccountCard subAccountCard = subAccountCardService.findSubaccountByLandlordId(landlordId);
@@ -102,13 +101,13 @@ public class WebPaymentsController {
         Integer landlordId = userService.findLandlordId(userId);
         try {
             //判断是否有商户子账号
-            SubAccount subAccount = webPaymentsService.findAccountByUserId(landlordId);
+            SubAccount subAccount = subAccountService.findAccountByUserId(landlordId);
             if (subAccount != null) {
                 return ResponseBodyVO.generateResponseObject(0, null, "该用户已开通子账号");
             }
             PinganMchRegisterResVO resVO = pinganMchService.registerAccount(userId);
             String subAcctNo = resVO.getSubAcctNo();
-            WebRegisterResVO registerResVO = webPaymentsService.registerAccount(userId, subAcctNo);
+            WebRegisterResVO registerResVO = subAccountService.registerAccount(userId, subAcctNo);
             data.put("registerResVO", registerResVO);
         } catch (PinganMchException | IOException e) {
             e.printStackTrace();
@@ -181,7 +180,7 @@ public class WebPaymentsController {
         }
         try {
             //根据用户id获取会员子账号和交易网会员代码
-            SubAccount subAccount = webPaymentsService.findAccountByUserId(reqVO.getUserId());
+            SubAccount subAccount = subAccountService.findAccountByUserId(reqVO.getUserId());
             //判断银行是否是平安银行
             String bankType = bankinfoService.judgeBankTypeIsPingan(reqVO.getBankCnapsNo());
             //发送短信鉴权
@@ -203,7 +202,7 @@ public class WebPaymentsController {
         }
         try {
             //根据用户id获取会员子账号和交易网会员代码
-            SubAccount subAccount = webPaymentsService.findAccountByUserId(reqVO.getUserId());
+            SubAccount subAccount = subAccountService.findAccountByUserId(reqVO.getUserId());
             //回填平安短信验证码
             pinganMchService.bindPersonalCardVertify(subAccount, reqVO);
             //回填验证成功，将银行卡信息存入数据库
@@ -227,7 +226,7 @@ public class WebPaymentsController {
         }
         try {
             //根据用户id获取会员子账号和交易网会员代码
-            SubAccount subAccount = webPaymentsService.findAccountByUserId(reqVO.getUserId());
+            SubAccount subAccount = subAccountService.findAccountByUserId(reqVO.getUserId());
             //判断银行是否是平安银行
             String bankType = bankinfoService.judgeBankTypeIsPingan(reqVO.getBankCnapsNo());
             //发送金额鉴权
@@ -250,7 +249,7 @@ public class WebPaymentsController {
         }
         try {
             //根据用户id获取会员子账号和交易网会员代码
-            SubAccount subAccount = webPaymentsService.findAccountByUserId(reqVO.getUserId());
+            SubAccount subAccount = subAccountService.findAccountByUserId(reqVO.getUserId());
             //回填平安小额鉴权金额
             pinganMchService.bindCompanyCardVertify(subAccount, reqVO);
             //回填验证成功，将银行卡信息存入数据库
@@ -291,7 +290,7 @@ public class WebPaymentsController {
             //判断提现账号是主账号还是子账号，若是子账号则查询出对应的主账号
             Integer landlordId = userService.findLandlordId(userId);
             //根据用户id获取会员子账号和交易网会员代码
-            SubAccount subAccount = webPaymentsService.findAccountByUserId(landlordId);
+            SubAccount subAccount = subAccountService.findAccountByUserId(landlordId);
             PinganMchQueryBalanceResVO queryBalanceResVO = pinganMchService.queryBalance(subAccount);
             PinganMchQueryBalanceAcctArray balanceAcct = queryBalanceResVO.getAcctArray().get(0);
             SubAccountCard subAccountCard = subAccountCardService.findSubAccountByAccountId(subAccount.getId());
@@ -353,6 +352,30 @@ public class WebPaymentsController {
     }
 
 
+    @GetMapping(value = "bindcard/unbind/{userId}", produces = "application/json;charset=UTF-8")
+    @ApiOperation("会员子账户解绑银行卡")
+    public ResponseBodyVO unbindBankCard(@ApiParam("登录Id") @PathVariable("userId") Integer userId) {
+        JSONObject data = new JSONObject();
+        //判断解绑账号是主账号还是子账号，若是子账号则查询出对应的主账号
+        Integer landlordId = userService.findLandlordId(userId);
+        try {
+            if (landlordId.equals(userId)) {
+                SubAccount subaccount = subAccountService.findAccountByUserId(landlordId);
+                SubAccountCard subAccountCard = subAccountCardService.findSubaccountByLandlordId(landlordId);
+                //平安银行卡解绑
+                pinganMchService.unbindBankCard(subaccount, subAccountCard);
+                //水滴数据库解绑
+                subAccountCardService.unbindSubAccountCard(subAccountCard);
+                landlordBankCardService.unbindLandlordBankCard(subAccountCard.getBankNo());
+            } else {
+                return ResponseBodyVO.generateResponseObject(-1, data, "您没有权限进行解绑操作");
+            }
+        } catch (PinganMchException | IOException e) {
+            e.printStackTrace();
+            LOGGER.info("unbindBankCard--->解绑银行卡失败,登录用户id:{},主账户id:{},失败原因:{}", userId, landlordId, e.getMessage());
+            return new ResponseBodyVO(-1, data, e.getMessage());
+        }
+        return ResponseBodyVO.generateResponseObject(0, data, "解绑成功");
+    }
+
 }
-
-

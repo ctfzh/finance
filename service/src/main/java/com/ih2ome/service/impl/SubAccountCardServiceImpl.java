@@ -114,4 +114,20 @@ public class SubAccountCardServiceImpl implements SubAccountCardService {
         SubAccountCard subAccountCard = subAccountCardDao.selectOneByExample(example);
         return subAccountCard;
     }
+
+    /**
+     * 解绑子账户银行卡
+     *
+     * @param subAccountCard
+     */
+    @Override
+    public void unbindSubAccountCard(SubAccountCard subAccountCard) {
+        //1：删除
+        subAccountCard.setIsDelete(1);
+        //0：解绑
+        subAccountCard.setIsBind(0);
+        subAccountCard.setDeletedById(subAccountCard.getCreatedById());
+        subAccountCard.setDeletedAt(new Date());
+        subAccountCardDao.updateByPrimaryKeySelective(subAccountCard);
+    }
 }

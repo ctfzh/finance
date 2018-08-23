@@ -9,8 +9,10 @@ import com.ih2ome.service.LandlordBankCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Sky
@@ -67,5 +69,24 @@ public class LandlordBankCardServiceImpl implements LandlordBankCardService {
         bankCard.setVersion(0);
         bankCard.setUsedType(1);
         landlordBankCardDao.insert(bankCard);
+    }
+
+    /**
+     * landlord_bank_card 解绑银行卡
+     *
+     * @param bankNo
+     */
+    @Override
+    public void unbindLandlordBankCard(String bankNo) {
+        Example example = new Example(LandlordBankCard.class);
+        example.createCriteria().andEqualTo("isDelete", 0).andEqualTo("cardNo", bankNo)
+                .andEqualTo("usedType", 1);
+        List<LandlordBankCard> landlordBankCards = landlordBankCardDao.selectByExample(example);
+        for (LandlordBankCard landlordBankCard : landlordBankCards) {
+            landlordBankCard.setIsDelete(1);
+            landlordBankCard.setDeletedAt(new Date());
+            landlordBankCard.setDeletedById(landlordBankCard.getCreatedById());
+            landlordBankCardDao.updateByPrimaryKeySelective(landlordBankCard);
+        }
     }
 }

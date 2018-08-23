@@ -378,7 +378,17 @@ public class PinganMchServiceImpl implements PinganMchService {
         unbindCardReqVO.setTranNetMemberCode(subAccount.getUserId().toString());
         unbindCardReqVO.setSubAcctNo(subAccount.getAccount());
         unbindCardReqVO.setMemberAcctNo(subAccountCard.getBankNo());
-
+        String reqJson = JSONObject.toJSONString(unbindCardReqVO);
+        LOGGER.info("unbindBankCard--->请求数据:{}", reqJson);
+        Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "UnbindRelateAcct");
+        String resultJson = JSONObject.toJSONString(result);
+        LOGGER.info("unbindBankCard--->响应数据:{}", resultJson);
+        String code = (String) result.get("TxnReturnCode");
+        if (!code.equals("000000")) {
+            String txnReturnMsg = (String) result.get("TxnReturnMsg");
+            LOGGER.error("unbindBankCard--->会员子账户解绑银行卡失败,失败原因:{}", txnReturnMsg);
+            throw new PinganMchException(txnReturnMsg);
+        }
     }
 
 

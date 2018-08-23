@@ -125,6 +125,7 @@
     </appender>
 
 
+    <!--商户子账户,绑卡,提现第三方日志-->
     <appender name="pinganMch" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${log_dir}/pinganMch/%d{yyyy-MM-dd}_pinganMch.log</fileNamePattern>
@@ -137,6 +138,7 @@
         <appender-ref ref="pinganMch"/>
     </logger>
 
+    <!--支付第三方日志-->
     <appender name="pinganPay" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${log_dir}/pinganPay/%d{yyyy-MM-dd}_pinganPay.log</fileNamePattern>
@@ -148,6 +150,20 @@
     <logger name="com.ih2ome.service.impl.PinganPayServiceImpl" additivity="true">
         <appender-ref ref="pinganPay"/>
     </logger>
+
+    <!--webPaymentsController 日志-->
+    <appender name="webpayments" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log_dir}/webpayments/%d{yyyy-MM-dd}_webpayments.log</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <logger name="com.ih2ome.server.controller.WebPaymentsController" additivity="true">
+        <appender-ref ref="webpayments"/>
+    </logger>
+
 
     <!-- root级别 DEBUG -->
     <root>
