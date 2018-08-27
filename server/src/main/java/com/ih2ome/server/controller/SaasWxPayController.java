@@ -7,7 +7,9 @@ import com.ih2ome.common.PageVO.SaasWxNotifyReqVO;
 import com.ih2ome.common.PageVO.SaasWxPayOrderReqVO;
 import com.ih2ome.common.PageVO.SaasWxPayOrderResVO;
 import com.ih2ome.common.support.ResponseBodyVO;
+import com.ih2ome.model.lijiang.SubAccount;
 import com.ih2ome.service.SaasWxPayService;
+import com.ih2ome.service.SubAccountService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -34,6 +36,9 @@ public class SaasWxPayController {
     @Autowired
     private SaasWxPayService saasWxPayService;
 
+    @Autowired
+    private SubAccountService subAccountService;
+
 
     @PostMapping(value = "placeOrder", produces = "application/json;charset=UTF-8")
     @ApiOperation("微信下单接口")
@@ -45,7 +50,9 @@ public class SaasWxPayController {
             return ResponseBodyVO.generateResponseObject(-1, data, "参数异常");
         }
         try {
-            SaasWxPayOrderResVO resVO = saasWxPayService.placeOrder(reqVO);
+            //根据主账号id查询平安商户子账户对象
+            SubAccount subAccount = subAccountService.findAccountByUserId(Integer.valueOf(reqVO.getLandlordId()));
+            SaasWxPayOrderResVO resVO = saasWxPayService.placeOrder(reqVO, subAccount);
             data.put("payInfo", resVO);
         } catch (SaasWxPayException e) {
             e.printStackTrace();

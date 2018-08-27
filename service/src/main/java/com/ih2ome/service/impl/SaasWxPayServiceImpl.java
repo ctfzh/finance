@@ -5,6 +5,8 @@ import com.ih2ome.common.Exception.PinganWxPayException;
 import com.ih2ome.common.Exception.SaasWxPayException;
 import com.ih2ome.common.PageVO.*;
 import com.ih2ome.common.PageVO.PinganWxPayVO.PinganWxPayOrderReqVO;
+import com.ih2ome.common.PageVO.PinganWxPayVO.PinganWxPayOrderSubDataVO;
+import com.ih2ome.common.PageVO.PinganWxPayVO.PinganWxPayOrderSubVO;
 import com.ih2ome.common.enums.FeeTypeEnum;
 import com.ih2ome.common.enums.PayTypeEnum;
 import com.ih2ome.common.utils.client.HttpClientUtil;
@@ -13,8 +15,11 @@ import com.ih2ome.common.utils.pingan.SignUtil;
 import com.ih2ome.dao.lijiang.OrdersDao;
 import com.ih2ome.dao.lijiang.SubOrdersDao;
 import com.ih2ome.model.lijiang.Orders;
+import com.ih2ome.model.lijiang.SubAccount;
+import com.ih2ome.model.lijiang.SubOrders;
 import com.ih2ome.service.PinganPayService;
 import com.ih2ome.service.SaasWxPayService;
+import com.ih2ome.service.SubOrdersService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,27 +50,30 @@ public class SaasWxPayServiceImpl implements SaasWxPayService {
     private String open_id;
     @Value("${pingan.wxPay.open_key}")
     private String open_key;
-
-
+    @Value("${pingan.shuidi.appid}")
+    private String subappid;
+    //saas微信端回调
+    private String saasNotify = "http://pay.shuidiguanjia.com/pinganpay/wxnotify/";
     @Autowired
     private OrdersDao ordersDao;
     @Autowired
     private SubOrdersDao subOrdersDao;
-
+    //水滴在平安的平台代码
+    private String plantCode = "4004";
     //平安第三方下单
     @Autowired
     private PinganPayService pinganPayService;
 
-    private String saasNotify = "http://pay.shuidiguanjia.com/pinganpay/wxnotify/";
 
     /**
      * 下单
      *
      * @param reqVO
+     * @param subAccount
      * @return
      */
     @Override
-    public SaasWxPayOrderResVO placeOrder(SaasWxPayOrderReqVO reqVO) throws SaasWxPayException, PinganWxPayException {
+    public SaasWxPayOrderResVO placeOrder(SaasWxPayOrderReqVO reqVO, SubAccount subAccount) throws SaasWxPayException, PinganWxPayException {
         //生成水滴订单号
         String orderId = uid + SerialNumUtil.generateSerial();
         //水滴总订单下单
@@ -83,15 +91,15 @@ public class SaasWxPayServiceImpl implements SaasWxPayService {
         orders.setPayOrderId(reqVO.getPayOrderId());
 
         //水滴子订单下单
-//        SubOrders subOrders = new SubOrders();
-//        subOrders.setUuid(UUID.randomUUID().toString().replace("-", ""));
-//        subOrders.setOrderId(orders.getUuid());
-//        subOrders.setSubOrderId(uid + SerialNumUtil.generateSerial());
-//        subOrders.setSubAccount("shuidi");
-//        subOrders.setSubAmount(reqVO.getTotalMoney());
-//        subOrders.setTranFee(reqVO.getPayCharge());
-//        subOrders.setRemark(FeeTypeEnum.getNameByCode(reqVO.getFeeType()));
-//        subOrders.setRawData(JSONObject.toJSONString(subOrders));
+        SubOrders subOrders = new SubOrders();
+        subOrders.setUuid(UUID.randomUUID().toString().replace("-", ""));
+        subOrders.setOrderId(orders.getUuid());
+        subOrders.setSubOrderId(uid + SerialNumUtil.generateSerial());
+        subOrders.setSubAccount(subAccount.getAccount());
+        subOrders.setSubAmount(reqVO.getTotalMoney());
+        subOrders.setTranFee(reqVO.getPayCharge());
+        subOrders.setRemark(FeeTypeEnum.getNameByCode(reqVO.getFeeType()));
+        subOrders.setRawData(JSONObject.toJSONString(subOrders));
 
 
         //第三方下单
@@ -105,29 +113,29 @@ public class SaasWxPayServiceImpl implements SaasWxPayService {
         pinganWxPayOrderReqVO.setRemark(FeeTypeEnum.getNameByCode(reqVO.getFeeType()));
         //支付成功的异步通知地址
         pinganWxPayOrderReqVO.setNotify_url(shuidiUrl + "saas/wx/notify");
-        pinganWxPayOrderReqVO.setSub_appid("wxed1a36ce3fa969f5");
+        pinganWxPayOrderReqVO.setSub_appid(subappid);
         pinganWxPayOrderReqVO.setSub_openid(reqVO.getOpenId());
         pinganWxPayOrderReqVO.setJSAPI("1");
 
         //子订单信息拼装
-//        PinganWxPayOrderSubVO pinganWxPayOrderSubVO = new PinganWxPayOrderSubVO();
-//        pinganWxPayOrderSubVO.setSFJOrdertype("1");
-//        pinganWxPayOrderSubVO.setRemarktype("JHS0100000");
-//        pinganWxPayOrderSubVO.setPlantCode("平台代码");
-//        ArrayList<PinganWxPayOrderSubDataVO> orderLists = new ArrayList<PinganWxPayOrderSubDataVO>();
-//        //订单数据
-//        PinganWxPayOrderSubDataVO pinganWxPayOrderSubDataVO = new PinganWxPayOrderSubDataVO();
-//        pinganWxPayOrderSubDataVO.setObject(FeeTypeEnum.getNameByCode(reqVO.getFeeType()));
-//        //0-冻结支付 ，1-普通支付
-//        pinganWxPayOrderSubDataVO.setPayModel("1");
-//        pinganWxPayOrderSubDataVO.setSubAccNo("商户名称");
-//        pinganWxPayOrderSubDataVO.setSubamount(String.valueOf(subOrders.getSubAmount()));
-//        pinganWxPayOrderSubDataVO.setSuborderId(subOrders.getSubOrderId());
-//        pinganWxPayOrderSubDataVO.setObject(subOrders.getRemark());
-//        pinganWxPayOrderSubDataVO.setTranFee(String.valueOf(subOrders.getTranFee()));
-//        orderLists.add(pinganWxPayOrderSubDataVO);
-//        pinganWxPayOrderSubVO.setOrderList(orderLists);
-//        pinganWxPayOrderReqVO.setCmd(JSONObject.toJSONString(pinganWxPayOrderSubVO));
+        PinganWxPayOrderSubVO pinganWxPayOrderSubVO = new PinganWxPayOrderSubVO();
+        pinganWxPayOrderSubVO.setSFJOrdertype("1");
+        pinganWxPayOrderSubVO.setRemarktype("JHS0100000");
+        pinganWxPayOrderSubVO.setPlantCode(plantCode);
+        ArrayList<PinganWxPayOrderSubDataVO> orderLists = new ArrayList<PinganWxPayOrderSubDataVO>();
+        //订单数据
+        PinganWxPayOrderSubDataVO pinganWxPayOrderSubDataVO = new PinganWxPayOrderSubDataVO();
+        pinganWxPayOrderSubDataVO.setObject(FeeTypeEnum.getNameByCode(reqVO.getFeeType()));
+        //0-冻结支付 ，1-普通支付
+        pinganWxPayOrderSubDataVO.setPayModel("1");
+        pinganWxPayOrderSubDataVO.setSubAccNo(subAccount.getAccount());
+        pinganWxPayOrderSubDataVO.setSubamount(String.valueOf(subOrders.getSubAmount()));
+        pinganWxPayOrderSubDataVO.setSuborderId(subOrders.getSubOrderId());
+        pinganWxPayOrderSubDataVO.setObject(subOrders.getRemark());
+        pinganWxPayOrderSubDataVO.setTranFee(String.valueOf(subOrders.getTranFee()));
+        orderLists.add(pinganWxPayOrderSubDataVO);
+        pinganWxPayOrderSubVO.setOrderList(orderLists);
+        pinganWxPayOrderReqVO.setCmd(JSONObject.toJSONString(pinganWxPayOrderSubVO));
 
         PinganWxPayOrderResVO pinganWxPayOrderResVO = pinganPayService.payOrder(pinganWxPayOrderReqVO);
         //第三方下单成功,更新水滴订单信息
@@ -135,7 +143,7 @@ public class SaasWxPayServiceImpl implements SaasWxPayService {
         //存水滴订单信息
         ordersDao.insert(orders);
         //存水滴子订单信息
-//        subOrdersDao.insert(subOrders);
+        subOrdersDao.insert(subOrders);
         SaasWxPayOrderResVO resVO = new SaasWxPayOrderResVO();
         BeanUtils.copyProperties(pinganWxPayOrderResVO, resVO);
         return resVO;

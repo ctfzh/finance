@@ -5,6 +5,7 @@ import com.ih2ome.common.Exception.SaasWxPayException;
 import com.ih2ome.common.PageVO.SaasWxNotifyReqVO;
 import com.ih2ome.common.PageVO.SaasWxPayOrderReqVO;
 import com.ih2ome.common.PageVO.SaasWxPayOrderResVO;
+import com.ih2ome.model.lijiang.SubAccount;
 
 /**
  * @author Sky
@@ -18,10 +19,11 @@ public interface SaasWxPayService {
      * saas微信端下单
      *
      * @param reqVO
+     * @param subAccount
      * @return
      * @throws SaasWxPayException
      */
-    SaasWxPayOrderResVO placeOrder(SaasWxPayOrderReqVO reqVO) throws SaasWxPayException, PinganWxPayException;
+    SaasWxPayOrderResVO placeOrder(SaasWxPayOrderReqVO reqVO, SubAccount subAccount) throws SaasWxPayException, PinganWxPayException;
 
     /**
      * 支付成功回调
