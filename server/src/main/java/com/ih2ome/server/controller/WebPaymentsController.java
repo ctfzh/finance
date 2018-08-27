@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -289,19 +290,25 @@ public class WebPaymentsController {
     @ApiOperation("根据登录用户id查询绑定银行卡信息")
     public ResponseBodyVO getTMoneyBankInfo(@ApiParam("登录id") @PathVariable("userId") Integer userId) {
         JSONObject data = new JSONObject();
-        //判断是主账号还是子账号,如果是子账号则查询出主账号
-        Integer landlordId = userService.findLandlordId(userId);
-        Integer userType = paymentsUserService.judgeUserType(userId) ? 1 : 0;
-        //根据用户id和类型获取绑定银行卡信息
-        LandlordBankCard landlordBankCard = landlordBankCardService.findBankCardInfo(landlordId, userType);
-        Map<String, Object> cardInfo = new HashMap<>();
-        if (landlordBankCard != null) {
-            cardInfo.put("bank_name", landlordBankCard.getBankName());
-            cardInfo.put("owner_name", landlordBankCard.getOwnerName());
-            cardInfo.put("branch_bank", landlordBankCard.getBranchBank());
-            cardInfo.put("card_no", landlordBankCard.getCardNo());
+        try {
+            //判断是主账号还是子账号,如果是子账号则查询出主账号
+            Integer landlordId = userService.findLandlordId(userId);
+            Integer userType = paymentsUserService.judgeUserType(userId) ? 1 : 0;
+            //根据用户id和类型获取绑定银行卡信息
+            LandlordBankCard landlordBankCard = landlordBankCardService.findBankCardInfo(landlordId, userType);
+            Map<String, Object> cardInfo = new HashMap<>();
+            if (landlordBankCard != null) {
+                cardInfo.put("bank_name", landlordBankCard.getBankName());
+                cardInfo.put("owner_name", landlordBankCard.getOwnerName());
+                cardInfo.put("branch_bank", landlordBankCard.getBranchBank());
+                cardInfo.put("card_no", landlordBankCard.getCardNo());
+            }
+            data.put("card_info", cardInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.info("getTMoneyBankInfo--->获取银行卡信息失败,用户id:{},失败原因:{}", userId, e.getMessage());
+            return new ResponseBodyVO(-1, data, e.getMessage());
         }
-        data.put("card_info", cardInfo);
         return ResponseBodyVO.generateResponseObject(0, data, "获取成功");
     }
 
