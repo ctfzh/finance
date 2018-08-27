@@ -72,7 +72,7 @@ public class WebPaymentsController {
         try {
             Integer landlordId = userService.findLandlordId(userId);
             Boolean bool = paymentsUserService.judgeUserType(landlordId);
-            data.put("userType", bool);
+            data.put("userType", bool ? 1 : 0);
         } catch (Exception e) {
             e.printStackTrace();
             LOGGER.info("getUserType--->用户查询失败,用户id:{},失败原因:{}", userId, e.getMessage());
