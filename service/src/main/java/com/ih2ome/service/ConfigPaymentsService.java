@@ -32,7 +32,8 @@ public interface ConfigPaymentsService {
 
     /**
      * 计算费用
-     *  @param userId
+     *
+     * @param userId
      * @param payWay
      * @param money  @return
      * @param bool

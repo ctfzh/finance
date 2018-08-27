@@ -1,5 +1,6 @@
 package com.ih2ome.service.impl;
 
+import com.ih2ome.common.enums.ConfigPayChannelEnum;
 import com.ih2ome.dao.caspain.ConfigPaymentsUserDao;
 import com.ih2ome.model.caspain.ConfigPaymentsUser;
 import com.ih2ome.service.ConfigPaymentsUserService;
@@ -34,7 +35,7 @@ public class ConfigPaymentsUserServiceImpl implements ConfigPaymentsUserService 
         ConfigPaymentsUser configPaymentsUser = configPaymentsUserDao.selectOneByExample(example);
         if (configPaymentsUser != null) {
             Integer userType = configPaymentsUser.getUserType();
-            if (userType == 1 || userType == 2) {
+            if (userType == 1) {
                 return true;
             }
         }
@@ -48,22 +49,23 @@ public class ConfigPaymentsUserServiceImpl implements ConfigPaymentsUserService 
      * @return
      */
     @Override
-    public Map<String, Integer> selectUserType(Integer userId) {
+    public ConfigPaymentsUser selectUserType(Integer userId) {
         Example example = new Example(ConfigPaymentsUser.class);
-        example.createCriteria().andEqualTo("createdById", userId);
+        example.createCriteria().andEqualTo("createdById", userId).andEqualTo("isDelete", 0);
         ConfigPaymentsUser configPaymentsUser = configPaymentsUserDao.selectOneByExample(example);
-        Map<String, Integer> map = new HashMap<>();
-        if (configPaymentsUser != null) {
-            map.put("userType", configPaymentsUser.getUserType());
-            map.put("wxShow", configPaymentsUser.getWxShow());
-            map.put("aliShow", configPaymentsUser.getAliShow());
-            map.put("cardShow", configPaymentsUser.getCardShow());
-        } else {
-            map.put("userType", 0);
-            map.put("wxShow", 1);
-            map.put("aliShow", 1);
-            map.put("cardShow", 1);
+        //默认原先通道全展开,使用通联微信，支付宝，连连借记卡
+        if (configPaymentsUser == null) {
+            ConfigPaymentsUser paymentsUser = new ConfigPaymentsUser();
+            //默认普通用户
+            paymentsUser.setUserType(0);
+            paymentsUser.setAliShow(1);
+            paymentsUser.setCardShow(1);
+            paymentsUser.setWxShow(1);
+            paymentsUser.setWxType(ConfigPayChannelEnum.ALLIANPAY_WX.getName());
+            paymentsUser.setAliType(ConfigPayChannelEnum.ALIPAY.getName());
+            paymentsUser.setCardType(ConfigPayChannelEnum.LLIANPAY_CARD.getName());
+            return paymentsUser;
         }
-        return map;
+        return configPaymentsUser;
     }
 }

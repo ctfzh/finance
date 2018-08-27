@@ -12,10 +12,12 @@ import com.ih2ome.dao.caspain.ConfigPaymentsSetDao;
 import com.ih2ome.model.caspain.ConfigPaymentsChannel;
 import com.ih2ome.model.caspain.ConfigPaymentsSet;
 import com.ih2ome.model.caspain.ConfigPaymentsUser;
+import com.ih2ome.service.ConfigPaymentsChannelService;
 import com.ih2ome.service.ConfigPaymentsService;
 import com.ih2ome.service.ConfigPaymentsUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -24,10 +26,7 @@ import tk.mybatis.mapper.entity.Example;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Sky
@@ -39,114 +38,101 @@ import java.util.Map;
 public class ConfigPaymentsServiceImpl implements ConfigPaymentsService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfigPaymentsServiceImpl.class);
 
-
     @Autowired
     private ConfigPaymentsChannelDao configPaymentsChannelDao;
     @Autowired
     private ConfigPaymentsSetDao configPaymentsSetDao;
     @Autowired
     private ConfigPaymentsUserService configPaymentsUserService;
-
+    @Autowired
+    private ConfigPaymentsChannelService configPaymentsChannelService;
 
     @Override
     public ConfigPaymentsVO findConfigPaymentsInfo(Integer userId, Boolean bool) throws Exception {
         ConfigPaymentsVO configPaymentsVO = new ConfigPaymentsVO();
-        Example configPaymentsSetExample = new Example(ConfigPaymentsSet.class);
-        configPaymentsSetExample.createCriteria().andEqualTo("createdById", userId).andEqualTo("isDelete", 0);
-        List<ConfigPaymentsSet> configPaymentsSets = configPaymentsSetDao.selectByExample(configPaymentsSetExample);
-        StringBuilder chargeInfo = new StringBuilder();
-        String assumePerson = null;
+        //查询该用户的支付渠道选择
+        ConfigPaymentsUser configPaymentsUser = configPaymentsUserService.selectUserType(userId);
+        //查询该用户的通道选择
+        List<ConfigPaymentsChannel> configPaymentsChannels = configPaymentsChannelService.findPaymentsChannels(configPaymentsUser);
         //判断是否为中建等大客户
-        if (bool) {
-            Example configPaymentsChannelExample = new Example(ConfigPaymentsChannel.class);
-            Double pinganpayWxCharge = 0.0;
-            if (configPaymentsSets.size() == 0) {
-                configPaymentsChannelExample.createCriteria().andLike("payChannel", "%pinganpay%").andEqualTo("isDelete", 0);
-                configPaymentsChannelExample.setOrderByClause("created_at desc");
-                List<ConfigPaymentsChannel> configPaymentsChannels = configPaymentsChannelDao.selectByExample(configPaymentsChannelExample);
-                for (ConfigPaymentsChannel configPaymentsChannel : configPaymentsChannels) {
-                    if (configPaymentsChannel.getPayChannel().equals(ConfigPayChannelEnum.PINGANPAY_WX.getName())) {
-                        pinganpayWxCharge = configPaymentsChannel.getDefaultCharge() * 10;
-                    }
+        Example configPaymentsSetExample = new Example(ConfigPaymentsSet.class);
+        String wxMessage = "";
+        String aliMessage = "";
+        String cardMessage = "";
+        String assumePerson = ConfigPayAssumeEnum.RENTER.name();
+        for (ConfigPaymentsChannel configPaymentsChannel : configPaymentsChannels) {
+            configPaymentsSetExample.createCriteria().andEqualTo("isDelete", 0).andEqualTo("paymentsChannelId", configPaymentsChannel.getId())
+                    .andEqualTo("createdById", userId);
+            ConfigPaymentsSet paymentsSet = configPaymentsSetDao.selectOneByExample(configPaymentsSetExample);
+            Double charge = 0.0;
+            if (configPaymentsChannel.getPayChannel().equals(ConfigPayChannelEnum.PINGANPAY_WX.getName())) {
+                if (paymentsSet == null) {
+                    charge = configPaymentsChannel.getDefaultCharge();
+                } else {
+                    charge = paymentsSet.getServiceCharge();
+                    assumePerson = paymentsSet.getAssumePerson();
                 }
-                assumePerson = ConfigPayAssumeEnum.RENTER.getName();
-            } else {
-                for (ConfigPaymentsSet configPaymentsSet : configPaymentsSets) {
-                    Integer paymentsChannelId = configPaymentsSet.getPaymentsChannelId();
-                    ConfigPaymentsChannel configPaymentsChannel = configPaymentsChannelDao.selectByPrimaryKey(paymentsChannelId);
-                    if (configPaymentsChannel.getPayChannel().equals(ConfigPayChannelEnum.PINGANPAY_WX.getName())) {
-                        pinganpayWxCharge = configPaymentsChannel.getDefaultCharge() * 10;
-                    }
-                    assumePerson = configPaymentsSet.getAssumePerson();
+                wxMessage = "微信手续费" + 6.6 + "‰,最低0.1元";
+            } else if (configPaymentsChannel.getPayChannel().equals(ConfigPayChannelEnum.ALLIANPAY_WX.getName())) {
+                if (paymentsSet == null) {
+                    charge = configPaymentsChannel.getDefaultCharge();
+                } else {
+                    charge = paymentsSet.getServiceCharge();
+                    assumePerson = paymentsSet.getAssumePerson();
                 }
+                wxMessage = "微信手续费" + charge + "%,最低0.1元";
+            } else if (configPaymentsChannel.getPayChannel().equals(ConfigPayChannelEnum.ALIPAY.getName())) {
+                if (paymentsSet == null) {
+                    charge = configPaymentsChannel.getDefaultCharge();
+                } else {
+                    charge = paymentsSet.getServiceCharge();
+                    assumePerson = paymentsSet.getAssumePerson();
+                }
+                aliMessage = "支付宝手续费" + charge + "%,最低0.1元";
+            } else if (configPaymentsChannel.getPayChannel().equals(ConfigPayChannelEnum.LLIANPAY_CARD.getName())) {
+                if (paymentsSet == null) {
+                    charge = configPaymentsChannel.getDefaultCharge();
+                } else {
+                    charge = paymentsSet.getServiceCharge();
+                    assumePerson = paymentsSet.getAssumePerson();
+                }
+                cardMessage = "银行卡暂不收取手续费";
             }
-            configPaymentsVO.setRentChargeInfo(chargeInfo.append("手续费用为").append(pinganpayWxCharge).append("‰").append(",小数部分按1元计").toString());
-            chargeInfo.delete(0, chargeInfo.length());
-            configPaymentsVO.setLandlordChargeInfo(chargeInfo.append("手续费用为").append(pinganpayWxCharge).append("‰").toString());
-            //中建等大客户展示方式
-            configPaymentsVO.setShowType(2);
-            configPaymentsVO.setPayAssume(assumePerson);
-        } else {
-            //普通客户
-            Example configPaymentsChannelExample = new Example(ConfigPaymentsChannel.class);
-            Double allianpayWxCharge = 0.0;
-            Double alipayCharge = 0.0;
-            Double llianpayCardCharge = 0.0;
-            if (configPaymentsSets.size() == 0) {
-                //ͨ通联微信支付
-                configPaymentsChannelExample.createCriteria().andEqualTo("payChannel", "allianpay_wx").andEqualTo("isDelete", 0);
-                ConfigPaymentsChannel configPaymentsChannelWx = configPaymentsChannelDao.selectOneByExample(configPaymentsChannelExample);
-                allianpayWxCharge = configPaymentsChannelWx.getDefaultCharge();
-                configPaymentsChannelExample.clear();
-                //支付宝支付
-                configPaymentsChannelExample.createCriteria().andEqualTo("payChannel", "alipay").andEqualTo("isDelete", 0);
-                ConfigPaymentsChannel configPaymentsChannelAli = configPaymentsChannelDao.selectOneByExample(configPaymentsChannelExample);
-                alipayCharge = configPaymentsChannelAli.getDefaultCharge();
-                configPaymentsChannelExample.clear();
-                //快捷支付(0.0)
-
-                //费用承担方
-                assumePerson = ConfigPayAssumeEnum.RENTER.getName();
-            } else {
-                for (ConfigPaymentsSet configPaymentsSet : configPaymentsSets) {
-                    Integer paymentsChannelId = configPaymentsSet.getPaymentsChannelId();
-                    ConfigPaymentsChannel configPaymentsChannel = configPaymentsChannelDao.selectByPrimaryKey(paymentsChannelId);
-                    if (configPaymentsChannel.getPayChannel().equals(ConfigPayChannelEnum.ALLIANPAY_WX.getName())) {
-                        allianpayWxCharge = configPaymentsSet.getServiceCharge();
-                    } else if (configPaymentsChannel.getPayChannel().equals(ConfigPayChannelEnum.ALIPAY.getName())) {
-                        alipayCharge = configPaymentsSet.getServiceCharge();
-                    } else if (configPaymentsChannel.getPayChannel().equals(ConfigPayChannelEnum.LLIANPAY_CARD.getName())) {
-                        llianpayCardCharge = configPaymentsSet.getServiceCharge();
-                    }
-                    assumePerson = configPaymentsSet.getAssumePerson();
-                }
-            }
-            configPaymentsVO.setRentChargeInfo(chargeInfo.append("使用微信或支付宝支付通道,将收取").append(allianpayWxCharge).append("%的手续费,最低0.1元(借记卡支付通道暂免手续费)").toString());
-            chargeInfo.delete(0, chargeInfo.length());
-            configPaymentsVO.setLandlordChargeInfo(chargeInfo.append("使用微信或支付宝支付通道,将收取").append(allianpayWxCharge).append("%的手续费,最低0.1元(借记卡支付通道暂免手续费)").toString());
-            configPaymentsVO.setShowType(1);
-            configPaymentsVO.setPayAssume(assumePerson);
+            configPaymentsSetExample.clear();
         }
+        String chargeInfo = wxMessage + "," + aliMessage + "," + cardMessage + "!";
+        configPaymentsVO.setShowType(1);
+        configPaymentsVO.setLandlordChargeInfo(chargeInfo);
+        configPaymentsVO.setRentChargeInfo(chargeInfo);
+        configPaymentsVO.setPayAssume(assumePerson);
         return configPaymentsVO;
     }
 
+    /**
+     * 手续费用设置
+     */
     @Override
     public void setConfigPaymentsInfo(Integer userId, String assumePerson, Boolean bool) throws Exception {
-        List<ConfigPaymentsChannel> configPaymentsChannels = new ArrayList<>();
-        //使用平安支付渠道的客户
-        if (bool) {
-            //查询平安的支付通道有几种
-            Example configPaymentsChannelExample = new Example(ConfigPaymentsChannel.class);
-            configPaymentsChannelExample.createCriteria().andLike("payChannel", "%pinganpay%").andEqualTo("isDelete", 0);
-            configPaymentsChannels = configPaymentsChannelDao.selectByExample(configPaymentsChannelExample);
-            //使用通联,连连支付渠道的客户
-        } else {
-            //查询非平安的支付通道
-            Example configPaymentsChannelExample = new Example(ConfigPaymentsChannel.class);
-            configPaymentsChannelExample.createCriteria().andNotLike("payChannel", "%pinganpay%").andEqualTo("isDelete", 0);
-            configPaymentsChannels = configPaymentsChannelDao.selectByExample(configPaymentsChannelExample);
-        }
+        ConfigPaymentsUser configPaymentsUser = configPaymentsUserService.selectUserType(userId);
+        //查询该用户的通道选择
+        List<ConfigPaymentsChannel> configPaymentsChannels = configPaymentsChannelService.findPaymentsChannels(configPaymentsUser);
+        //查询该用户没有使用的通道
+        List<ConfigPaymentsChannel> notConfigPaymentsChannels = configPaymentsChannelService.findNotPaymentsChannels(configPaymentsUser);
         Example configPaymentsSetExample = new Example(ConfigPaymentsSet.class);
+        //清除原先的未使用通道配置
+        for (ConfigPaymentsChannel notConfigPaymentsChannel : notConfigPaymentsChannels) {
+            configPaymentsSetExample.createCriteria().andEqualTo("isDelete", 0).andEqualTo("paymentsChannelId", notConfigPaymentsChannel.getId())
+                    .andEqualTo("createdById", userId);
+            ConfigPaymentsSet configPaymentsSet = configPaymentsSetDao.selectOneByExample(configPaymentsSetExample);
+            if (configPaymentsSet != null) {
+                configPaymentsSet.setDeletedAt(new Date());
+                configPaymentsSet.setDeletedById(userId);
+                configPaymentsSet.setIsDelete(1);
+                configPaymentsSetDao.updateByPrimaryKey(configPaymentsSet);
+            }
+            configPaymentsSetExample.clear();
+        }
+        //设置新的通道配置
         for (ConfigPaymentsChannel configPaymentsChannel : configPaymentsChannels) {
             Integer channelId = configPaymentsChannel.getId();
             configPaymentsSetExample.createCriteria().andEqualTo("isDelete", 0).andEqualTo("paymentsChannelId", channelId)
@@ -172,105 +158,83 @@ public class ConfigPaymentsServiceImpl implements ConfigPaymentsService {
         }
     }
 
+    /**
+     * 计算费用
+     */
     @Override
     public CalculateChargeVO calculateCharge(Integer userId, ConfigPayWayEnum payWay, Double money, Boolean bool) throws Exception {
-        Map<String, Integer> map = configPaymentsUserService.selectUserType(userId);
-        Integer userType = map.get("userType");
+        ConfigPaymentsUser configPaymentsUser = configPaymentsUserService.selectUserType(userId);
+        Integer userType = configPaymentsUser.getUserType();
         CalculateChargeVO calculateChargeVO = new CalculateChargeVO();
         calculateChargeVO.setInitPayMoney(money);
         if (bool) {
-            Example ConfigPaymentsChannelExample = new Example(ConfigPaymentsChannel.class);
-            Example configPaymentsSetExample = new Example(ConfigPaymentsSet.class);
-            Integer channelId;
-            ConfigPaymentsSet paymentsSet;
             switch (payWay) {
-                //微信支付方式(pinganpay_wx)
                 case WX:
-                    ConfigPaymentsChannelExample.createCriteria().andEqualTo("payChannel", ConfigPayChannelEnum.PINGANPAY_WX.getName()).andEqualTo("isDelete", 0);
-                    ConfigPaymentsChannel pinganpayWxChannel = configPaymentsChannelDao.selectOneByExample(ConfigPaymentsChannelExample);
-                    channelId = pinganpayWxChannel.getId();
-                    configPaymentsSetExample.createCriteria().andEqualTo("isDelete", 0).andEqualTo("paymentsChannelId", channelId)
-                            .andEqualTo("createdById", userId);
-                    paymentsSet = configPaymentsSetDao.selectOneByExample(configPaymentsSetExample);
-                    if (paymentsSet == null) {
-                        //默认租客承担
-                        Double defaultCharge = pinganpayWxChannel.getDefaultCharge();
-                        Double charge = ConstUtils.getDecimalFormat(defaultCharge / 100);
-                        Double payCharge = new BigDecimal((money + money * charge) * charge).setScale(1, RoundingMode.UP).doubleValue();
-                        calculateChargeVO.setPayAssume(ConfigPayAssumeEnum.RENTER.getName());
-                        calculateChargeVO.setPayCharge(payCharge);
-                        calculateChargeVO.setEnterPayMoney(money);
-                        calculateChargeVO.setTotalPayMoney(money + payCharge);
-                    } else {
-                        Double charge = ConstUtils.getDecimalFormat(paymentsSet.getServiceCharge() / 100);
-                        String assumePerson = paymentsSet.getAssumePerson();
-                        //设置的是租客承担
-                        if (assumePerson.equals(ConfigPayAssumeEnum.RENTER.getName())) {
+                    //微信支付方式(pinganpay_wx)
+                    if (configPaymentsUser.getWxType().equals(ConfigPayChannelEnum.PINGANPAY_WX.getName())) {
+                        //获取通道和用户配置
+                        Map<String, Object> map = getPayChannelAndPaySet(ConfigPayChannelEnum.PINGANPAY_WX.getName(), userId);
+                        ConfigPaymentsSet paymentsSet = (ConfigPaymentsSet) map.get("paymentsSet");
+                        ConfigPaymentsChannel paymentsChannel = (ConfigPaymentsChannel) map.get("paymentsChannel");
+                        if (paymentsSet == null) {
+                            //默认租客承担
+                            Double defaultCharge = paymentsChannel.getDefaultCharge();
+                            Double charge = ConstUtils.getDecimalFormat(defaultCharge / 100);
                             Double payCharge = new BigDecimal((money + money * charge) * charge).setScale(1, RoundingMode.UP).doubleValue();
                             calculateChargeVO.setPayAssume(ConfigPayAssumeEnum.RENTER.getName());
+                            calculateChargeVO.setPayCharge(payCharge);
                             calculateChargeVO.setEnterPayMoney(money);
-                            calculateChargeVO.setPayCharge(payCharge);
                             calculateChargeVO.setTotalPayMoney(money + payCharge);
-                            //设置的是公寓方承担
                         } else {
-                            Double payCharge = new BigDecimal(money * charge).setScale(1, RoundingMode.UP).doubleValue();
-                            calculateChargeVO.setPayAssume(ConfigPayAssumeEnum.LANDLORD.getName());
-                            calculateChargeVO.setPayCharge(payCharge);
-                            calculateChargeVO.setEnterPayMoney(ConstUtils.getDecimalFormat(money - payCharge));
-                            calculateChargeVO.setTotalPayMoney(money);
+                            Double charge = ConstUtils.getDecimalFormat(paymentsSet.getServiceCharge() / 100);
+                            String assumePerson = paymentsSet.getAssumePerson();
+                            //设置的是租客承担
+                            if (assumePerson.equals(ConfigPayAssumeEnum.RENTER.getName())) {
+                                Double payCharge = new BigDecimal((money + money * charge) * charge).setScale(1, RoundingMode.UP).doubleValue();
+                                calculateChargeVO.setPayAssume(ConfigPayAssumeEnum.RENTER.getName());
+                                calculateChargeVO.setEnterPayMoney(money);
+                                calculateChargeVO.setPayCharge(payCharge);
+                                calculateChargeVO.setTotalPayMoney(money + payCharge);
+                                //设置的是公寓方承担
+                            } else {
+                                Double payCharge = new BigDecimal(money * charge).setScale(1, RoundingMode.UP).doubleValue();
+                                calculateChargeVO.setPayAssume(ConfigPayAssumeEnum.LANDLORD.getName());
+                                calculateChargeVO.setPayCharge(payCharge);
+                                calculateChargeVO.setEnterPayMoney(ConstUtils.getDecimalFormat(money - payCharge));
+                                calculateChargeVO.setTotalPayMoney(money);
+                            }
                         }
+                        //微信支付方式(allianpay_wx)
+                    } else if (configPaymentsUser.getWxType().equals(ConfigPayChannelEnum.ALLIANPAY_WX.getName())) {
+                        //获取通道和用户配置
+                        Map<String, Object> map = getPayChannelAndPaySet(ConfigPayChannelEnum.ALLIANPAY_WX.getName(), userId);
+                        ConfigPaymentsSet paymentsSet = (ConfigPaymentsSet) map.get("paymentsSet");
+                        ConfigPaymentsChannel paymentsChannel = (ConfigPaymentsChannel) map.get("paymentsChannel");
+                        //处理由谁支付费用计算
+                        disposeChargeMethod(money, calculateChargeVO, paymentsChannel, paymentsSet);
                     }
-                    ConfigPaymentsChannelExample.clear();
-                    configPaymentsSetExample.clear();
                     break;
                 case CARD:
-                    //快捷支付使用原先支付
-                    if (userType == 1) {
-                        ConfigPaymentsChannelExample.createCriteria().andEqualTo("payChannel", ConfigPayChannelEnum.PINGANPAY_WX.getName()).andEqualTo("isDelete", 0);
-                        ConfigPaymentsChannel pinganpayWxChannel1 = configPaymentsChannelDao.selectOneByExample(ConfigPaymentsChannelExample);
-                        channelId = pinganpayWxChannel1.getId();
-                        configPaymentsSetExample.createCriteria().andEqualTo("isDelete", 0).andEqualTo("paymentsChannelId", channelId)
-                                .andEqualTo("createdById", userId);
-                        paymentsSet = configPaymentsSetDao.selectOneByExample(configPaymentsSetExample);
-                        calculateChargeVO.setPayCharge(0.0);
-                        calculateChargeVO.setEnterPayMoney(money);
-                        calculateChargeVO.setTotalPayMoney(money);
-                        if (paymentsSet == null || paymentsSet.getAssumePerson().equals(ConfigPayAssumeEnum.RENTER.getName())) {
-                            calculateChargeVO.setPayAssume(ConfigPayAssumeEnum.RENTER.getName());
-                        } else {
-                            calculateChargeVO.setPayAssume(ConfigPayAssumeEnum.LANDLORD.getName());
-                        }
+                    //快捷支付(llianpay_card)
+                    if (configPaymentsUser.getCardType().equals(ConfigPayChannelEnum.LLIANPAY_CARD.getName())) {
+                        //获取通道和用户配置
+                        Map<String, Object> map = getPayChannelAndPaySet(ConfigPayChannelEnum.LLIANPAY_CARD.getName(), userId);
+                        ConfigPaymentsSet paymentsSet = (ConfigPaymentsSet) map.get("paymentsSet");
+                        ConfigPaymentsChannel paymentsChannel = (ConfigPaymentsChannel) map.get("paymentsChannel");
+                        //处理由谁支付费用计算
+                        disposeChargeMethod(money, calculateChargeVO, paymentsChannel, paymentsSet);
                     } else {
 
                     }
                     break;
                 case ALI:
-                    //支付宝支付使用原先支付
-                    if (userType == 1) {
-                        ConfigPaymentsChannelExample.createCriteria().andEqualTo("payChannel", ConfigPayChannelEnum.PINGANPAY_WX.getName()).andEqualTo("isDelete", 0);
-                        ConfigPaymentsChannel pinganpayWxChannel2 = configPaymentsChannelDao.selectOneByExample(ConfigPaymentsChannelExample);
-                        channelId = pinganpayWxChannel2.getId();
-                        configPaymentsSetExample.createCriteria().andEqualTo("isDelete", 0).andEqualTo("paymentsChannelId", channelId)
-                                .andEqualTo("createdById", userId);
-                        paymentsSet = configPaymentsSetDao.selectOneByExample(configPaymentsSetExample);
-                        Double charge = ConstUtils.getDecimalFormat(1.0 / 100);
-                        Double payCharge = money * charge;
-                        double minDefaultCharge = 0.1;
-                        if (payCharge <= minDefaultCharge) {
-                            payCharge = minDefaultCharge;
-                        } else {
-                            payCharge = new BigDecimal(payCharge).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-                        }
-                        calculateChargeVO.setPayCharge(payCharge);
-                        if (paymentsSet == null || paymentsSet.getAssumePerson().equals(ConfigPayAssumeEnum.RENTER.getName())) {
-                            calculateChargeVO.setPayAssume(ConfigPayAssumeEnum.RENTER.getName());
-                            calculateChargeVO.setEnterPayMoney(money);
-                            calculateChargeVO.setTotalPayMoney(ConstUtils.getDecimalFormat(money + payCharge));
-                        } else {
-                            calculateChargeVO.setPayAssume(ConfigPayAssumeEnum.LANDLORD.getName());
-                            calculateChargeVO.setEnterPayMoney(ConstUtils.getDecimalFormat(money - payCharge));
-                            calculateChargeVO.setTotalPayMoney(money);
-                        }
+                    //支付宝支付（alipay）
+                    if (configPaymentsUser.getAliType().equals(ConfigPayChannelEnum.ALIPAY.getName())) {
+                        Map<String, Object> map = getPayChannelAndPaySet(ConfigPayChannelEnum.ALIPAY.getName(), userId);
+                        ConfigPaymentsSet paymentsSet = (ConfigPaymentsSet) map.get("paymentsSet");
+                        ConfigPaymentsChannel paymentsChannel = (ConfigPaymentsChannel) map.get("paymentsChannel");
+                        //处理由谁支付费用计算
+                        disposeChargeMethod(money, calculateChargeVO, paymentsChannel, paymentsSet);
                     } else {
 
                     }
@@ -281,53 +245,48 @@ public class ConfigPaymentsServiceImpl implements ConfigPaymentsService {
             }
             //普通客户，使用通联微信，连连快捷，支付宝的用户
         } else {
-            Example ConfigPaymentsChannelExample = new Example(ConfigPaymentsChannel.class);
-            Example configPaymentsSetExample = new Example(ConfigPaymentsSet.class);
-            Integer channelId;
-            ConfigPaymentsSet paymentsSet;
+            String channelName = "";
             switch (payWay) {
                 //通联微信支付
                 case WX:
-                    ConfigPaymentsChannelExample.createCriteria().andEqualTo("payChannel", ConfigPayChannelEnum.ALLIANPAY_WX.getName()).andEqualTo("isDelete", 0);
-                    ConfigPaymentsChannel allianpayWxChannel = configPaymentsChannelDao.selectOneByExample(ConfigPaymentsChannelExample);
-                    channelId = allianpayWxChannel.getId();
-                    configPaymentsSetExample.createCriteria().andEqualTo("isDelete", 0).andEqualTo("paymentsChannelId", channelId)
-                            .andEqualTo("createdById", userId);
-                    paymentsSet = configPaymentsSetDao.selectOneByExample(configPaymentsSetExample);
-                    //处理由谁支付费用计算
-                    disposeChargeMethod(money, calculateChargeVO, allianpayWxChannel, paymentsSet);
-                    ConfigPaymentsChannelExample.clear();
-                    configPaymentsSetExample.clear();
+                    channelName = ConfigPayChannelEnum.ALLIANPAY_WX.getName();
                     break;
                 case ALI:
-                    ConfigPaymentsChannelExample.createCriteria().andEqualTo("payChannel", ConfigPayChannelEnum.ALIPAY.getName()).andEqualTo("isDelete", 0);
-                    ConfigPaymentsChannel alipayWxChannel = configPaymentsChannelDao.selectOneByExample(ConfigPaymentsChannelExample);
-                    channelId = alipayWxChannel.getId();
-                    configPaymentsSetExample.createCriteria().andEqualTo("isDelete", 0).andEqualTo("paymentsChannelId", channelId)
-                            .andEqualTo("createdById", userId);
-                    paymentsSet = configPaymentsSetDao.selectOneByExample(configPaymentsSetExample);
-                    //处理由谁支付费用计算
-                    disposeChargeMethod(money, calculateChargeVO, alipayWxChannel, paymentsSet);
-                    ConfigPaymentsChannelExample.clear();
-                    configPaymentsSetExample.clear();
+                    channelName = ConfigPayChannelEnum.ALIPAY.getName();
                     break;
                 case CARD:
-                    ConfigPaymentsChannelExample.createCriteria().andEqualTo("payChannel", ConfigPayChannelEnum.LLIANPAY_CARD.getName()).andEqualTo("isDelete", 0);
-                    ConfigPaymentsChannel llianpayChannel = configPaymentsChannelDao.selectOneByExample(ConfigPaymentsChannelExample);
-                    channelId = llianpayChannel.getId();
-                    configPaymentsSetExample.createCriteria().andEqualTo("isDelete", 0).andEqualTo("paymentsChannelId", channelId)
-                            .andEqualTo("createdById", userId);
-                    paymentsSet = configPaymentsSetDao.selectOneByExample(configPaymentsSetExample);
-                    //处理由谁支付费用计算
-                    disposeChargeMethod(money, calculateChargeVO, llianpayChannel, paymentsSet);
-                    ConfigPaymentsChannelExample.clear();
-                    configPaymentsSetExample.clear();
+                    channelName = ConfigPayChannelEnum.LLIANPAY_CARD.getName();
                     break;
                 default:
                     break;
             }
+            //获取支付通道和支付设置
+            Map<String, Object> map = getPayChannelAndPaySet(channelName, userId);
+            ConfigPaymentsSet paymentsSet = (ConfigPaymentsSet) map.get("paymentsSet");
+            ConfigPaymentsChannel paymentsChannel = (ConfigPaymentsChannel) map.get("paymentsChannel");
+            //处理由谁支付费用计算
+            disposeChargeMethod(money, calculateChargeVO, paymentsChannel, paymentsSet);
         }
         return calculateChargeVO;
+    }
+
+
+    //根据用户id，支付渠道名称查询ConfigPaymentsChannel,ConfigPaymentsSet
+    private Map<String, Object> getPayChannelAndPaySet(String channelName, Integer userId) {
+        Map<String, Object> map = new HashMap<>();
+        Example configPaymentsChannelExample = new Example(ConfigPaymentsChannel.class);
+        Example configPaymentsSetExample = new Example(ConfigPaymentsSet.class);
+        configPaymentsChannelExample.createCriteria().andEqualTo("payChannel", channelName).andEqualTo("isDelete", 0);
+        ConfigPaymentsChannel paymentsChannel = configPaymentsChannelDao.selectOneByExample(configPaymentsChannelExample);
+        Integer channelId = paymentsChannel.getId();
+        configPaymentsSetExample.createCriteria().andEqualTo("isDelete", 0).andEqualTo("paymentsChannelId", channelId)
+                .andEqualTo("createdById", userId);
+        ConfigPaymentsSet paymentsSet = configPaymentsSetDao.selectOneByExample(configPaymentsSetExample);
+        map.put("paymentsChannel", paymentsChannel);
+        map.put("paymentsSet", paymentsSet);
+        configPaymentsChannelExample.clear();
+        configPaymentsSetExample.clear();
+        return map;
     }
 
 
@@ -367,7 +326,6 @@ public class ConfigPaymentsServiceImpl implements ConfigPaymentsService {
                         payCharge = new BigDecimal(payCharge).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
                     }
                 }
-//                Double payCharge = new BigDecimal(money * charge).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
                 calculateChargeVO.setPayAssume(ConfigPayAssumeEnum.RENTER.getName());
                 calculateChargeVO.setPayCharge(payCharge);
                 calculateChargeVO.setEnterPayMoney(money);
@@ -395,26 +353,11 @@ public class ConfigPaymentsServiceImpl implements ConfigPaymentsService {
 
     @Override
     public ConfigPayChannelsVO getConfigChannelInfo(Integer userId, Boolean bool) throws Exception {
-        List<ConfigPaymentsChannel> configPaymentsChannels = new ArrayList<ConfigPaymentsChannel>();
         ConfigPayChannelsVO configPayChannelsVO = new ConfigPayChannelsVO();
-        Map<String, Integer> map = configPaymentsUserService.selectUserType(userId);
-        configPayChannelsVO.setAliShow(map.get("aliShow"));
-        configPayChannelsVO.setCardShow(map.get("cardShow"));
-        configPayChannelsVO.setWxShow(map.get("wxShow"));
-        //判断是否是使用平安支付渠道的客户
-        if (bool) {
-            configPayChannelsVO.setUsePaPay(map.get("userType"));
-            //查询平安的支付通道有几种
-            Example configPaymentsChannelExample = new Example(ConfigPaymentsChannel.class);
-            configPaymentsChannelExample.createCriteria().andLike("payChannel", "%pinganpay%").andEqualTo("isDelete", 0);
-            configPaymentsChannels = configPaymentsChannelDao.selectByExample(configPaymentsChannelExample);
-        } else {
-            configPayChannelsVO.setUsePaPay(map.get("userType"));
-            //查询非平安的支付通道
-            Example configPaymentsChannelExample = new Example(ConfigPaymentsChannel.class);
-            configPaymentsChannelExample.createCriteria().andNotLike("payChannel", "%pinganpay%").andEqualTo("isDelete", 0);
-            configPaymentsChannels = configPaymentsChannelDao.selectByExample(configPaymentsChannelExample);
-        }
+        ConfigPaymentsUser configPaymentsUser = configPaymentsUserService.selectUserType(userId);
+        BeanUtils.copyProperties(configPaymentsUser, configPayChannelsVO);
+        //查询该用户的通道选择
+        List<ConfigPaymentsChannel> configPaymentsChannels = configPaymentsChannelService.findPaymentsChannels(configPaymentsUser);
         Example configPaymentsSetExample = new Example(ConfigPaymentsSet.class);
         for (ConfigPaymentsChannel configPaymentsChannel : configPaymentsChannels) {
             Integer channelId = configPaymentsChannel.getId();
@@ -425,6 +368,7 @@ public class ConfigPaymentsServiceImpl implements ConfigPaymentsService {
                 configPayChannelsVO.setPayAssume(ConfigPayAssumeEnum.RENTER.getName());
             } else {
                 configPayChannelsVO.setPayAssume(configPaymentsSet.getAssumePerson());
+                break;
             }
             configPaymentsSetExample.clear();
         }

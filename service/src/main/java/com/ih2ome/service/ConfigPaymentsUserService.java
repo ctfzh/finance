@@ -25,5 +25,5 @@ public interface ConfigPaymentsUserService {
      * @param userId
      * @return
      */
-    Map<String, Integer> selectUserType(Integer userId);
+    ConfigPaymentsUser selectUserType(Integer userId);
 }

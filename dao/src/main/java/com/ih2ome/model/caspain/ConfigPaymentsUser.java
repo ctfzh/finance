@@ -37,4 +37,10 @@ public class ConfigPaymentsUser {
     private Integer aliShow;
     @Column(name = "card_show")
     private Integer cardShow;
+    @Column(name = "wx_type")
+    private String wxType;
+    @Column(name = "ali_type")
+    private String aliType;
+    @Column(name = "card_type")
+    private String cardType;
 }
