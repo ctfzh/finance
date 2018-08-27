@@ -15,6 +15,7 @@ import com.ih2ome.model.caspain.ConfigPaymentsUser;
 import com.ih2ome.service.ConfigPaymentsChannelService;
 import com.ih2ome.service.ConfigPaymentsService;
 import com.ih2ome.service.ConfigPaymentsUserService;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -100,7 +101,17 @@ public class ConfigPaymentsServiceImpl implements ConfigPaymentsService {
             }
             configPaymentsSetExample.clear();
         }
-        String chargeInfo = wxMessage + "," + aliMessage + "," + cardMessage + "!";
+        String chargeInfo = "";
+        if (StringUtils.isNotBlank(wxMessage)) {
+            chargeInfo = wxMessage;
+        }
+        if (StringUtils.isNotBlank(aliMessage)) {
+            chargeInfo = "," + aliMessage;
+        }
+        if (StringUtils.isNotBlank(cardMessage)) {
+            chargeInfo = "," + cardMessage;
+        }
+        chargeInfo += "!";
         configPaymentsVO.setShowType(1);
         configPaymentsVO.setLandlordChargeInfo(chargeInfo);
         configPaymentsVO.setRentChargeInfo(chargeInfo);

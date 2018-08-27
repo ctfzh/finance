@@ -64,9 +64,27 @@ public class WebPaymentsController {
     @Autowired
     private ConfigPaymentsUserService paymentsUserService;
 
+
+    @GetMapping(value = "userType/{userId}", produces = "application/json;charset=UTF-8")
+    @ApiOperation("判断用户类型")
+    public ResponseBodyVO getUserType(@ApiParam("用户登录id") @PathVariable("userId") Integer userId) {
+        JSONObject data = new JSONObject();
+        try {
+            Integer landlordId = userService.findLandlordId(userId);
+            Boolean bool = paymentsUserService.judgeUserType(landlordId);
+            data.put("userType", bool);
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.info("getUserType--->用户查询失败,用户id:{},失败原因:{}", userId, e.getMessage());
+            return new ResponseBodyVO(-1, data, e.getMessage());
+        }
+        return ResponseBodyVO.generateResponseObject(0, data, "查询成功");
+    }
+
+
     @GetMapping(value = "show/openbutton/{userId}", produces = "application/json;charset=UTF-8")
     @ApiOperation("开通子账户按钮")
-    public ResponseBodyVO getUserType(@ApiParam("用户登录id") @PathVariable("userId") Integer userId) {
+    public ResponseBodyVO showOpenButtons(@ApiParam("用户登录id") @PathVariable("userId") Integer userId) {
         JSONObject data = new JSONObject();
         try {
             //判断登录账号是主账号还是子账号，若是子账号则查询出对应的主账号
@@ -85,7 +103,7 @@ public class WebPaymentsController {
             data.put("status", flag);
         } catch (Exception e) {
             e.printStackTrace();
-            LOGGER.info("registerMerchant--->开通子账户按钮查询失败,用户id:{},失败原因:{}", userId, e.getMessage());
+            LOGGER.info("showOpenButtons--->开通子账户按钮查询失败,用户id:{},失败原因:{}", userId, e.getMessage());
             return new ResponseBodyVO(-1, data, e.getMessage());
         }
         return ResponseBodyVO.generateResponseObject(0, data, "查询成功");

@@ -1,6 +1,7 @@
 package com.ih2ome.service.impl;
 
 import com.ih2ome.common.enums.ConfigPayChannelEnum;
+import com.ih2ome.common.enums.ConfigPayUserTypeEnum;
 import com.ih2ome.dao.caspain.ConfigPaymentsUserDao;
 import com.ih2ome.model.caspain.ConfigPaymentsUser;
 import com.ih2ome.service.ConfigPaymentsUserService;
@@ -35,7 +36,7 @@ public class ConfigPaymentsUserServiceImpl implements ConfigPaymentsUserService 
         ConfigPaymentsUser configPaymentsUser = configPaymentsUserDao.selectOneByExample(example);
         if (configPaymentsUser != null) {
             Integer userType = configPaymentsUser.getUserType();
-            if (userType == 1) {
+            if (userType.equals(ConfigPayUserTypeEnum.PINGAN_USER.getCode())) {
                 return true;
             }
         }
