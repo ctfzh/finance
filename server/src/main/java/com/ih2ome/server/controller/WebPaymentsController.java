@@ -10,6 +10,7 @@ import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterResVO;
 import com.ih2ome.common.PageVO.WebVO.*;
 import com.ih2ome.common.support.ResponseBodyVO;
 import com.ih2ome.dao.lijiang.SubAccountDao;
+import com.ih2ome.model.caspain.LandlordBankCard;
 import com.ih2ome.model.caspain.TerminalToken;
 import com.ih2ome.model.lijiang.*;
 import com.ih2ome.service.*;
@@ -27,7 +28,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Sky
@@ -282,21 +285,25 @@ public class WebPaymentsController {
     }
 
 
-//    @GetMapping(value = "bankcard/info/{userid}", produces = "application/json;charset=UTF-8")
-//    @ApiOperation("根据登录用户id查询绑定银行卡信息")
-//    public ResponseBodyVO getTMoneyBankInfo(@ApiParam("登录id") @PathVariable("userId") Integer userId) {
-//        JSONObject data = new JSONObject();
-//        //判断是主账号还是子账号,
-//        //根据用户查询会员子账号信息
-//        SubAccount subAccount = webPaymentsService.findAccountByUserId(userId);
-//        Integer accountId = subAccount.getId();
-//        //根据会员子账号主键查询绑定银行卡信息
-//        SubAccountCard subAccountCard = subAccountCardService.findSubAccountByAccountId(accountId);
-//        WebTMoneyBankCardInfoVO bankCardInfo = new WebTMoneyBankCardInfoVO();
-//        bankCardInfo.setBankName(subAccountCard.getBankName());
-//        bankCardInfo.setBankNo(subAccountCard.getBankNo());
-//        return ResponseBodyVO.generateResponseObject(0, null, "成功");
-//    }
+    @GetMapping(value = "bankcard/info/{userId}", produces = "application/json;charset=UTF-8")
+    @ApiOperation("根据登录用户id查询绑定银行卡信息")
+    public ResponseBodyVO getTMoneyBankInfo(@ApiParam("登录id") @PathVariable("userId") Integer userId) {
+        JSONObject data = new JSONObject();
+        //判断是主账号还是子账号,如果是子账号则查询出主账号
+        Integer landlordId = userService.findLandlordId(userId);
+        Integer userType = paymentsUserService.judgeUserType(userId) ? 1 : 0;
+        //根据用户id和类型获取绑定银行卡信息
+        LandlordBankCard landlordBankCard = landlordBankCardService.findBankCardInfo(landlordId, userType);
+        Map<String, Object> cardInfo = new HashMap<>();
+        if (landlordBankCard != null) {
+            cardInfo.put("bank_name", landlordBankCard.getBankName());
+            cardInfo.put("owner_name", landlordBankCard.getOwnerName());
+            cardInfo.put("branch_bank", landlordBankCard.getBranchBank());
+            cardInfo.put("card_no", landlordBankCard.getCardNo());
+        }
+        data.put("card_info", cardInfo);
+        return ResponseBodyVO.generateResponseObject(0, data, "获取成功");
+    }
 
 
     @GetMapping(value = "bankcard/withdrawMoney/{userId}/{money}", produces = "application/json;charset=UTF-8")

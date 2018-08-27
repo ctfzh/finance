@@ -89,4 +89,20 @@ public class LandlordBankCardServiceImpl implements LandlordBankCardService {
             landlordBankCardDao.updateByPrimaryKeySelective(landlordBankCard);
         }
     }
+
+    /**
+     * 根据主账号id查询绑定银行卡信息
+     *
+     * @param landlordId
+     * @param userType
+     * @return
+     */
+    @Override
+    public LandlordBankCard findBankCardInfo(Integer landlordId, Integer userType) {
+        Example example = new Example(LandlordBankCard.class);
+        example.createCriteria().andEqualTo("userId", landlordId).andEqualTo("isDelete", 0)
+                .andEqualTo("usedType", userType);
+        LandlordBankCard landlordBankCard = landlordBankCardDao.selectOneByExample(example);
+        return landlordBankCard;
+    }
 }

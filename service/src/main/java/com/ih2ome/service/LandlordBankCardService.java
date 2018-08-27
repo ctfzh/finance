@@ -2,6 +2,7 @@ package com.ih2ome.service;
 
 import com.ih2ome.common.PageVO.WebVO.WebBindCardCompanyReqVO;
 import com.ih2ome.common.PageVO.WebVO.WebBindCardPersonalReqVO;
+import com.ih2ome.model.caspain.LandlordBankCard;
 import com.ih2ome.model.lijiang.SubAccount;
 
 /**
@@ -32,4 +33,13 @@ public interface LandlordBankCardService {
      * @param bankNo
      */
     void unbindLandlordBankCard(String bankNo);
+
+    /**
+     * 根据主账号id查询绑定银行卡信息
+     *
+     * @param landlordId
+     * @param userType
+     * @return
+     */
+    LandlordBankCard findBankCardInfo(Integer landlordId, Integer userType);
 }
