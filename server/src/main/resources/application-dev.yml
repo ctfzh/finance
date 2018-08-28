@@ -99,7 +99,6 @@ spring:
 
 server:
   port: 80
-
 #短信平台地址
 sms:
   baseUrl: http://xs1:5312

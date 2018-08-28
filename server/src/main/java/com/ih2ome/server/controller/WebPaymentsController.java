@@ -67,6 +67,8 @@ public class WebPaymentsController {
     private SubWithdrawRecordService subWithdrawRecordService;
     @Autowired
     private ConfigPaymentsUserService paymentsUserService;
+    @Autowired
+    private WebPaymentsService webPaymentsService;
 
 
     @GetMapping(value = "userType/{userId}", produces = "application/json;charset=UTF-8")
@@ -313,10 +315,11 @@ public class WebPaymentsController {
     }
 
 
-    @GetMapping(value = "bankcard/withdrawMoney/{userId}/{money}", produces = "application/json;charset=UTF-8")
+    @GetMapping(value = "bankcard/withdrawMoney/{userId}/{money}/{type}", produces = "application/json;charset=UTF-8")
     @ApiOperation("用户平安提现")
     public ResponseBodyVO withdrawMoney(@ApiParam("登录Id") @PathVariable("userId") Integer userId,
-                                        @ApiParam("提现金额") @PathVariable("money") String money) {
+                                        @ApiParam("提现金额") @PathVariable("money") Double money,
+                                        @ApiParam("query查询,withdraw提现") @PathVariable("type") String type) {
         JSONObject data = new JSONObject();
         try {
             //判断提现账号是主账号还是子账号，若是子账号则查询出对应的主账号
@@ -326,27 +329,34 @@ public class WebPaymentsController {
             PinganMchQueryBalanceResVO queryBalanceResVO = pinganMchService.queryBalance(subAccount);
             PinganMchQueryBalanceAcctArray balanceAcct = queryBalanceResVO.getAcctArray().get(0);
             SubAccountCard subAccountCard = subAccountCardService.findSubAccountByAccountId(subAccount.getId());
-            //提现手续费默认一笔5.0
-            Double withdrawCharge = 0.0;
+            //提现手续费默认一笔5.0(优先从平安商户子账户扣除,手续费不够则扣除部分手续费)
+            Double withdrawCharge = 5.0;
+            //获取商户子账户可提现余额
             String cashAmt = balanceAcct.getCashAmt();
-            Double withdrawMoney = 0.0;
-            Double initMoney = Double.valueOf(money);
+            //可提现余额
             Double cashMoney = Double.valueOf(cashAmt);
-            if (initMoney > (cashMoney - withdrawCharge)) {
-                withdrawMoney = Double.valueOf(cashAmt);
-            } else {
-                withdrawMoney = Double.valueOf(money);
+            //处理提现金额和手续费,算出正确的提现金额和手续费
+            Map<String, Double> moneyAndCharge = webPaymentsService.disposeMoneyAndCharge(money, cashMoney, withdrawCharge);
+            //获取需要提现的金额
+            Double withdrawMoney = moneyAndCharge.get("money");
+            //获取提现的手续费用
+            withdrawCharge = moneyAndCharge.get("charge");
+            if ("withdraw".equals(type)) {
+                //平安提现
+                String serialNo = pinganMchService.withDrawCash(subAccount, subAccountCard, withdrawMoney, withdrawCharge);
+                //提现记录保存到数据库
+                subWithdrawRecordService.insertWithdrawRecord(userId, subAccount, subAccountCard, withdrawMoney, withdrawCharge, serialNo);
+                return ResponseBodyVO.generateResponseObject(0, data, "提现请求成功");
+            } else if ("query".equals(type)) {
+                data.put("moneyAndCharge", moneyAndCharge);
+                return ResponseBodyVO.generateResponseObject(0, data, "查询成功");
             }
-            //平安提现
-            String serialNo = pinganMchService.withDrawCash(subAccount, subAccountCard, withdrawMoney, withdrawCharge);
-            //提现记录保存到数据库
-            subWithdrawRecordService.insertWithdrawRecord(userId, subAccount, subAccountCard, withdrawMoney, withdrawCharge, serialNo);
         } catch (PinganMchException | IOException e) {
             e.printStackTrace();
-            LOGGER.info("withdrawMoney--->提现请求失败,用户id:{},提现金额:{},失败原因:{}", userId, money, e.getMessage());
+            LOGGER.info("withdrawMoney-{}--->失败,用户id:{},金额:{},失败原因:{}", type, userId, money, e.getMessage());
             return new ResponseBodyVO(-1, data, e.getMessage());
         }
-        return ResponseBodyVO.generateResponseObject(0, data, "提现请求成功");
+        return null;
     }
 
 

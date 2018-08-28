@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Sky
@@ -58,5 +60,35 @@ public class WebPaymentsServiceImpl implements WebPaymentsService {
         example.createCriteria().andEqualTo("userId", userId).andEqualTo("isDelete", 0);
         SubAccount subAccount = subAccountDao.selectOneByExample(example);
         return subAccount;
+    }
+
+    /**
+     * 处理提现金额和手续费
+     *
+     * @param money
+     * @param cashMoney
+     * @param charge
+     * @return
+     */
+    @Override
+    public Map<String, Double> disposeMoneyAndCharge(Double money, Double cashMoney, Double charge) {
+        Map<String, Double> moneyAndCharge = new HashMap<String, Double>();
+        Double withdrawMoney = 0.0;
+        Double withdrawCharge = 0.0;
+        if (money <= cashMoney) {
+            withdrawMoney = money;
+            double balance = cashMoney - money;
+            if (balance <= charge) {
+                withdrawCharge = balance;
+            } else {
+                withdrawCharge = charge;
+            }
+        } else {
+            withdrawMoney = cashMoney;
+            withdrawCharge = 0.0;
+        }
+        moneyAndCharge.put("money", withdrawMoney);
+        moneyAndCharge.put("charge", withdrawCharge);
+        return moneyAndCharge;
     }
 }
