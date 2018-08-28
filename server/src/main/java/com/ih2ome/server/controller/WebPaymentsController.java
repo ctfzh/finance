@@ -349,6 +349,7 @@ public class WebPaymentsController {
                 subWithdrawRecordService.insertWithdrawRecord(userId, subAccount, subAccountCard, withdrawMoney, withdrawCharge, serialNo, tradeId);
                 return ResponseBodyVO.generateResponseObject(0, data, "提现请求成功");
             } else if ("query".equals(type)) {
+                moneyAndCharge.put("cashMoney",cashMoney);
                 data.put("moneyAndCharge", moneyAndCharge);
                 return ResponseBodyVO.generateResponseObject(0, data, "查询成功");
             }
