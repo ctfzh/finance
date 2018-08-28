@@ -44,5 +44,7 @@ public class SubWithdrawRecord {
     private Integer withdrawStatus;
     @Column(name = "serial_no")
     private String serialNo;
+    @Column(name = "h2ome_trade_id")
+    private String h2omeTradeId;
 
 }

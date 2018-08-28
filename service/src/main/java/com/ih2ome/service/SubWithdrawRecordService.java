@@ -14,15 +14,15 @@ import java.util.List;
 public interface SubWithdrawRecordService {
     /**
      * 新增提现记录
-     *
-     * @param userId
+     *  @param userId
      * @param subAccount
      * @param subAccountCard
      * @param withdrawMoney
      * @param withdrawCharge
      * @param serialNo
+     * @param serialNo
      */
-    void insertWithdrawRecord(Integer userId, SubAccount subAccount, SubAccountCard subAccountCard, Double withdrawMoney, Double withdrawCharge, String serialNo);
+    void insertWithdrawRecord(Integer userId, SubAccount subAccount, SubAccountCard subAccountCard, Double withdrawMoney, Double withdrawCharge, String serialNo, String tradeId);
 
     /**
      * 根据主账号id查询该账号下所有的提现状态为提现中

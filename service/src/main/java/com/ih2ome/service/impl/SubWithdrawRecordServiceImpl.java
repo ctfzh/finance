@@ -34,9 +34,10 @@ public class SubWithdrawRecordServiceImpl implements SubWithdrawRecordService {
      * @param withdrawMoney
      * @param withdrawCharge
      * @param serialNo
+     * @param serialNo
      */
     @Override
-    public void insertWithdrawRecord(Integer userId, SubAccount subAccount, SubAccountCard subAccountCard, Double withdrawMoney, Double withdrawCharge, String serialNo) {
+    public void insertWithdrawRecord(Integer userId, SubAccount subAccount, SubAccountCard subAccountCard, Double withdrawMoney, Double withdrawCharge, String serialNo, String tradeId) {
         SubWithdrawRecord withdrawRecord = new SubWithdrawRecord();
         withdrawRecord.setCreatedAt(new Date());
         //提现人的用户id
@@ -52,6 +53,7 @@ public class SubWithdrawRecordServiceImpl implements SubWithdrawRecordService {
         withdrawRecord.setWithdrawMoney(withdrawMoney);
         //提现状态：0提现中，1提现成功 2提现失败
         withdrawRecord.setWithdrawStatus(0);
+        withdrawRecord.setH2omeTradeId(tradeId);
         withdrawRecordDao.insert(withdrawRecord);
     }
 

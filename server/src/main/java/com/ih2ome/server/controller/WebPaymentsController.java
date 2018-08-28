@@ -315,11 +315,12 @@ public class WebPaymentsController {
     }
 
 
-    @GetMapping(value = "bankcard/withdrawMoney/{userId}/{money}/{type}", produces = "application/json;charset=UTF-8")
+    @GetMapping(value = "bankcard/withdrawMoney", produces = "application/json;charset=UTF-8")
     @ApiOperation("用户平安提现")
-    public ResponseBodyVO withdrawMoney(@ApiParam("登录Id") @PathVariable("userId") Integer userId,
-                                        @ApiParam("提现金额") @PathVariable("money") Double money,
-                                        @ApiParam("query查询,withdraw提现") @PathVariable("type") String type) {
+    public ResponseBodyVO withdrawMoney(@ApiParam("登录Id") @RequestParam("userId") Integer userId,
+                                        @ApiParam("提现金额") @RequestParam("money") Double money,
+                                        @ApiParam("query查询,withdraw提现") @RequestParam("type") String type,
+                                        @ApiParam("提现home_trade表的trade_id") @RequestParam("type") String tradeId) {
         JSONObject data = new JSONObject();
         try {
             //判断提现账号是主账号还是子账号，若是子账号则查询出对应的主账号
@@ -345,7 +346,7 @@ public class WebPaymentsController {
                 //平安提现
                 String serialNo = pinganMchService.withDrawCash(subAccount, subAccountCard, withdrawMoney, withdrawCharge);
                 //提现记录保存到数据库
-                subWithdrawRecordService.insertWithdrawRecord(userId, subAccount, subAccountCard, withdrawMoney, withdrawCharge, serialNo);
+                subWithdrawRecordService.insertWithdrawRecord(userId, subAccount, subAccountCard, withdrawMoney, withdrawCharge, serialNo, tradeId);
                 return ResponseBodyVO.generateResponseObject(0, data, "提现请求成功");
             } else if ("query".equals(type)) {
                 data.put("moneyAndCharge", moneyAndCharge);
