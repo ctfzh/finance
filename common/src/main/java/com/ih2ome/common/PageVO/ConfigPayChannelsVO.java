@@ -28,4 +28,10 @@ public class ConfigPayChannelsVO {
     private String payAssume;
     @ApiModelProperty(value = "用户类型（0:普通用户，）")
     private Integer userType;
+    @ApiModelProperty(value = "微信手续费率")
+    private Double wxCharge;
+    @ApiModelProperty(value = "支付宝手续费率")
+    private Double aliCharge;
+    @ApiModelProperty(value = "借记卡手续费率")
+    private Double cardCharge;
 }

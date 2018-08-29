@@ -375,11 +375,31 @@ public class ConfigPaymentsServiceImpl implements ConfigPaymentsService {
             configPaymentsSetExample.createCriteria().andEqualTo("isDelete", 0).andEqualTo("paymentsChannelId", channelId)
                     .andEqualTo("createdById", userId);
             ConfigPaymentsSet configPaymentsSet = configPaymentsSetDao.selectOneByExample(configPaymentsSetExample);
-            if (configPaymentsSet == null) {
-                configPayChannelsVO.setPayAssume(ConfigPayAssumeEnum.RENTER.getName());
-            } else {
-                configPayChannelsVO.setPayAssume(configPaymentsSet.getAssumePerson());
-                break;
+            if (ConfigPayChannelEnum.PINGANPAY_WX.getName().equals(configPaymentsChannel.getPayChannel()) ||
+                    ConfigPayChannelEnum.ALLIANPAY_WX.getName().equals(configPaymentsChannel.getPayChannel())) {
+                if (configPaymentsSet == null) {
+                    configPayChannelsVO.setPayAssume(ConfigPayAssumeEnum.RENTER.getName());
+                    configPayChannelsVO.setWxCharge(configPaymentsChannel.getDefaultCharge());
+                } else {
+                    configPayChannelsVO.setPayAssume(configPaymentsSet.getAssumePerson());
+                    configPayChannelsVO.setWxCharge(configPaymentsSet.getServiceCharge());
+                }
+            } else if (ConfigPayChannelEnum.ALIPAY.getName().equals(configPaymentsChannel.getPayChannel())) {
+                if (configPaymentsSet == null) {
+                    configPayChannelsVO.setPayAssume(ConfigPayAssumeEnum.RENTER.getName());
+                    configPayChannelsVO.setAliCharge(configPaymentsChannel.getDefaultCharge());
+                } else {
+                    configPayChannelsVO.setPayAssume(configPaymentsSet.getAssumePerson());
+                    configPayChannelsVO.setAliCharge(configPaymentsSet.getServiceCharge());
+                }
+            } else if (ConfigPayChannelEnum.LLIANPAY_CARD.getName().equals(configPaymentsChannel.getPayChannel())) {
+                if (configPaymentsSet == null) {
+                    configPayChannelsVO.setPayAssume(ConfigPayAssumeEnum.RENTER.getName());
+                    configPayChannelsVO.setCardCharge(configPaymentsChannel.getDefaultCharge());
+                } else {
+                    configPayChannelsVO.setPayAssume(configPaymentsSet.getAssumePerson());
+                    configPayChannelsVO.setCardCharge(configPaymentsSet.getServiceCharge());
+                }
             }
             configPaymentsSetExample.clear();
         }
