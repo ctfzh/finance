@@ -215,6 +215,7 @@ public class ConfigPaymentsServiceImpl implements ConfigPaymentsService {
                                 calculateChargeVO.setTotalPayMoney(money);
                             }
                         }
+                        calculateChargeVO.setChannelType(paymentsChannel.getPayChannel());
                         //微信支付方式(allianpay_wx)
                     } else if (configPaymentsUser.getWxType().equals(ConfigPayChannelEnum.ALLIANPAY_WX.getName())) {
                         //获取通道和用户配置
@@ -223,6 +224,7 @@ public class ConfigPaymentsServiceImpl implements ConfigPaymentsService {
                         ConfigPaymentsChannel paymentsChannel = (ConfigPaymentsChannel) map.get("paymentsChannel");
                         //处理由谁支付费用计算
                         disposeChargeMethod(money, calculateChargeVO, paymentsChannel, paymentsSet);
+                        calculateChargeVO.setChannelType(paymentsChannel.getPayChannel());
                     }
                     break;
                 case CARD:
@@ -234,6 +236,7 @@ public class ConfigPaymentsServiceImpl implements ConfigPaymentsService {
                         ConfigPaymentsChannel paymentsChannel = (ConfigPaymentsChannel) map.get("paymentsChannel");
                         //处理由谁支付费用计算
                         disposeChargeMethod(money, calculateChargeVO, paymentsChannel, paymentsSet);
+                        calculateChargeVO.setChannelType(paymentsChannel.getPayChannel());
                     } else {
 
                     }
@@ -246,6 +249,7 @@ public class ConfigPaymentsServiceImpl implements ConfigPaymentsService {
                         ConfigPaymentsChannel paymentsChannel = (ConfigPaymentsChannel) map.get("paymentsChannel");
                         //处理由谁支付费用计算
                         disposeChargeMethod(money, calculateChargeVO, paymentsChannel, paymentsSet);
+                        calculateChargeVO.setChannelType(paymentsChannel.getPayChannel());
                     } else {
 
                     }
@@ -277,6 +281,7 @@ public class ConfigPaymentsServiceImpl implements ConfigPaymentsService {
             ConfigPaymentsChannel paymentsChannel = (ConfigPaymentsChannel) map.get("paymentsChannel");
             //处理由谁支付费用计算
             disposeChargeMethod(money, calculateChargeVO, paymentsChannel, paymentsSet);
+            calculateChargeVO.setChannelType(paymentsChannel.getPayChannel());
         }
         return calculateChargeVO;
     }

@@ -132,7 +132,7 @@ public class ConfigPaymentsController {
         } catch (Exception e) {
             e.printStackTrace();
             LOGGER.info("getPayChannelsInfo-----getConfigChannelInfo({})出错,错误原因:{},", userId, e.getMessage());
-            return ResponseBodyVO.generateResponseObject(-1, null, e.getMessage());
+            return ResponseBodyVO.generateResponseObject(-1, data, e.getMessage());
         }
         return ResponseBodyVO.generateResponseObject(0, data, "查询成功");
     }

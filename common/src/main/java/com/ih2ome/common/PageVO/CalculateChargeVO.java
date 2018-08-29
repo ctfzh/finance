@@ -25,4 +25,7 @@ public class CalculateChargeVO {
 
     @ApiModelProperty(value = "费用承担者")
     private String payAssume;
+
+    @ApiModelProperty(value = "支付渠道类型")
+    private String channelType;
 }
