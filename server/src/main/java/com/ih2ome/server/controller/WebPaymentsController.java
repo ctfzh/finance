@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.text.Collator;
 import java.util.*;
 
 /**
@@ -147,9 +148,30 @@ public class WebPaymentsController {
     public ResponseBodyVO getBankType() {
         JSONObject data = new JSONObject();
         List<ZjjzCnapsBanktype> banktypes = banktypeService.getBankType();
+        //根据银行名称首字母a-z排序
+        Collator collator = Collator.getInstance(java.util.Locale.CHINA);
+        banktypes.sort((bankType1, bankType2) -> {
+            return collator.compare(bankType1.getBankname(), bankType2.getBankname());
+        });
         data.put("banktypes", banktypes);
         return ResponseBodyVO.generateResponseObject(0, data, "获取银行类别成功");
     }
+
+    @GetMapping(value = "bank/type/search", produces = "application/json;charset=UTF-8")
+    @ApiOperation("获取银行类别(模糊搜索)")
+    public ResponseBodyVO getBankType(@ApiParam("银行名称") @RequestParam(value = "bankName", required = false) String bankName) {
+        JSONObject data = new JSONObject();
+        //根据输入名称搜索银行类别
+        List<ZjjzCnapsBanktype> banktypes = banktypeService.getBankType(bankName);
+        //根据银行名称首字母a-z排序
+        Collator collator = Collator.getInstance(java.util.Locale.CHINA);
+        banktypes.sort((bankType1, bankType2) -> {
+            return collator.compare(bankType1.getBankname(), bankType2.getBankname());
+        });
+        data.put("banktypes", banktypes);
+        return ResponseBodyVO.generateResponseObject(0, data, "获取银行类别成功");
+    }
+
 
     @GetMapping(value = "province", produces = "application/json;charset=UTF-8")
     @ApiOperation("获取省份")
@@ -183,11 +205,13 @@ public class WebPaymentsController {
     public ResponseBodyVO searchCnaps(@ApiParam("银行类别code") @RequestParam("bankCode") String bankCode,
                                       @ApiParam("市或者(区、县)code") @RequestParam("cityCode") String cityCode,
                                       @ApiParam("支行名称") @RequestParam(value = "bankName", required = false) String bankName) {
-        if (bankCode == null || cityCode == null) {
+        if (StringUtils.isBlank(bankCode) || StringUtils.isBlank(cityCode)) {
             return ResponseBodyVO.generateResponseObject(-1, null, "请求参数错误");
         }
         JSONObject data = new JSONObject();
         List<WebSearchCnapsVO> cnaps = bankinfoService.searchCnaps(bankCode, cityCode, bankName);
+        //对银行进行a-z排序
+//        Collections.sort(cnaps, Comparator.comparing(WebSearchCnapsVO::getCnapsName));
         data.put("cnaps", cnaps);
         return ResponseBodyVO.generateResponseObject(0, data, "获取大小额银联号成功");
     }
@@ -319,42 +343,46 @@ public class WebPaymentsController {
                                         @ApiParam("query查询,withdraw提现") @RequestParam("type") String type,
                                         @ApiParam("提现home_trade表的trade_id") @RequestParam(value = "tradeId", required = false) String tradeId) {
         JSONObject data = new JSONObject();
-        try {
-            //判断提现账号是主账号还是子账号，若是子账号则查询出对应的主账号
-            Integer landlordId = userService.findLandlordId(userId);
-            //根据用户id获取会员子账号和交易网会员代码
-            SubAccount subAccount = subAccountService.findAccountByUserId(landlordId);
-            PinganMchQueryBalanceResVO queryBalanceResVO = pinganMchService.queryBalance(subAccount);
-            PinganMchQueryBalanceAcctArray balanceAcct = queryBalanceResVO.getAcctArray().get(0);
-            SubAccountCard subAccountCard = subAccountCardService.findSubAccountByAccountId(subAccount.getId());
-            //提现手续费默认一笔5.0(优先从平安商户子账户扣除,手续费不够则扣除部分手续费)
-            Double withdrawCharge = 5.0;
-            //获取商户子账户可提现余额
-            String cashAmt = balanceAcct.getCashAmt();
-            //可提现余额
-            Double cashMoney = Double.valueOf(cashAmt);
-            //处理提现金额和手续费,算出正确的提现金额和手续费
-            Map<String, Double> moneyAndCharge = webPaymentsService.disposeMoneyAndCharge(money, cashMoney, withdrawCharge);
-            //获取需要提现的金额
-            Double withdrawMoney = moneyAndCharge.get("money");
-            //获取提现的手续费用
-            withdrawCharge = moneyAndCharge.get("charge");
-            if ("withdraw".equals(type)) {
-                //平安提现
-                String serialNo = pinganMchService.withDrawCash(subAccount, subAccountCard, withdrawMoney, withdrawCharge);
-                //提现记录保存到数据库
-                subWithdrawRecordService.insertWithdrawRecord(userId, subAccount, subAccountCard, withdrawMoney, withdrawCharge, serialNo, tradeId);
-                return ResponseBodyVO.generateResponseObject(0, data, "提现请求成功");
-            } else if ("query".equals(type)) {
-                moneyAndCharge.put("availMoney", Double.valueOf(balanceAcct.getAcctAvailBal()));
-                data.put("moneyAndCharge", moneyAndCharge);
-                return ResponseBodyVO.generateResponseObject(0, data, "查询成功");
-            }
-        } catch (PinganMchException | IOException e) {
-            e.printStackTrace();
-            LOGGER.info("withdrawMoney-{}--->失败,用户id:{},金额:{},失败原因:{}", type, userId, money, e.getMessage());
-            return new ResponseBodyVO(-1, data, e.getMessage());
+//        try {
+        //判断提现账号是主账号还是子账号，若是子账号则查询出对应的主账号
+        Integer landlordId = userService.findLandlordId(userId);
+        //根据用户id获取会员子账号和交易网会员代码
+        SubAccount subAccount = subAccountService.findAccountByUserId(landlordId);
+//            PinganMchQueryBalanceResVO queryBalanceResVO = pinganMchService.queryBalance(subAccount);
+//            PinganMchQueryBalanceAcctArray balanceAcct = queryBalanceResVO.getAcctArray().get(0);
+
+        SubAccountCard subAccountCard = subAccountCardService.findSubAccountByAccountId(subAccount.getId());
+        //提现手续费默认一笔5.0(优先从平安商户子账户扣除,手续费不够则扣除部分手续费)
+        Double withdrawCharge = 5.0;
+        //获取商户子账户可提现余额
+//            String cashAmt = balanceAcct.getCashAmt();
+        String cashAmt = "10.0";
+        //可提现余额
+        Double cashMoney = Double.valueOf(cashAmt);
+        //处理提现金额和手续费,算出正确的提现金额和手续费
+        Map<String, Double> moneyAndCharge = webPaymentsService.disposeMoneyAndCharge(money, cashMoney, withdrawCharge);
+        //获取需要提现的金额
+        Double withdrawMoney = moneyAndCharge.get("money");
+        //获取提现的手续费用
+        withdrawCharge = moneyAndCharge.get("charge");
+        if ("withdraw".equals(type)) {
+            //平安提现
+//                String serialNo = pinganMchService.withDrawCash(subAccount, subAccountCard, withdrawMoney, withdrawCharge);
+            String serialNo = "M394791808090340767002";
+            //提现记录保存到数据库
+            subWithdrawRecordService.insertWithdrawRecord(userId, subAccount, subAccountCard, withdrawMoney, withdrawCharge, serialNo, tradeId);
+            return ResponseBodyVO.generateResponseObject(0, data, "提现请求成功");
+        } else if ("query".equals(type)) {
+//                moneyAndCharge.put("availMoney", Double.valueOf(balanceAcct.getAcctAvailBal()));
+            moneyAndCharge.put("availMoney", 12.0);
+            data.put("moneyAndCharge", moneyAndCharge);
+            return ResponseBodyVO.generateResponseObject(0, data, "查询成功");
         }
+//        } catch (PinganMchException | IOException e) {
+//            e.printStackTrace();
+//            LOGGER.info("withdrawMoney-{}--->失败,用户id:{},金额:{},失败原因:{}", type, userId, money, e.getMessage());
+//            return new ResponseBodyVO(-1, data, e.getMessage());
+//        }
         return null;
     }
 

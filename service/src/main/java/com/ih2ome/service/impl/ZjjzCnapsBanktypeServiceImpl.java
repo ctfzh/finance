@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sun.net.ftp.FtpClient;
 import sun.net.ftp.FtpProtocolException;
+import tk.mybatis.mapper.entity.Example;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -83,5 +84,24 @@ public class ZjjzCnapsBanktypeServiceImpl implements ZjjzCnapsBanktypeService {
         }
         //将数据插入数据库
         zjjzCnapsBanktypeDao.insertList(banktypes);
+    }
+
+    /**
+     * 根据银行名称模糊搜索银行类别
+     *
+     * @param bankName
+     * @return
+     */
+    @Override
+    public List<ZjjzCnapsBanktype> getBankType(String bankName) {
+        if (bankName != null) {
+            Example example = new Example(ZjjzCnapsBanktype.class);
+            example.createCriteria().andLike("bankname", "%" + bankName + "%");
+            List<ZjjzCnapsBanktype> banktypes = zjjzCnapsBanktypeDao.selectByExample(example);
+            return banktypes;
+        } else {
+            List<ZjjzCnapsBanktype> banktypes = zjjzCnapsBanktypeDao.selectAll();
+            return banktypes;
+        }
     }
 }

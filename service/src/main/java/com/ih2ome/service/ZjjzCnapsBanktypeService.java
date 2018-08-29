@@ -22,4 +22,12 @@ public interface ZjjzCnapsBanktypeService {
      * 读取ftp superBankCode.txt文件，将内容插入数据库
      */
     void insertBankType();
+
+    /**
+     * 根据银行名称模糊搜索银行类别
+     *
+     * @param bankName
+     * @return
+     */
+    List<ZjjzCnapsBanktype> getBankType(String bankName);
 }
