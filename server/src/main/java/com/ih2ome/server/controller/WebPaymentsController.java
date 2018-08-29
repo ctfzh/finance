@@ -376,12 +376,12 @@ public class WebPaymentsController {
             statusResVO.setWithdrawStatus("0");
             String serialNo = withdrawRecord.getSerialNo();
             PinganMchQueryTranStatusResVO tranStatusResVO = null;
-//            try {
-//                tranStatusResVO = pinganMchService.queryTranStatus(serialNo);
-//            } catch (PinganMchException | IOException e) {
-//                e.printStackTrace();
-//                LOGGER.info("refreshWithdrawStatus--->该笔提现状态失败,请求tradeId:{},失败原因:{}", tradeIds, e.getMessage());
-//            }
+            try {
+                tranStatusResVO = pinganMchService.queryTranStatus(serialNo);
+            } catch (PinganMchException | IOException e) {
+                e.printStackTrace();
+                LOGGER.info("refreshWithdrawStatus--->该笔提现状态失败,请求tradeId:{},失败原因:{}", tradeIds, e.getMessage());
+            }
             if (tranStatusResVO != null) {
                 String tranStatus = tranStatusResVO.getTranStatus();
                 //0成功，1失败(平安)
