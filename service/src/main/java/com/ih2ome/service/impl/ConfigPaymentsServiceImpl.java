@@ -103,13 +103,13 @@ public class ConfigPaymentsServiceImpl implements ConfigPaymentsService {
         }
         String chargeInfo = "";
         if (StringUtils.isNotBlank(wxMessage)) {
-            chargeInfo = wxMessage;
+            chargeInfo += wxMessage;
         }
         if (StringUtils.isNotBlank(aliMessage)) {
-            chargeInfo = "," + aliMessage;
+            chargeInfo += "," + aliMessage;
         }
         if (StringUtils.isNotBlank(cardMessage)) {
-            chargeInfo = "," + cardMessage;
+            chargeInfo += "," + cardMessage;
         }
         chargeInfo += "!";
         configPaymentsVO.setShowType(1);
@@ -176,6 +176,7 @@ public class ConfigPaymentsServiceImpl implements ConfigPaymentsService {
     public CalculateChargeVO calculateCharge(Integer userId, ConfigPayWayEnum payWay, Double money, Boolean bool) throws Exception {
         ConfigPaymentsUser configPaymentsUser = configPaymentsUserService.selectUserType(userId);
         Integer userType = configPaymentsUser.getUserType();
+        double minDefaultCharge = 0.1;
         CalculateChargeVO calculateChargeVO = new CalculateChargeVO();
         calculateChargeVO.setInitPayMoney(money);
         if (bool) {
@@ -192,6 +193,9 @@ public class ConfigPaymentsServiceImpl implements ConfigPaymentsService {
                             Double defaultCharge = paymentsChannel.getDefaultCharge();
                             Double charge = ConstUtils.getDecimalFormat(defaultCharge / 100);
                             Double payCharge = new BigDecimal((money + money * charge) * charge).setScale(1, RoundingMode.UP).doubleValue();
+                            if (payCharge <= minDefaultCharge) {
+                                payCharge = minDefaultCharge;
+                            }
                             calculateChargeVO.setPayAssume(ConfigPayAssumeEnum.RENTER.getName());
                             calculateChargeVO.setPayCharge(payCharge);
                             calculateChargeVO.setEnterPayMoney(money);
@@ -202,6 +206,9 @@ public class ConfigPaymentsServiceImpl implements ConfigPaymentsService {
                             //设置的是租客承担
                             if (assumePerson.equals(ConfigPayAssumeEnum.RENTER.getName())) {
                                 Double payCharge = new BigDecimal((money + money * charge) * charge).setScale(1, RoundingMode.UP).doubleValue();
+                                if (payCharge <= minDefaultCharge) {
+                                    payCharge = minDefaultCharge;
+                                }
                                 calculateChargeVO.setPayAssume(ConfigPayAssumeEnum.RENTER.getName());
                                 calculateChargeVO.setEnterPayMoney(money);
                                 calculateChargeVO.setPayCharge(payCharge);
@@ -209,6 +216,9 @@ public class ConfigPaymentsServiceImpl implements ConfigPaymentsService {
                                 //设置的是公寓方承担
                             } else {
                                 Double payCharge = new BigDecimal(money * charge).setScale(1, RoundingMode.UP).doubleValue();
+                                if (payCharge <= minDefaultCharge) {
+                                    payCharge = minDefaultCharge;
+                                }
                                 calculateChargeVO.setPayAssume(ConfigPayAssumeEnum.LANDLORD.getName());
                                 calculateChargeVO.setPayCharge(payCharge);
                                 calculateChargeVO.setEnterPayMoney(ConstUtils.getDecimalFormat(money - payCharge));
