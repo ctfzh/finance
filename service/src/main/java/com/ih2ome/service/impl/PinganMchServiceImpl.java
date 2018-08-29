@@ -351,7 +351,7 @@ public class PinganMchServiceImpl implements PinganMchService {
         String resultJson = JSONObject.toJSONString(result);
         LOGGER.info("queryTranStatus--->响应数据:{}", resultJson);
         String code = (String) result.get("TxnReturnCode");
-        if (!code.equals("000000") && !code.equals("ERR020")) {
+        if (code.equals("ERR020") || !code.equals("000000")) {
             String txnReturnMsg = (String) result.get("TxnReturnMsg");
             LOGGER.error("queryTranStatus--->查询提现交易失败,失败原因:{}", txnReturnMsg);
             throw new PinganMchException(txnReturnMsg);
