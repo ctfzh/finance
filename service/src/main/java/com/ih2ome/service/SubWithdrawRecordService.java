@@ -14,7 +14,8 @@ import java.util.List;
 public interface SubWithdrawRecordService {
     /**
      * 新增提现记录
-     *  @param userId
+     *
+     * @param userId
      * @param subAccount
      * @param subAccountCard
      * @param withdrawMoney
@@ -38,4 +39,12 @@ public interface SubWithdrawRecordService {
      * @param withdrawRecord
      */
     void updateWithdrawStatus(SubWithdrawRecord withdrawRecord);
+
+    /**
+     * 根据h2ome_trade标的trade_id查询提现
+     *
+     * @param tradeIds
+     * @return
+     */
+    List<SubWithdrawRecord> queryWithdrawRecords(List<String> tradeIds);
 }

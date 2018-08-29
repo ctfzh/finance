@@ -81,4 +81,18 @@ public class SubWithdrawRecordServiceImpl implements SubWithdrawRecordService {
     public void updateWithdrawStatus(SubWithdrawRecord withdrawRecord) {
         withdrawRecordDao.updateByPrimaryKey(withdrawRecord);
     }
+
+    /**
+     * 根据h2ome_trade标的trade_id查询提现
+     *
+     * @param tradeIds
+     * @return
+     */
+    @Override
+    public List<SubWithdrawRecord> queryWithdrawRecords(List<String> tradeIds) {
+        Example example = new Example(SubWithdrawRecord.class);
+        example.createCriteria().andIn("h2omeTradeId", tradeIds).andEqualTo("isDelete", 0);
+        List<SubWithdrawRecord> withdrawRecords = withdrawRecordDao.selectByExample(example);
+        return withdrawRecords;
+    }
 }

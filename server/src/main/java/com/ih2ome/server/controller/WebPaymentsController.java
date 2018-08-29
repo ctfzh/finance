@@ -28,10 +28,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Sky
@@ -362,39 +359,49 @@ public class WebPaymentsController {
     }
 
 
-    @GetMapping(value = "refresh/withdraw/status", produces = "application/json;charset=UTF-8")
+    @PostMapping(value = "refresh/withdraw/status", produces = "application/json;charset=UTF-8")
     @ApiOperation("进入账户页面刷新提现状态")
-    public ResponseBodyVO refreshWithdrawStatus(@ApiParam("登录Id") @PathVariable("userId") Integer userId) {
+    public ResponseBodyVO refreshWithdrawStatus(@ApiParam("h2ome_trade_id集合") @RequestBody List<String> tradeIds) {
         JSONObject data = new JSONObject();
         Integer landlordId = 0;
-        try {
-            //判断提现账号是主账号还是子账号，若是子账号则查询出对应的主账号
-            landlordId = userService.findLandlordId(userId);
-            //根据主账号id查询所有的提现中的记录
-            List<SubWithdrawRecord> withdrawRecords = subWithdrawRecordService.queryWithdrawRecords(landlordId);
-            for (SubWithdrawRecord withdrawRecord : withdrawRecords) {
-                String serialNo = withdrawRecord.getSerialNo();
-                PinganMchQueryTranStatusResVO tranStatusResVO = pinganMchService.queryTranStatus(serialNo);
+        //根据主账号id查询所有的提现中的记录
+//            List<SubWithdrawRecord> withdrawRecords = subWithdrawRecordService.queryWithdrawRecords(landlordId);
+        //根据h2ome_trade表的trade_id查询提现状态
+        List<SubWithdrawRecord> withdrawRecords = subWithdrawRecordService.queryWithdrawRecords(tradeIds);
+        List<WebWithdrawStatusResVO> statusResVOS = new ArrayList<WebWithdrawStatusResVO>();
+        for (SubWithdrawRecord withdrawRecord : withdrawRecords) {
+            WebWithdrawStatusResVO statusResVO = new WebWithdrawStatusResVO();
+            statusResVO.setTradeId(withdrawRecord.getH2omeTradeId());
+            //默认0提现中
+            statusResVO.setWithdrawStatus("0");
+            String serialNo = withdrawRecord.getSerialNo();
+            PinganMchQueryTranStatusResVO tranStatusResVO = null;
+//            try {
+//                tranStatusResVO = pinganMchService.queryTranStatus(serialNo);
+//            } catch (PinganMchException | IOException e) {
+//                e.printStackTrace();
+//                LOGGER.info("refreshWithdrawStatus--->该笔提现状态失败,请求tradeId:{},失败原因:{}", tradeIds, e.getMessage());
+//            }
+            if (tranStatusResVO != null) {
                 String tranStatus = tranStatusResVO.getTranStatus();
                 //0成功，1失败(平安)
                 if ("0".equals(tranStatus)) {
                     //修改提现状态（1:成功）
                     withdrawRecord.setWithdrawStatus(1);
+                    statusResVO.setWithdrawStatus("1");
                     subWithdrawRecordService.updateWithdrawStatus(withdrawRecord);
                 } else if ("1".equals(tranStatus)) {
                     //修改提现状态(2:失败)
                     withdrawRecord.setWithdrawStatus(2);
+                    statusResVO.setWithdrawStatus("2");
                     subWithdrawRecordService.updateWithdrawStatus(withdrawRecord);
                 }
             }
-        } catch (PinganMchException | IOException e) {
-            e.printStackTrace();
-            LOGGER.info("refreshWithdrawStatus--->刷新提现状态失败,登录用户id:{},主账户id:{},失败原因:{}", userId, landlordId, e.getMessage());
-            return new ResponseBodyVO(-1, data, e.getMessage());
+            statusResVOS.add(statusResVO);
+            data.put("status", statusResVOS);
         }
         return ResponseBodyVO.generateResponseObject(0, data, "提现状态刷新成功");
     }
-
 
     @GetMapping(value = "bindcard/unbind/{userId}", produces = "application/json;charset=UTF-8")
     @ApiOperation("会员子账户解绑银行卡")
