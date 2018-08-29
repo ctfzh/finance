@@ -398,8 +398,8 @@ public class WebPaymentsController {
                 }
             }
             statusResVOS.add(statusResVO);
-            data.put("status", statusResVOS);
         }
+        data.put("status", statusResVOS);
         return ResponseBodyVO.generateResponseObject(0, data, "提现状态刷新成功");
     }
 
