@@ -379,26 +379,26 @@ public class ConfigPaymentsServiceImpl implements ConfigPaymentsService {
                     ConfigPayChannelEnum.ALLIANPAY_WX.getName().equals(configPaymentsChannel.getPayChannel())) {
                 if (configPaymentsSet == null) {
                     configPayChannelsVO.setPayAssume(ConfigPayAssumeEnum.RENTER.getName());
-                    configPayChannelsVO.setWxCharge(configPaymentsChannel.getDefaultCharge());
+                    configPayChannelsVO.setWxPercent(configPaymentsChannel.getDefaultCharge());
                 } else {
                     configPayChannelsVO.setPayAssume(configPaymentsSet.getAssumePerson());
-                    configPayChannelsVO.setWxCharge(configPaymentsSet.getServiceCharge());
+                    configPayChannelsVO.setWxPercent(configPaymentsSet.getServiceCharge());
                 }
             } else if (ConfigPayChannelEnum.ALIPAY.getName().equals(configPaymentsChannel.getPayChannel())) {
                 if (configPaymentsSet == null) {
                     configPayChannelsVO.setPayAssume(ConfigPayAssumeEnum.RENTER.getName());
-                    configPayChannelsVO.setAliCharge(configPaymentsChannel.getDefaultCharge());
+                    configPayChannelsVO.setAliPercent(configPaymentsChannel.getDefaultCharge());
                 } else {
                     configPayChannelsVO.setPayAssume(configPaymentsSet.getAssumePerson());
-                    configPayChannelsVO.setAliCharge(configPaymentsSet.getServiceCharge());
+                    configPayChannelsVO.setAliPercent(configPaymentsSet.getServiceCharge());
                 }
             } else if (ConfigPayChannelEnum.LLIANPAY_CARD.getName().equals(configPaymentsChannel.getPayChannel())) {
                 if (configPaymentsSet == null) {
                     configPayChannelsVO.setPayAssume(ConfigPayAssumeEnum.RENTER.getName());
-                    configPayChannelsVO.setCardCharge(configPaymentsChannel.getDefaultCharge());
+                    configPayChannelsVO.setCardPercent(configPaymentsChannel.getDefaultCharge());
                 } else {
                     configPayChannelsVO.setPayAssume(configPaymentsSet.getAssumePerson());
-                    configPayChannelsVO.setCardCharge(configPaymentsSet.getServiceCharge());
+                    configPayChannelsVO.setCardPercent(configPaymentsSet.getServiceCharge());
                 }
             }
             configPaymentsSetExample.clear();
