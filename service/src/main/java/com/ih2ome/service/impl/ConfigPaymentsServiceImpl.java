@@ -195,7 +195,7 @@ public class ConfigPaymentsServiceImpl implements ConfigPaymentsService {
                             calculateChargeVO.setPayAssume(ConfigPayAssumeEnum.RENTER.getName());
                             calculateChargeVO.setPayCharge(payCharge);
                             calculateChargeVO.setEnterPayMoney(money);
-                            calculateChargeVO.setTotalPayMoney(money + payCharge);
+                            calculateChargeVO.setTotalPayMoney(ConstUtils.getDecimalFormat(money + payCharge));
                         } else {
                             Double charge = ConstUtils.getDecimalFormat(paymentsSet.getServiceCharge() / 100);
                             String assumePerson = paymentsSet.getAssumePerson();
@@ -205,7 +205,7 @@ public class ConfigPaymentsServiceImpl implements ConfigPaymentsService {
                                 calculateChargeVO.setPayAssume(ConfigPayAssumeEnum.RENTER.getName());
                                 calculateChargeVO.setEnterPayMoney(money);
                                 calculateChargeVO.setPayCharge(payCharge);
-                                calculateChargeVO.setTotalPayMoney(money + payCharge);
+                                calculateChargeVO.setTotalPayMoney(ConstUtils.getDecimalFormat(money + payCharge));
                                 //设置的是公寓方承担
                             } else {
                                 Double payCharge = new BigDecimal(money * charge).setScale(1, RoundingMode.UP).doubleValue();
