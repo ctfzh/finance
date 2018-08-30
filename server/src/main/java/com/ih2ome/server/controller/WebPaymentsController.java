@@ -400,17 +400,20 @@ public class WebPaymentsController {
         List<SubWithdrawRecord> withdrawRecords = subWithdrawRecordService.queryWithdrawRecords(tradeIds);
         List<WebWithdrawStatusResVO> statusResVOS = new ArrayList<WebWithdrawStatusResVO>();
         for (SubWithdrawRecord withdrawRecord : withdrawRecords) {
+            Integer withdrawStatus = withdrawRecord.getWithdrawStatus();
             WebWithdrawStatusResVO statusResVO = new WebWithdrawStatusResVO();
             statusResVO.setTradeId(withdrawRecord.getH2omeTradeId());
-            //默认0提现中
-            statusResVO.setWithdrawStatus("0");
+            //默认数据库的提现状态
+            statusResVO.setWithdrawStatus(String.valueOf(withdrawStatus));
             String serialNo = withdrawRecord.getSerialNo();
             PinganMchQueryTranStatusResVO tranStatusResVO = null;
-            try {
-                tranStatusResVO = pinganMchService.queryTranStatus(serialNo);
-            } catch (PinganMchException | IOException e) {
-                e.printStackTrace();
-                LOGGER.info("refreshWithdrawStatus--->该笔提现状态失败,请求tradeId:{},失败原因:{}", withdrawRecord.getH2omeTradeId(), e.getMessage());
+            if (withdrawStatus == 0) {
+                try {
+                    tranStatusResVO = pinganMchService.queryTranStatus(serialNo);
+                } catch (PinganMchException | IOException e) {
+                    e.printStackTrace();
+                    LOGGER.info("refreshWithdrawStatus--->该笔提现状态失败,请求tradeId:{},失败原因:{}", withdrawRecord.getH2omeTradeId(), e.getMessage());
+                }
             }
             if (tranStatusResVO != null) {
                 String tranStatus = tranStatusResVO.getTranStatus();
