@@ -26,14 +26,8 @@ public class LandlordBankCardServiceImpl implements LandlordBankCardService {
     @Autowired
     private LandlordBankCardDao landlordBankCardDao;
 
-    /**
-     * 往landlord_bank_card插入绑定个人银行卡信息
-     *
-     * @param subAccount
-     * @param personalReqVO
-     */
-    @Override
-    public void insertPersonalCardInfo(SubAccount subAccount, WebBindCardPersonalReqVO personalReqVO) {
+    //删除原先绑定的银行卡信息
+    private void deleteCardInfo(SubAccount subAccount) {
         //先删除原先旧的银行卡信息
         Example example = new Example(LandlordBankCard.class);
         example.createCriteria().andEqualTo("userId", subAccount.getUserId()).andEqualTo("isDelete", 0);
@@ -43,6 +37,19 @@ public class LandlordBankCardServiceImpl implements LandlordBankCardService {
             landlordBankCard.setIsDelete(0);
             landlordBankCardDao.updateByPrimaryKey(landlordBankCard);
         });
+    }
+
+
+    /**
+     * 往landlord_bank_card插入绑定个人银行卡信息
+     *
+     * @param subAccount
+     * @param personalReqVO
+     */
+    @Override
+    public void insertPersonalCardInfo(SubAccount subAccount, WebBindCardPersonalReqVO personalReqVO) {
+        //删除原先绑定的银行卡信息
+        deleteCardInfo(subAccount);
         LandlordBankCard bankCard = new LandlordBankCard();
         bankCard.setBankName(personalReqVO.getBankName());
         bankCard.setBranchBank(personalReqVO.getBankBranchName());
@@ -66,6 +73,8 @@ public class LandlordBankCardServiceImpl implements LandlordBankCardService {
      */
     @Override
     public void insertCompanyCardInfo(SubAccount subAccount, WebBindCardCompanyReqVO companyReqVO) {
+        //删除原先绑定的银行卡信息
+        deleteCardInfo(subAccount);
         LandlordBankCard bankCard = new LandlordBankCard();
         bankCard.setBankName(companyReqVO.getBankName());
         bankCard.setBranchBank(companyReqVO.getBankBranchName());
