@@ -313,6 +313,7 @@ public class WebPaymentsController {
     @GetMapping(value = "bankcard/info/{userId}", produces = "application/json;charset=UTF-8")
     @ApiOperation("根据登录用户id查询绑定银行卡信息")
     public ResponseBodyVO getTMoneyBankInfo(@ApiParam("登录id") @PathVariable("userId") Integer userId) {
+        LOGGER.info("heheheheheheheheheheheheheheheheheheheheh");
         JSONObject data = new JSONObject();
         try {
             //判断是主账号还是子账号,如果是子账号则查询出主账号

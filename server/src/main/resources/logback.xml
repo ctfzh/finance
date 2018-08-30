@@ -136,7 +136,6 @@
     </appender>
     <logger name="com.ih2ome.service.impl.PinganMchServiceImpl" additivity="true">
         <appender-ref ref="pinganMch"/>
-        <appender-ref ref="console"/>
     </logger>
 
     <!--支付第三方日志-->
@@ -150,7 +149,6 @@
     </appender>
     <logger name="com.ih2ome.service.impl.PinganPayServiceImpl" additivity="true">
         <appender-ref ref="pinganPay"/>
-        <appender-ref ref="console"/>
     </logger>
 
     <!--webPaymentsController 日志-->
@@ -164,7 +162,6 @@
     </appender>
     <logger name="com.ih2ome.server.controller.WebPaymentsController" additivity="true">
         <appender-ref ref="webpayments"/>
-        <appender-ref ref="console"/>
     </logger>
 
 
