@@ -15,14 +15,14 @@
     <property name="maxHistory" value="30"/>
 
     <!-- ConsoleAppender 控制台输出日志 -->
-    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>
-                <!-- 设置日志输出格式 -->
-                %d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n
-            </pattern>
-        </encoder>
-    </appender>
+    <!--<appender name="console" class="ch.qos.logback.core.ConsoleAppender">-->
+        <!--<encoder>-->
+            <!--<pattern>-->
+                <!--&lt;!&ndash; 设置日志输出格式 &ndash;&gt;-->
+                <!--%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger - %msg%n-->
+            <!--</pattern>-->
+        <!--</encoder>-->
+    <!--</appender>-->
 
     <!-- ERROR级别日志 -->
     <!-- 滚动记录文件，先将日志记录到指定文件，当符合某个条件时，将日志记录到其他文件 RollingFileAppender -->
@@ -170,7 +170,7 @@
         <!-- 打印debug级别日志及以上级别日志 -->
         <level value="DEBUG"/>
         <!-- 控制台输出 -->
-        <appender-ref ref="console"/>
+        <appender-ref ref="STDOUT"/>
         <!-- 文件输出 -->
         <appender-ref ref="ERROR"/>
         <appender-ref ref="INFO"/>
@@ -187,7 +187,7 @@
         </encoder>
     </appender>
 
-    <root level="INFO">
-        <appender-ref ref="STDOUT"/>
-    </root>
+    <!--<root level="INFO">-->
+        <!--<appender-ref ref="STDOUT"/>-->
+    <!--</root>-->
 </configuration>
