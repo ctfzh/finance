@@ -25,9 +25,9 @@ pagehelper:
 
 
 # 打印sql
-logging:
-  level:
-    com.ih2ome.dao: DEBUG
+#logging:
+#  level:
+#    com.ih2ome.dao: DEBUG
 
 
 # java -cp druid-1.0.29.jar com.alibaba.druid.filter.config.ConfigTools 1234

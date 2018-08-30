@@ -366,6 +366,9 @@ public class WebPaymentsController {
         Double withdrawMoney = moneyAndCharge.get("money");
         //获取提现的手续费用
         withdrawCharge = moneyAndCharge.get("charge");
+        //                moneyAndCharge.put("availMoney", Double.valueOf(balanceAcct.getAcctAvailBal()));
+        moneyAndCharge.put("availMoney", 12.0);
+        data.put("moneyAndCharge", moneyAndCharge);
         if ("withdraw".equals(type)) {
             //平安提现
 //                String serialNo = pinganMchService.withDrawCash(subAccount, subAccountCard, withdrawMoney, withdrawCharge);
@@ -374,9 +377,6 @@ public class WebPaymentsController {
             subWithdrawRecordService.insertWithdrawRecord(userId, subAccount, subAccountCard, withdrawMoney, withdrawCharge, serialNo, tradeId);
             return ResponseBodyVO.generateResponseObject(0, data, "提现请求成功");
         } else if ("query".equals(type)) {
-//                moneyAndCharge.put("availMoney", Double.valueOf(balanceAcct.getAcctAvailBal()));
-            moneyAndCharge.put("availMoney", 12.0);
-            data.put("moneyAndCharge", moneyAndCharge);
             return ResponseBodyVO.generateResponseObject(0, data, "查询成功");
         }
 //        } catch (PinganMchException | IOException e) {
