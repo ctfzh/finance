@@ -34,6 +34,15 @@ public class LandlordBankCardServiceImpl implements LandlordBankCardService {
      */
     @Override
     public void insertPersonalCardInfo(SubAccount subAccount, WebBindCardPersonalReqVO personalReqVO) {
+        //先删除原先旧的银行卡信息
+        Example example = new Example(LandlordBankCard.class);
+        example.createCriteria().andEqualTo("userId", subAccount.getUserId()).andEqualTo("isDelete", 0);
+        List<LandlordBankCard> landlordBankCards = landlordBankCardDao.selectByExample(example);
+        //java8 lambda -->foreach写法
+        landlordBankCards.forEach(landlordBankCard -> {
+            landlordBankCard.setIsDelete(0);
+            landlordBankCardDao.updateByPrimaryKey(landlordBankCard);
+        });
         LandlordBankCard bankCard = new LandlordBankCard();
         bankCard.setBankName(personalReqVO.getBankName());
         bankCard.setBranchBank(personalReqVO.getBankBranchName());

@@ -252,6 +252,7 @@ public class WebPaymentsController {
             pinganMchService.bindPersonalCardVertify(subAccount, reqVO);
             //回填验证成功，将银行卡信息存入数据库
             subAccountCardService.insertPersonalCardInfo(subAccount, reqVO);
+            //插入新的银行卡信息到landlord_bankcard表
             landlordBankCardService.insertPersonalCardInfo(subAccount, reqVO);
         } catch (PinganMchException | IOException e) {
             e.printStackTrace();
