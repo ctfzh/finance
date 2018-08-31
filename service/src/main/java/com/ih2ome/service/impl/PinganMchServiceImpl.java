@@ -50,6 +50,7 @@ public class PinganMchServiceImpl implements PinganMchService {
         PinganMchRegisterReqVO pinganMchRegisterReqVO = new PinganMchRegisterReqVO();
         pinganMchRegisterReqVO.setCnsmrSeqNo(uid + SerialNumUtil.generateSerial());
         pinganMchRegisterReqVO.setFunctionFlag("1");
+//        pinganMchRegisterReqVO.setFunctionFlag("3");
         pinganMchRegisterReqVO.setFundSummaryAcctNo(mainAcctNo);
         pinganMchRegisterReqVO.setTranNetMemberCode(userId.toString());
         pinganMchRegisterReqVO.setMemberProperty("00");

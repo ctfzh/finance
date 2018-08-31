@@ -204,7 +204,7 @@ public class TestMapperController {
             pinganMchService.queryMemberBindInfo();
 //            pinganMchService.queryTransferinfo();
 //            pinganMchService.queryTranStatus("M394791808218285023854");
-
+//            pinganMchService.registerAccount(2788);
         } catch (Exception e) {
             e.printStackTrace();
         }
