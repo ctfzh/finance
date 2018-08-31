@@ -214,8 +214,11 @@ public class WebPaymentsController {
     public ResponseBodyVO searchCnaps(@ApiParam("银行类别code") @RequestParam("bankCode") String bankCode,
                                       @ApiParam("市或者(区、县)code") @RequestParam("cityCode") String cityCode,
                                       @ApiParam("支行名称") @RequestParam(value = "bankName", required = false) String bankName) {
-        if (StringUtils.isBlank(bankCode) || StringUtils.isBlank(cityCode)) {
-            return ResponseBodyVO.generateResponseObject(-1, null, "请求参数错误");
+        if (StringUtils.isBlank(bankCode)) {
+            return ResponseBodyVO.generateResponseObject(-1, null, "请选择银行");
+        }
+        if (StringUtils.isBlank(cityCode)) {
+            return ResponseBodyVO.generateResponseObject(-1, null, "请选择城市");
         }
         JSONObject data = new JSONObject();
         List<WebSearchCnapsVO> cnaps = bankinfoService.searchCnaps(bankCode, cityCode, bankName);
