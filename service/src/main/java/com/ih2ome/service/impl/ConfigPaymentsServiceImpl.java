@@ -73,7 +73,7 @@ public class ConfigPaymentsServiceImpl implements ConfigPaymentsService {
                     charge = paymentsSet.getServiceCharge();
                     assumePerson = paymentsSet.getAssumePerson();
                 }
-                wxMessage = "微信手续费" + 6.6 + "‰,最低0.1元";
+                wxMessage = "微信手续费" + 6.6 + "‰,最低0.1元/笔!";
             } else if (configPaymentsChannel.getPayChannel().equals(ConfigPayChannelEnum.ALLIANPAY_WX.getName())) {
                 if (paymentsSet == null) {
                     charge = configPaymentsChannel.getDefaultCharge();
@@ -81,7 +81,7 @@ public class ConfigPaymentsServiceImpl implements ConfigPaymentsService {
                     charge = paymentsSet.getServiceCharge();
                     assumePerson = paymentsSet.getAssumePerson();
                 }
-                wxMessage = "微信手续费" + charge + "%,最低0.1元";
+                wxMessage = "微信手续费" + charge + "%,最低0.1元/笔!";
             } else if (configPaymentsChannel.getPayChannel().equals(ConfigPayChannelEnum.ALIPAY.getName())) {
                 if (paymentsSet == null) {
                     charge = configPaymentsChannel.getDefaultCharge();
@@ -89,7 +89,7 @@ public class ConfigPaymentsServiceImpl implements ConfigPaymentsService {
                     charge = paymentsSet.getServiceCharge();
                     assumePerson = paymentsSet.getAssumePerson();
                 }
-                aliMessage = "支付宝手续费" + charge + "%,最低0.1元";
+                aliMessage = "支付宝手续费" + charge + "%,最低0.1元/笔!";
             } else if (configPaymentsChannel.getPayChannel().equals(ConfigPayChannelEnum.LLIANPAY_CARD.getName())) {
                 if (paymentsSet == null) {
                     charge = configPaymentsChannel.getDefaultCharge();
@@ -97,24 +97,13 @@ public class ConfigPaymentsServiceImpl implements ConfigPaymentsService {
                     charge = paymentsSet.getServiceCharge();
                     assumePerson = paymentsSet.getAssumePerson();
                 }
-                cardMessage = "银行卡暂不收取手续费";
+                cardMessage = "银行卡暂不收取手续费!";
             }
             configPaymentsSetExample.clear();
         }
-        String chargeInfo = "";
-        if (StringUtils.isNotBlank(wxMessage)) {
-            chargeInfo += wxMessage;
-        }
-        if (StringUtils.isNotBlank(aliMessage)) {
-            chargeInfo += "," + aliMessage;
-        }
-        if (StringUtils.isNotBlank(cardMessage)) {
-            chargeInfo += "," + cardMessage;
-        }
-        chargeInfo += "!";
-        configPaymentsVO.setShowType(1);
-        configPaymentsVO.setLandlordChargeInfo(chargeInfo);
-        configPaymentsVO.setRentChargeInfo(chargeInfo);
+        configPaymentsVO.setWxChargeInfo(wxMessage);
+        configPaymentsVO.setAliChargeInfo(aliMessage);
+        configPaymentsVO.setCardChargeInfo(cardMessage);
         configPaymentsVO.setPayAssume(assumePerson);
         return configPaymentsVO;
     }

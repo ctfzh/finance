@@ -30,6 +30,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.text.Collator;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Sky
@@ -178,7 +179,15 @@ public class WebPaymentsController {
     public ResponseBodyVO getProvince() {
         JSONObject data = new JSONObject();
         List<PubPayNode> provinces = pubPayNodeService.getProvinces();
-        data.put("provinces", provinces);
+        List<PubPayNode> prefix = provinces.stream().filter(pubPayNode -> pubPayNode.getNodeNodename().endsWith("市")).collect(Collectors.toList());
+        List<PubPayNode> suffix = provinces.stream().filter(pubPayNode -> !pubPayNode.getNodeNodename().endsWith("市")).collect(Collectors.toList());
+        //首字母a-z排序
+        Collator collator = Collator.getInstance(java.util.Locale.CHINA);
+        suffix.sort((param1, param2) -> {
+            return collator.compare(param1.getNodeNodename(), param2.getNodeNodename());
+        });
+        prefix.addAll(suffix);
+        data.put("provinces", prefix);
         return ResponseBodyVO.generateResponseObject(0, data, "获取省份成功");
     }
 
@@ -386,7 +395,6 @@ public class WebPaymentsController {
 //        }
         return null;
     }
-
 
     @PostMapping(value = "refresh/withdraw/status", produces = "application/json;charset=UTF-8")
     @ApiOperation("进入账户页面刷新提现状态")

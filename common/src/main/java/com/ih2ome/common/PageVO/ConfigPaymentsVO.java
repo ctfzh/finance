@@ -14,12 +14,14 @@ public class ConfigPaymentsVO {
     @ApiModelProperty(value = "费用承担方(renter:租客landlord:房东)")
     private String payAssume;
 
-    @ApiModelProperty(value = "租客费用信息")
-    private String rentChargeInfo;
+    @ApiModelProperty(value = "微信手续费用信息")
+    private String wxChargeInfo;
 
-    @ApiModelProperty(value = "房东端费用信息")
-    private String landlordChargeInfo;
+    @ApiModelProperty(value = "支付宝手续费用信息")
+    private String aliChargeInfo;
 
-    @ApiModelProperty(value = "显示方式[1:普通客户展示,2:中建等客户展示]")
-    private Integer showType;
+    @ApiModelProperty(value = "借记卡手续费用信息")
+    private String cardChargeInfo;
+
+
 }
