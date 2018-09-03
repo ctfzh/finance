@@ -201,7 +201,7 @@ public class TestMapperController {
     @ResponseBody
     public ResponseBodyVO test09() throws IOException, InvocationTargetException, IllegalAccessException {
         try {
-            pinganMchService.queryMemberBindInfo();
+//            pinganMchService.queryMemberBindInfo();
 //            pinganMchService.queryTransferinfo();
 //            pinganMchService.queryTranStatus("M394791808218285023854");
 //            pinganMchService.registerAccount(2788);
@@ -216,6 +216,13 @@ public class TestMapperController {
     public ResponseBodyVO test10() {
         banktypeService.insertBankType();
         return ResponseBodyVO.generateResponseObject(0, null, "成功");
+    }
+
+    @GetMapping("reconciliationFile")
+    public ResponseBodyVO test11() {
+        JSONObject data = new JSONObject();
+//        pinganMchService.queryReconciliationFile("")
+        return ResponseBodyVO.generateResponseObject(0, data,"success");
     }
 
 }

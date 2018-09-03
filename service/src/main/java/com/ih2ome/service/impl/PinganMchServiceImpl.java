@@ -173,6 +173,10 @@ public class PinganMchServiceImpl implements PinganMchService {
         if (!code.equals("000000")) {
             String txnReturnMsg = (String) result.get("TxnReturnMsg");
             LOGGER.error("bindCardSendAmount--->会员绑定提现账户(企业)-银联鉴权,失败原因:{}", txnReturnMsg);
+            //限定时间内只能发起一笔小额鉴权的提醒。
+            if (code.equals("ERR145")) {
+                txnReturnMsg="我们已向您的银行卡转入随机金额,请您在收到短信后进行查看并填写您收到的金额,完成银行卡的绑定。";
+            }
             throw new PinganMchException(txnReturnMsg);
         }
 
@@ -390,6 +394,37 @@ public class PinganMchServiceImpl implements PinganMchService {
             LOGGER.error("unbindBankCard--->会员子账户解绑银行卡失败,失败原因:{}", txnReturnMsg);
             throw new PinganMchException(txnReturnMsg);
         }
+    }
+
+    /**
+     * 查询对账文件信息
+     *
+     * @param fileType
+     * @param fileDate
+     * @return
+     * @throws PinganMchException
+     * @throws IOException
+     */
+    @Override
+    public PinganMchQueryReconciliationDocResVO queryReconciliationFile(String fileType, String fileDate) throws PinganMchException, IOException {
+        PinganMchQueryReconciliationDocReqVO reconciliationDocReqVO = new PinganMchQueryReconciliationDocReqVO();
+        reconciliationDocReqVO.setFundSummaryAcctNo(mainAcctNo);
+        reconciliationDocReqVO.setCnsmrSeqNo(uid + SerialNumUtil.generateSerial());
+        reconciliationDocReqVO.setFileDate(fileDate);
+        reconciliationDocReqVO.setFileType(fileType);
+        String reqJson = JSONObject.toJSONString(reconciliationDocReqVO);
+        LOGGER.info("queryReconciliationFile--->请求数据:{}", reqJson);
+        Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "ReconciliationDocumentQuery");
+        String resultJson = JSONObject.toJSONString(result);
+        LOGGER.info("queryReconciliationFile--->响应数据:{}", resultJson);
+        String code = (String) result.get("TxnReturnCode");
+        if (!code.equals("000000")) {
+            String txnReturnMsg = (String) result.get("TxnReturnMsg");
+            LOGGER.error("queryReconciliationFile--->查询对账文件信息失败,失败原因:{}", txnReturnMsg);
+            throw new PinganMchException(txnReturnMsg);
+        }
+        PinganMchQueryReconciliationDocResVO reconciliationDocResVO = JSONObject.parseObject(resultJson, PinganMchQueryReconciliationDocResVO.class);
+        return reconciliationDocResVO;
     }
 
 

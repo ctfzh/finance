@@ -1,10 +1,7 @@
 package com.ih2ome.service;
 
 import com.ih2ome.common.Exception.PinganMchException;
-import com.ih2ome.common.PageVO.PinganMchVO.PinganMchQueryBalanceResVO;
-import com.ih2ome.common.PageVO.PinganMchVO.PinganMchQueryTranStatusReqVO;
-import com.ih2ome.common.PageVO.PinganMchVO.PinganMchQueryTranStatusResVO;
-import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterResVO;
+import com.ih2ome.common.PageVO.PinganMchVO.*;
 import com.ih2ome.common.PageVO.WebVO.WebBindCardCompanyReqVO;
 import com.ih2ome.common.PageVO.WebVO.WebBindCardPersonalReqVO;
 import com.ih2ome.model.lijiang.SubAccount;
@@ -124,6 +121,15 @@ public interface PinganMchService {
     void unbindBankCard(SubAccount subAccount, SubAccountCard subAccountCard) throws PinganMchException, IOException;
 
 
-
+    /**
+     * 查询对账文件信息
+     *
+     * @param fileType
+     * @param fileDate
+     * @return
+     * @throws PinganMchException
+     * @throws IOException
+     */
+    PinganMchQueryReconciliationDocResVO queryReconciliationFile(String fileType, String fileDate) throws PinganMchException, IOException;
 
 }
