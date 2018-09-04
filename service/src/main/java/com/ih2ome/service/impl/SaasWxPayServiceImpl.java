@@ -96,7 +96,7 @@ public class SaasWxPayServiceImpl implements SaasWxPayService {
         subOrders.setOrderId(orders.getUuid());
         subOrders.setSubOrderId(uid + SerialNumUtil.generateSerial());
         subOrders.setSubAccount(subAccount.getAccount());
-        subOrders.setSubAmount(reqVO.getTotalMoney());
+        subOrders.setSubAmount(reqVO.getEnterPayMoney());
         subOrders.setTranFee(reqVO.getPayCharge());
         subOrders.setRemark(FeeTypeEnum.getNameByCode(reqVO.getFeeType()));
         subOrders.setRawData(JSONObject.toJSONString(subOrders));
