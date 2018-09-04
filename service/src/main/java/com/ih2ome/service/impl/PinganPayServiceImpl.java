@@ -137,7 +137,6 @@ public class PinganPayServiceImpl implements PinganPayService {
         String url = baseUrl + "order/view";
         TreeMap<String, String> treeMap = BeanMapUtil.objectToMap(pinganWxRequestVO);
         String resultJson = handlePost(url, treeMap);
-        LOGGER.info("queryOrderView-->请求参数:{}|返回参数:{}", JSONObject.toJSONString(treeMap), resultJson);
         PinganWxSignVerifyVO pinganWxSignVerifyVO = JSONObject.parseObject(resultJson, PinganWxSignVerifyVO.class);
         pinganWxSignVerifyVO.setOpen_key(open_key);
         //请求成功
@@ -150,6 +149,7 @@ public class PinganPayServiceImpl implements PinganPayService {
                     //验证签名成功,拿到返回的响应data数据
                     String decryptData = AESUtil.decrypt(pinganWxSignVerifyVO.getData(), open_key);
                     PinganWxOrderViewResVO pinganWxOrderViewResVO = JSONObject.parseObject(decryptData, PinganWxOrderViewResVO.class);
+                    LOGGER.info("queryOrderView-->请求参数:{}|返回参数:{}", JSONObject.toJSONString(pinganWxOrderViewReqVO), JSONObject.toJSONString(pinganWxOrderViewResVO));
                     return pinganWxOrderViewResVO;
                 } else {
                     LOGGER.error("签名校验失败,签名信息:{}", pinganWxSignVerifyVO.getSign());
@@ -180,7 +180,6 @@ public class PinganPayServiceImpl implements PinganPayService {
         String url = baseUrl + "payorder";
         TreeMap<String, String> treeMap = BeanMapUtil.objectToMap(pinganWxRequestVO);
         String resultJson = handlePost(url, treeMap);
-        LOGGER.info("payOrder-->请求参数:{} | 返回参数:{}", JSONObject.toJSONString(treeMap), resultJson);
         PinganWxSignVerifyVO pinganWxSignVerifyVO = JSONObject.parseObject(resultJson, PinganWxSignVerifyVO.class);
         pinganWxSignVerifyVO.setOpen_key(open_key);
         //请求成功
@@ -195,6 +194,7 @@ public class PinganPayServiceImpl implements PinganPayService {
                     PinganWxPayOrderResVO pinganWxPayOrderResVO = JSONObject.parseObject(decryptData, PinganWxPayOrderResVO.class);
                     JSONObject jsonObject = JSONObject.parseObject(decryptData);
                     pinganWxPayOrderResVO.setPackage_info(jsonObject.getString("package"));
+                    LOGGER.info("payOrder-->请求参数:{} | 返回参数:{}", JSONObject.toJSONString(pinganWxPayOrderReqVO), JSONObject.toJSONString(pinganWxPayOrderResVO));
                     return pinganWxPayOrderResVO;
                 } else {
                     LOGGER.error("签名校验失败,签名信息:{}", pinganWxSignVerifyVO.getSign());
