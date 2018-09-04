@@ -137,6 +137,7 @@ public class PinganPayServiceImpl implements PinganPayService {
         String url = baseUrl + "order/view";
         TreeMap<String, String> treeMap = BeanMapUtil.objectToMap(pinganWxRequestVO);
         String resultJson = handlePost(url, treeMap);
+        LOGGER.info("queryOrderView-->请求参数:{}|返回参数:{}", JSONObject.toJSONString(treeMap), resultJson);
         PinganWxSignVerifyVO pinganWxSignVerifyVO = JSONObject.parseObject(resultJson, PinganWxSignVerifyVO.class);
         pinganWxSignVerifyVO.setOpen_key(open_key);
         //请求成功
@@ -179,6 +180,7 @@ public class PinganPayServiceImpl implements PinganPayService {
         String url = baseUrl + "payorder";
         TreeMap<String, String> treeMap = BeanMapUtil.objectToMap(pinganWxRequestVO);
         String resultJson = handlePost(url, treeMap);
+        LOGGER.info("payOrder-->请求参数:{} | 返回参数:{}", JSONObject.toJSONString(treeMap), resultJson);
         PinganWxSignVerifyVO pinganWxSignVerifyVO = JSONObject.parseObject(resultJson, PinganWxSignVerifyVO.class);
         pinganWxSignVerifyVO.setOpen_key(open_key);
         //请求成功

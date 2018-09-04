@@ -51,8 +51,8 @@ public class SaasWxPayController {
         }
         try {
             //根据主账号id查询平安商户子账户对象
-//            SubAccount subAccount = subAccountService.findAccountByUserId(Integer.valueOf(reqVO.getLandlordId()));
-            SubAccount subAccount = subAccountService.findAccountByUserId(2984);
+            SubAccount subAccount = subAccountService.findAccountByUserId(Integer.valueOf(reqVO.getLandlordId()));
+//            SubAccount subAccount = subAccountService.findAccountByUserId(2984);
             SaasWxPayOrderResVO resVO = saasWxPayService.placeOrder(reqVO, subAccount);
             data.put("payInfo", resVO);
         } catch (SaasWxPayException e) {
