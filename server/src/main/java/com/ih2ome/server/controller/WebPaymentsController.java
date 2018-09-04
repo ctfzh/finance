@@ -329,7 +329,7 @@ public class WebPaymentsController {
         try {
             //判断是主账号还是子账号,如果是子账号则查询出主账号
             Integer landlordId = userService.findLandlordId(userId);
-            Integer userType = paymentsUserService.judgeUserType(userId) ? 1 : 0;
+            Integer userType = paymentsUserService.judgeUserType(landlordId) ? 1 : 0;
             //根据用户id和类型获取绑定银行卡信息
             LandlordBankCard landlordBankCard = landlordBankCardService.findBankCardInfo(landlordId, userType);
             Map<String, Object> cardInfo = new HashMap<>();
