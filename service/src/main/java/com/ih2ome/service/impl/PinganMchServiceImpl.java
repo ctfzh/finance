@@ -175,7 +175,7 @@ public class PinganMchServiceImpl implements PinganMchService {
             LOGGER.error("bindCardSendAmount--->会员绑定提现账户(企业)-银联鉴权,失败原因:{}", txnReturnMsg);
             //限定时间内只能发起一笔小额鉴权的提醒。
             if (code.equals("ERR145")) {
-                txnReturnMsg="我们已向您的银行卡转入随机金额,请您在收到短信后进行查看并填写您收到的金额,完成银行卡的绑定。";
+                txnReturnMsg = "我们已向您的银行卡转入随机金额,请您在收到短信后进行查看并填写您收到的金额,完成银行卡的绑定。";
             }
             throw new PinganMchException(txnReturnMsg);
         }

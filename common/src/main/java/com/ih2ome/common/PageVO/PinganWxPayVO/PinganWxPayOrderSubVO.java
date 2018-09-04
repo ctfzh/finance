@@ -23,5 +23,6 @@ public class PinganWxPayOrderSubVO {
     @JSONField(name = "plantCode")
     private String plantCode;
     //订单列表
-    private List<PinganWxPayOrderSubDataVO> orderList;
+    @JSONField(name = "oderlist")
+    private List<PinganWxPayOrderSubDataVO> oderlist;
 }

@@ -134,7 +134,7 @@ public class SaasWxPayServiceImpl implements SaasWxPayService {
         pinganWxPayOrderSubDataVO.setObject(subOrders.getRemark());
         pinganWxPayOrderSubDataVO.setTranFee(String.valueOf(subOrders.getTranFee()));
         orderLists.add(pinganWxPayOrderSubDataVO);
-        pinganWxPayOrderSubVO.setOrderList(orderLists);
+        pinganWxPayOrderSubVO.setOderlist(orderLists);
         pinganWxPayOrderReqVO.setCmd(JSONObject.toJSONString(pinganWxPayOrderSubVO));
 
         PinganWxPayOrderResVO pinganWxPayOrderResVO = pinganPayService.payOrder(pinganWxPayOrderReqVO);

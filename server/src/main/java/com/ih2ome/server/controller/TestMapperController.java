@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.google.common.io.Resources;
 import com.ih2ome.common.Exception.PinganMchException;
 import com.ih2ome.common.Exception.PinganWxPayException;
+import com.ih2ome.common.PageVO.PinganMchVO.PinganMchQueryReconciliationDocResVO;
 import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterResVO;
 import com.ih2ome.common.PageVO.PinganWxPayVO.*;
 import com.ih2ome.common.support.ResponseBodyVO;
@@ -58,6 +59,7 @@ public class TestMapperController {
     private PinganMchService pinganMchService;
     @Autowired
     private ZjjzCnapsBanktypeService banktypeService;
+    private static Integer a = 1;
 
     @GetMapping("/one")
     @ResponseBody
@@ -221,8 +223,15 @@ public class TestMapperController {
     @GetMapping("reconciliationFile")
     public ResponseBodyVO test11() {
         JSONObject data = new JSONObject();
-//        pinganMchService.queryReconciliationFile("")
-        return ResponseBodyVO.generateResponseObject(0, data,"success");
+        try {
+            PinganMchQueryReconciliationDocResVO reconciliationDocResVO = pinganMchService.queryReconciliationFile("CZ", "20180902");
+            System.out.println(reconciliationDocResVO);
+        } catch (PinganMchException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ResponseBodyVO.generateResponseObject(0, data, "success");
     }
 
 }
