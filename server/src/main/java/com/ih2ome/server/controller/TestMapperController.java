@@ -17,13 +17,11 @@ import com.ih2ome.dao.caspain.ConfigPaymentsChannelDao;
 import com.ih2ome.dao.lijiang.PayOrdersDao;
 import com.ih2ome.dao.volga.VolgaMoneyFlowDao;
 import com.ih2ome.model.lijiang.PayOrders;
+import com.ih2ome.model.lijiang.SubAccount;
 import com.ih2ome.model.lijiang.ZjjzCnapsBanktype;
 import com.ih2ome.model.volga.MoneyFlow;
 import com.ih2ome.server.pingan.sdk.InitConfiguration;
-import com.ih2ome.service.PinganMchService;
-import com.ih2ome.service.PinganPayService;
-import com.ih2ome.service.WebPaymentsService;
-import com.ih2ome.service.ZjjzCnapsBanktypeService;
+import com.ih2ome.service.*;
 import com.pabank.sdk.PABankSDK;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -59,6 +57,8 @@ public class TestMapperController {
     private PinganMchService pinganMchService;
     @Autowired
     private ZjjzCnapsBanktypeService banktypeService;
+    @Autowired
+    private SubAccountService subAccountService;
     private static Integer a = 1;
 
     @GetMapping("/one")
@@ -207,6 +207,22 @@ public class TestMapperController {
 //            pinganMchService.queryTransferinfo();
 //            pinganMchService.queryTranStatus("M394791808218285023854");
 //            pinganMchService.registerAccount(2788);
+
+
+            //查询子账户余额
+//            SubAccount subAccount = subAccountService.findAccountByUserId(2984);
+//            pinganMchService.queryBalance(subAccount);
+
+
+            //查询订单明细
+//            PinganWxOrderViewReqVO reqVO=new PinganWxOrderViewReqVO();
+//            reqVO.setOut_no("M394791809046952442997");
+//            pinganPayService.queryOrderView(reqVO);
+
+
+            //查询订单列表
+            PinganWxOrderReqVO reqVO = new PinganWxOrderReqVO();
+            pinganPayService.queryOrderList(reqVO);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,6 +1,7 @@
 package com.ih2ome.common.PageVO.PinganWxPayVO;
 
 import io.swagger.models.auth.In;
+import lombok.Data;
 
 import java.util.Date;
 
@@ -10,6 +11,7 @@ import java.util.Date;
  * email sky.li@ixiaoshuidi.com
  * 获取订单列表请求对象
  **/
+@Data
 public class PinganWxOrderReqVO {
     //分页编号，默认1
     private Integer page;
