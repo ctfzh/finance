@@ -151,4 +151,15 @@ public interface PinganMchService {
      * @throws IOException
      */
     PinganMchAccRegulationResVO accountRegulation(PinganMchAccRegulationReqVO reqVO) throws PinganMchException, IOException;
+
+    /**
+     * 平台补帐
+     *
+     * @param orderNo 总订单的交易流水号
+     * @param amt
+     * @return
+     * @throws PinganMchException
+     * @throws IOException
+     */
+    PinganMchAccSupplyResVO accountSupply(String orderNo, String amt) throws PinganMchException, IOException;
 }

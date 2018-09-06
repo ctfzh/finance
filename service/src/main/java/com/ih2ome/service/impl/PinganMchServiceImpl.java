@@ -488,4 +488,37 @@ public class PinganMchServiceImpl implements PinganMchService {
         return pinganMchAccRegulationResVO;
     }
 
+    /**
+     * 平台补帐
+     *
+     * @param orderNo 总订单的交易流水号
+     * @param amt
+     * @return
+     * @throws PinganMchException
+     * @throws IOException
+     */
+    @Override
+    public PinganMchAccSupplyResVO accountSupply(String orderNo, String amt) throws PinganMchException, IOException {
+        PinganMchAccSupplyReqVO reqVO = new PinganMchAccSupplyReqVO();
+        reqVO.setFundSummaryAcctNo(mainAcctNo);
+        reqVO.setCnsmrSeqNo(uid + SerialNumUtil.generateSerial());
+        //01-橙E收款  02-跨行快收（非T0)  03-跨行快收（T0） 04-聚合支付
+        reqVO.setAcquiringChannelType("04");
+        reqVO.setOrderNo(orderNo);
+        reqVO.setAmt(amt);
+        String reqJson = JSONObject.toJSONString(reqVO);
+        LOGGER.info("accountSupply--->请求数据:{}", reqJson);
+        Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "PlatformAccountSupply");
+        String resultJson = JSONObject.toJSONString(result);
+        LOGGER.info("accountSupply--->响应数据:{}", resultJson);
+        String code = (String) result.get("TxnReturnCode");
+        if (!code.equals("000000")) {
+            String txnReturnMsg = (String) result.get("TxnReturnMsg");
+            LOGGER.error("accountSupply--->补帐失败,失败原因:{}", txnReturnMsg);
+            throw new PinganMchException(txnReturnMsg);
+        }
+        PinganMchAccSupplyResVO pinganMchAccSupplyResVO = JSONObject.parseObject(resultJson, PinganMchAccSupplyResVO.class);
+        return pinganMchAccSupplyResVO;
+    }
+
 }
