@@ -18,5 +18,17 @@ public class PinganMchAccRegulationReqVO extends PinganMchBaseReqVO {
     @JSONField(name = "AcquiringChannelType")
     private String AcquiringChannelType;
 
+    //订单号
+    @JSONField(name = "OrderNo")
+    private String OrderNo;
+
+    //子账户账号
+    @JSONField(name = "SubAcctNo")
+    private String SubAcctNo;
+
+    //交易网会员代码
+    @JSONField(name = "TranNetMemberCode")
+    private String TranNetMemberCode;
+
 
 }

@@ -142,4 +142,5 @@ public interface PinganMchService {
      */
     PinganMchChargeDetailResVO queryChargeDetail(String orderNo) throws PinganMchException, IOException;
 
+
 }

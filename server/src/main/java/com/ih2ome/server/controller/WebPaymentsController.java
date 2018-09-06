@@ -331,13 +331,15 @@ public class WebPaymentsController {
             Integer landlordId = userService.findLandlordId(userId);
             Integer userType = paymentsUserService.judgeUserType(landlordId) ? 1 : 0;
             //根据用户id和类型获取绑定银行卡信息
-            LandlordBankCard landlordBankCard = landlordBankCardService.findBankCardInfo(landlordId, userType);
+//            LandlordBankCard landlordBankCard = landlordBankCardService.findBankCardInfo(landlordId, userType);
+            SubAccountCard subAccountCard = subAccountCardService.findSubaccountByLandlordId(landlordId);
             Map<String, Object> cardInfo = new HashMap<>();
-            if (landlordBankCard != null) {
-                cardInfo.put("bank_name", landlordBankCard.getBankName());
-                cardInfo.put("owner_name", landlordBankCard.getOwnerName());
-                cardInfo.put("branch_bank", landlordBankCard.getBranchBank());
-                cardInfo.put("card_no", landlordBankCard.getCardNo());
+            if (subAccountCard != null) {
+                cardInfo.put("bank_name", subAccountCard.getBankName());
+                cardInfo.put("owner_name", subAccountCard.getIdCardName());
+                cardInfo.put("branch_bank", subAccountCard.getBankBranchName());
+                cardInfo.put("card_no", subAccountCard.getBankNo());
+                cardInfo.put("mobile", subAccountCard.getBindMobile());
             }
             data.put("card_info", cardInfo);
         } catch (Exception e) {
