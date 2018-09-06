@@ -1,6 +1,7 @@
 package com.ih2ome.service;
 
 import com.ih2ome.common.Exception.WebPaymentsException;
+import com.ih2ome.common.PageVO.PinganMchVO.PinganMchAccRegulationReqVO;
 import com.ih2ome.common.PageVO.WebVO.WebRegisterResVO;
 import com.ih2ome.model.lijiang.SubAccount;
 
@@ -38,4 +39,12 @@ public interface WebPaymentsService {
      * @return
      */
     Map<String, Double> disposeMoneyAndCharge(Double money, Double cashMoney, Double charge);
+
+    /**
+     * 根据子订单号查询平安调账所需信息
+     *
+     * @param outNo
+     * @return
+     */
+    PinganMchAccRegulationReqVO selectRegulationAccount(String outNo);
 }

@@ -1,9 +1,12 @@
 package com.ih2ome.service.impl;
 
 import com.ih2ome.common.Exception.WebPaymentsException;
+import com.ih2ome.common.PageVO.PinganMchVO.PinganMchAccRegulationReqVO;
 import com.ih2ome.common.PageVO.WebVO.WebRegisterResVO;
 import com.ih2ome.dao.lijiang.SubAccountDao;
+import com.ih2ome.dao.lijiang.SubOrdersDao;
 import com.ih2ome.model.lijiang.SubAccount;
+import com.ih2ome.model.lijiang.SubOrders;
 import com.ih2ome.service.WebPaymentsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,9 @@ public class WebPaymentsServiceImpl implements WebPaymentsService {
 
     @Autowired
     private SubAccountDao subAccountDao;
+
+    @Autowired
+    private SubOrdersDao subOrdersDao;
 
     /**
      * 商户注册
@@ -90,5 +96,17 @@ public class WebPaymentsServiceImpl implements WebPaymentsService {
         moneyAndCharge.put("money", withdrawMoney);
         moneyAndCharge.put("charge", withdrawCharge);
         return moneyAndCharge;
+    }
+
+    /**
+     * 根据子订单号查询平安调账所需信息
+     *
+     * @param outNo
+     * @return
+     */
+    @Override
+    public PinganMchAccRegulationReqVO selectRegulationAccount(String outNo) {
+        PinganMchAccRegulationReqVO reqVO = subOrdersDao.selectRegulationAccount(outNo);
+        return reqVO;
     }
 }

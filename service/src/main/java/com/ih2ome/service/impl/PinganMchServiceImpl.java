@@ -458,5 +458,34 @@ public class PinganMchServiceImpl implements PinganMchService {
         return pinganMchChargeDetailResVO;
     }
 
+    /**
+     * 平台调账
+     *
+     * @return
+     * @throws PinganMchException
+     * @throws IOException
+     */
+    @Override
+    public PinganMchAccRegulationResVO accountRegulation(PinganMchAccRegulationReqVO reqVO) throws PinganMchException, IOException {
+        reqVO.setFundSummaryAcctNo(mainAcctNo);
+        reqVO.setCnsmrSeqNo(uid + SerialNumUtil.generateSerial());
+        //01-橙E收款  02-跨行快收（非T0)  03-跨行快收（T0） 04-聚合支付
+        reqVO.setAcquiringChannelType("04");
+        reqVO.setCcy("RMB");
+        reqVO.setRemark("调账");
+        String reqJson = JSONObject.toJSONString(reqVO);
+        LOGGER.info("accountRegulation--->请求数据:{}", reqJson);
+        Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "AccountRegulation");
+        String resultJson = JSONObject.toJSONString(result);
+        LOGGER.info("accountRegulation--->响应数据:{}", resultJson);
+        String code = (String) result.get("TxnReturnCode");
+        if (!code.equals("000000")) {
+            String txnReturnMsg = (String) result.get("TxnReturnMsg");
+            LOGGER.error("accountRegulation--->调账失败,失败原因:{}", txnReturnMsg);
+            throw new PinganMchException(txnReturnMsg);
+        }
+        PinganMchAccRegulationResVO pinganMchAccRegulationResVO = JSONObject.parseObject(resultJson, PinganMchAccRegulationResVO.class);
+        return pinganMchAccRegulationResVO;
+    }
 
 }

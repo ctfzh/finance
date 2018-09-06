@@ -1,5 +1,6 @@
 package com.ih2ome.dao.lijiang;
 
+import com.ih2ome.common.PageVO.PinganMchVO.PinganMchAccRegulationReqVO;
 import com.ih2ome.dao.BaseDao;
 import com.ih2ome.model.lijiang.SubOrders;
 import org.springframework.stereotype.Repository;
@@ -11,4 +12,11 @@ import org.springframework.stereotype.Repository;
  **/
 @Repository
 public interface SubOrdersDao extends BaseDao<SubOrders> {
+    /**
+     * 根据子订单号
+     *
+     * @param outNo
+     * @return
+     */
+    PinganMchAccRegulationReqVO selectRegulationAccount(String outNo);
 }

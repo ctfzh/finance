@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ih2ome.dao.lijiang.SubOrdersDao">
+    <!--根据子订单号查询调账需要信息-->
+    <select id="selectRegulationAccount" parameterType="string"
+            resultType="com.ih2ome.common.PageVO.PinganMchVO.PinganMchAccRegulationReqVO">
+        SELECT
+            oa.OrderNo,
+            oa.SubAcctNo,
+            oa.TranNetMemberCode,
+            oa.Amt,
+            c.id_card_name AS SubAcctName
+        FROM
+            (
+                SELECT
+                    a.id AS id,
+                    o.sub_order_id AS OrderNo,
+                    a.account AS SubAcctNo,
+                    a.user_id AS TranNetMemberCode,
+                    o.sub_amount AS Amt
+                FROM
+                    sub_orders o
+                INNER JOIN sub_account a ON o.sub_account = a.account
+                AND o.sub_order_id = #{outNo}
+                AND a.is_delete = 0
+            ) AS oa
+        INNER JOIN sub_account_card c ON oa.id = c.sub_account_id
+        AND c.is_delete = 0
+        AND c.is_bind = 1;
+    </select>
+</mapper>

@@ -5,10 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.google.common.io.Resources;
 import com.ih2ome.common.Exception.PinganMchException;
 import com.ih2ome.common.Exception.PinganWxPayException;
-import com.ih2ome.common.PageVO.PinganMchVO.PinganMchChargeDetailResVO;
-import com.ih2ome.common.PageVO.PinganMchVO.PinganMchQueryBalanceResVO;
-import com.ih2ome.common.PageVO.PinganMchVO.PinganMchQueryReconciliationDocResVO;
-import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterResVO;
+import com.ih2ome.common.PageVO.PinganMchVO.*;
 import com.ih2ome.common.PageVO.PinganWxPayVO.*;
 import com.ih2ome.common.support.ResponseBodyVO;
 import com.ih2ome.common.utils.ip.IPUtil;
@@ -20,6 +17,7 @@ import com.ih2ome.dao.lijiang.PayOrdersDao;
 import com.ih2ome.dao.volga.VolgaMoneyFlowDao;
 import com.ih2ome.model.lijiang.PayOrders;
 import com.ih2ome.model.lijiang.SubAccount;
+import com.ih2ome.model.lijiang.SubOrders;
 import com.ih2ome.model.lijiang.ZjjzCnapsBanktype;
 import com.ih2ome.model.volga.MoneyFlow;
 import com.ih2ome.server.pingan.sdk.InitConfiguration;
@@ -64,7 +62,9 @@ public class TestMapperController {
     private ZjjzCnapsBanktypeService banktypeService;
     @Autowired
     private SubAccountService subAccountService;
-    private static Integer a = 1;
+    @Autowired
+    private WebPaymentsService webPaymentsService;
+
 
     @GetMapping("/one")
     @ResponseBody
@@ -299,13 +299,30 @@ public class TestMapperController {
         JSONObject data = new JSONObject();
         try {
             PinganMchChargeDetailResVO pinganMchChargeDetailResVO = pinganMchService.queryChargeDetail(orderNo);
-            System.out.println(pinganMchChargeDetailResVO);
+            System.out.println(JSONObject.toJSON(pinganMchChargeDetailResVO));
             data.put("chargeDetail", pinganMchChargeDetailResVO);
         } catch (PinganMchException | IOException e) {
             e.printStackTrace();
             return ResponseBodyVO.generateResponseObject(-1, data, e.getMessage());
         }
         return ResponseBodyVO.generateResponseObject(0, data, "success");
+    }
+
+    @GetMapping(value = "accountRegulation")
+    public ResponseBodyVO test15(@ApiParam("子订单out_no") @RequestParam("outNo") String outNo) {
+        JSONObject data = new JSONObject();
+        try {
+            PinganMchAccRegulationReqVO reqVO = webPaymentsService.selectRegulationAccount(outNo);
+            PinganMchAccRegulationResVO resVO = pinganMchService.accountRegulation(reqVO);
+            System.out.println(JSONObject.toJSON(resVO));
+            data.put("result", resVO);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseBodyVO.generateResponseObject(-1, data, e.getMessage());
+
+        }
+        return ResponseBodyVO.generateResponseObject(0, data, "success");
+
     }
 
 }

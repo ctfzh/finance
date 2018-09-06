@@ -30,5 +30,25 @@ public class PinganMchAccRegulationReqVO extends PinganMchBaseReqVO {
     @JSONField(name = "TranNetMemberCode")
     private String TranNetMemberCode;
 
+    //子账户名称
+    @JSONField(name = "SubAcctName")
+    private String SubAcctName;
+
+    //金额
+    @JSONField(name = "Amt")
+    private String Amt;
+
+    //币种
+    @JSONField(name = "Ccy")
+    private String Ccy;
+
+    //备注
+    @JSONField(name = "Remark")
+    private String Remark;
+
+    //保留域
+    @JSONField(name = "ReservedMsg")
+    private String ReservedMsg;
+
 
 }

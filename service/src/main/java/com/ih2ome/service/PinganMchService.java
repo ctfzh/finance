@@ -6,6 +6,7 @@ import com.ih2ome.common.PageVO.WebVO.WebBindCardCompanyReqVO;
 import com.ih2ome.common.PageVO.WebVO.WebBindCardPersonalReqVO;
 import com.ih2ome.model.lijiang.SubAccount;
 import com.ih2ome.model.lijiang.SubAccountCard;
+import com.ih2ome.model.lijiang.SubOrders;
 
 import java.io.IOException;
 
@@ -142,5 +143,12 @@ public interface PinganMchService {
      */
     PinganMchChargeDetailResVO queryChargeDetail(String orderNo) throws PinganMchException, IOException;
 
-
+    /**
+     * 平台调账
+     *
+     * @return
+     * @throws PinganMchException
+     * @throws IOException
+     */
+    PinganMchAccRegulationResVO accountRegulation(PinganMchAccRegulationReqVO reqVO) throws PinganMchException, IOException;
 }
