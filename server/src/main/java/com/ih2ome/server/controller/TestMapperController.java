@@ -5,6 +5,8 @@ import com.github.pagehelper.PageHelper;
 import com.google.common.io.Resources;
 import com.ih2ome.common.Exception.PinganMchException;
 import com.ih2ome.common.Exception.PinganWxPayException;
+import com.ih2ome.common.PageVO.PinganMchVO.PinganMchChargeDetailResVO;
+import com.ih2ome.common.PageVO.PinganMchVO.PinganMchQueryBalanceResVO;
 import com.ih2ome.common.PageVO.PinganMchVO.PinganMchQueryReconciliationDocResVO;
 import com.ih2ome.common.PageVO.PinganMchVO.PinganMchRegisterResVO;
 import com.ih2ome.common.PageVO.PinganWxPayVO.*;
@@ -23,11 +25,14 @@ import com.ih2ome.model.volga.MoneyFlow;
 import com.ih2ome.server.pingan.sdk.InitConfiguration;
 import com.ih2ome.service.*;
 import com.pabank.sdk.PABankSDK;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.crypto.Data;
+import javax.xml.ws.Response;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
@@ -209,20 +214,6 @@ public class TestMapperController {
 //            pinganMchService.registerAccount(2788);
 
 
-            //查询子账户余额
-//            SubAccount subAccount = subAccountService.findAccountByUserId(2984);
-//            pinganMchService.queryBalance(subAccount);
-
-
-            //查询订单明细
-//            PinganWxOrderViewReqVO reqVO=new PinganWxOrderViewReqVO();
-//            reqVO.setOut_no("M394791809046952442997");
-//            pinganPayService.queryOrderView(reqVO);
-
-
-            //查询订单列表
-            PinganWxOrderReqVO reqVO = new PinganWxOrderReqVO();
-            pinganPayService.queryOrderList(reqVO);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -237,15 +228,82 @@ public class TestMapperController {
     }
 
     @GetMapping("reconciliationFile")
-    public ResponseBodyVO test11() {
+    public ResponseBodyVO test11(@ApiParam("充值文件-CZ 提现文件-TX 交易文件-JY 余额文件-YE") @RequestParam(value = "fileName") String fileName,
+                                 @RequestParam(value = "fileDate") String fileDate) {
         JSONObject data = new JSONObject();
         try {
-            PinganMchQueryReconciliationDocResVO reconciliationDocResVO = pinganMchService.queryReconciliationFile("CZ", "20180902");
-            System.out.println(reconciliationDocResVO);
+            PinganMchQueryReconciliationDocResVO reconciliationDocResVO = pinganMchService.queryReconciliationFile(fileName, fileDate);
+            System.out.println(JSONObject.toJSON(reconciliationDocResVO));
+            data.put("file", reconciliationDocResVO);
+        } catch (PinganMchException | IOException e) {
+            e.printStackTrace();
+            return ResponseBodyVO.generateResponseObject(-1, data, e.getMessage());
+        }
+        return ResponseBodyVO.generateResponseObject(0, data, "success");
+    }
+
+
+    @GetMapping("wx_queryOrderDetail")
+    public ResponseBodyVO test12(@RequestParam(value = "orderNo") String orderNo) {
+        JSONObject data = new JSONObject();
+        try {
+            //查询订单明细
+            PinganWxOrderViewReqVO reqVO = new PinganWxOrderViewReqVO();
+            reqVO.setOut_no(orderNo);
+            pinganPayService.queryOrderView(reqVO);
+        } catch (PinganWxPayException e) {
+            e.printStackTrace();
+            return ResponseBodyVO.generateResponseObject(0, data, e.getMessage());
+        }
+
+        return ResponseBodyVO.generateResponseObject(0, data, "success");
+    }
+
+    @GetMapping(value = "wx_queryAllOrder")
+    public ResponseBodyVO test12() {
+        JSONObject data = new JSONObject();
+        try {
+            //查询订单列表
+            PinganWxOrderReqVO reqVO = new PinganWxOrderReqVO();
+            PinganWxOrderResVO pinganWxOrderResVO = pinganPayService.queryOrderList(reqVO);
+            System.out.println(JSONObject.toJSONString(pinganWxOrderResVO));
+            data.put("allOrder", pinganWxOrderResVO);
+        } catch (PinganWxPayException e) {
+            e.printStackTrace();
+            return ResponseBodyVO.generateResponseObject(-1, data, e.getMessage());
+        }
+        return ResponseBodyVO.generateResponseObject(0, data, "success");
+    }
+
+    @GetMapping(value = "queryAccountBalance")
+    public ResponseBodyVO test13(@RequestParam(value = "landlordId") Integer landlordId) {
+        JSONObject data = new JSONObject();
+        //查询子账户余额
+        try {
+            SubAccount subAccount = subAccountService.findAccountByUserId(landlordId);
+            PinganMchQueryBalanceResVO queryBalanceResVO = pinganMchService.queryBalance(subAccount);
+            System.out.println(JSONObject.toJSON(queryBalanceResVO));
+            data.put("balance", queryBalanceResVO);
         } catch (PinganMchException e) {
             e.printStackTrace();
+            return ResponseBodyVO.generateResponseObject(-1, data, e.getMessage());
         } catch (IOException e) {
             e.printStackTrace();
+            return ResponseBodyVO.generateResponseObject(-1, data, e.getMessage());
+        }
+        return ResponseBodyVO.generateResponseObject(0, data, "success");
+    }
+
+    @GetMapping(value = "mch_queryChargeDetail")
+    public ResponseBodyVO test14(@RequestParam(value = "orderNo") String orderNo) {
+        JSONObject data = new JSONObject();
+        try {
+            PinganMchChargeDetailResVO pinganMchChargeDetailResVO = pinganMchService.queryChargeDetail(orderNo);
+            System.out.println(pinganMchChargeDetailResVO);
+            data.put("chargeDetail", pinganMchChargeDetailResVO);
+        } catch (PinganMchException | IOException e) {
+            e.printStackTrace();
+            return ResponseBodyVO.generateResponseObject(-1, data, e.getMessage());
         }
         return ResponseBodyVO.generateResponseObject(0, data, "success");
     }

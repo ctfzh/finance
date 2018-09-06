@@ -5,18 +5,25 @@ import lombok.Data;
 
 /**
  * @author Sky
- * create 2018/09/04
+ * create 2018/09/06
  * email sky.li@ixiaoshuidi.com
  **/
 @Data
-public class PinganMchAccRegulationReqVO extends PinganMchBaseReqVO {
+public class PinganMchChargeDetailReqVO extends PinganMchBaseReqVO {
     //资金汇总账号
     @JSONField(name = "FundSummaryAcctNo")
     private String FundSummaryAcctNo;
+
 
     //收单渠道类型
     @JSONField(name = "AcquiringChannelType")
     private String AcquiringChannelType;
 
+    //订单号
+    @JSONField(name = "OrderNo")
+    private String OrderNo;
 
+    //保留域
+    @JSONField(name = "ReservedMsg")
+    private String ReservedMsg;
 }

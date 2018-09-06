@@ -427,5 +427,36 @@ public class PinganMchServiceImpl implements PinganMchService {
         return reconciliationDocResVO;
     }
 
+    /**
+     * 查询充值明细交易的状态，用于确定子订单是否已入账到对应子账户。
+     *
+     * @param orderNo
+     * @return
+     * @throws PinganMchException
+     * @throws IOException
+     */
+    @Override
+    public PinganMchChargeDetailResVO queryChargeDetail(String orderNo) throws PinganMchException, IOException {
+        PinganMchChargeDetailReqVO reqVO = new PinganMchChargeDetailReqVO();
+        reqVO.setFundSummaryAcctNo(mainAcctNo);
+        //01-橙E收款  02-跨行快收（非T0)  03-跨行快收（T0） 04-聚合支付
+        reqVO.setAcquiringChannelType("04");
+        reqVO.setOrderNo(orderNo);
+        reqVO.setCnsmrSeqNo(uid + SerialNumUtil.generateSerial());
+        String reqJson = JSONObject.toJSONString(reqVO);
+        LOGGER.info("queryChargeDetail--->请求数据:{}", reqJson);
+        Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "ChargeDetailQuery");
+        String resultJson = JSONObject.toJSONString(result);
+        LOGGER.info("queryChargeDetail--->响应数据:{}", resultJson);
+        String code = (String) result.get("TxnReturnCode");
+        if (!code.equals("000000")) {
+            String txnReturnMsg = (String) result.get("TxnReturnMsg");
+            LOGGER.error("queryChargeDetail--->查询交易明细失败,失败原因:{}", txnReturnMsg);
+            throw new PinganMchException(txnReturnMsg);
+        }
+        PinganMchChargeDetailResVO pinganMchChargeDetailResVO = JSONObject.parseObject(resultJson, PinganMchChargeDetailResVO.class);
+        return pinganMchChargeDetailResVO;
+    }
+
 
 }

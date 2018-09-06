@@ -132,4 +132,14 @@ public interface PinganMchService {
      */
     PinganMchQueryReconciliationDocResVO queryReconciliationFile(String fileType, String fileDate) throws PinganMchException, IOException;
 
+    /**
+     * 查询充值明细交易的状态，用于确定子订单是否已入账到对应子账户。
+     *
+     * @param orderNo
+     * @return
+     * @throws PinganMchException
+     * @throws IOException
+     */
+    PinganMchChargeDetailResVO queryChargeDetail(String orderNo) throws PinganMchException, IOException;
+
 }
