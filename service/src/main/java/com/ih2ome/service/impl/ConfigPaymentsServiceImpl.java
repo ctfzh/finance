@@ -73,7 +73,7 @@ public class ConfigPaymentsServiceImpl implements ConfigPaymentsService {
                     charge = paymentsSet.getServiceCharge();
                     assumePerson = paymentsSet.getAssumePerson();
                 }
-                wxMessage = "微信手续费" + 6.6 + "‰,最低0.1元/笔!";
+                wxMessage = "微信手续费" + charge * 10 + "‰,最低0.1元/笔!";
             } else if (configPaymentsChannel.getPayChannel().equals(ConfigPayChannelEnum.ALLIANPAY_WX.getName())) {
                 if (paymentsSet == null) {
                     charge = configPaymentsChannel.getDefaultCharge();

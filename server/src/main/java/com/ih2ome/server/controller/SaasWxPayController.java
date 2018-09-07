@@ -38,7 +38,7 @@ import java.io.IOException;
 @CrossOrigin
 public class SaasWxPayController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ConfigPaymentsController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SaasWxPayController.class);
 
     @Autowired
     private SaasWxPayService saasWxPayService;
@@ -103,6 +103,7 @@ public class SaasWxPayController {
                 String subOrderId = subOrders.getSubOrderId();
                 //查询子订单是否已入账到对应子账户
                 PinganMchChargeDetailResVO pinganMchChargeDetailResVO = pinganMchService.queryChargeDetail(subOrderId);
+                LOGGER.info("notify--->子订单是否入商户子账户:{}", JSONObject.toJSON(pinganMchChargeDetailResVO));
                 //子订单未记账到对应子账户
                 if (pinganMchChargeDetailResVO.getTxnReturnCode().equals("ERR020")) {
                     //调用补帐接口(总订单号)
@@ -111,7 +112,7 @@ public class SaasWxPayController {
                 }
             } catch (PinganMchException | IOException e) {
                 e.printStackTrace();
-                LOGGER.error("notify--->查询订单明细,补帐失败,失败原因", e.getMessage());
+                LOGGER.error("notify--->查询订单明细,补帐失败,失败原因:{}", e.getMessage());
                 return info;
             }
         }
