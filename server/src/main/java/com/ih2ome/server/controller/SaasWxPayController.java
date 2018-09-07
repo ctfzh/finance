@@ -14,6 +14,7 @@ import com.ih2ome.model.lijiang.Orders;
 import com.ih2ome.model.lijiang.SubAccount;
 import com.ih2ome.model.lijiang.SubOrders;
 import com.ih2ome.service.*;
+import com.sun.prism.impl.BaseMesh;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -23,6 +24,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.awt.geom.FlatteningPathIterator;
 import java.io.IOException;
 
 /**
@@ -86,15 +88,20 @@ public class SaasWxPayController {
     @ApiOperation("支付成功回调")
     public String notify(SaasWxNotifyReqVO saasWxNotifyReqVO) {
         LOGGER.info("notify--->平安微信支付回调参数:{}", JSONObject.toJSONString(saasWxNotifyReqVO));
-        Boolean flag = saasWxPayService.notify(saasWxNotifyReqVO);
+//        Boolean flag = saasWxPayService.notify(saasWxNotifyReqVO);
+        boolean flag = true;
         String info = "notify_error";
         if (flag) {
             info = "notify_success";
             try {
                 //查询子订单信息
+                LOGGER.info("notify--->总订单号:{}", saasWxNotifyReqVO.getOut_no());
                 Orders orders = ordersService.findOrdersByOrderId(saasWxNotifyReqVO.getOut_no());
+                LOGGER.info("notify--->总订单信息:{}", orders);
                 String ordersUuid = orders.getUuid();
+                LOGGER.info("notify--->总订单uuid:{}", ordersUuid);
                 SubOrders subOrders = subOrdersService.findSubOrdersByOrderId(ordersUuid);
+                LOGGER.info("notify--->子订单信息:{}", subOrders);
                 String subOrderId = subOrders.getSubOrderId();
                 //查询子订单是否已入账到对应子账户
                 PinganMchChargeDetailResVO pinganMchChargeDetailResVO = pinganMchService.queryChargeDetail(subOrderId);

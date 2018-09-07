@@ -29,7 +29,7 @@ public class SubOrdersServiceImpl implements SubOrdersService {
     @Override
     public SubOrders findSubOrdersByOrderId(String ordersUuid) {
         Example example = new Example(SubOrders.class);
-        example.createCriteria().andEqualTo("orderId");
+        example.createCriteria().andEqualTo("orderId", ordersUuid);
         SubOrders subOrders = subOrdersDao.selectOneByExample(example);
         return subOrders;
     }
