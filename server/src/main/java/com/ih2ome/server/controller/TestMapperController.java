@@ -25,6 +25,7 @@ import com.ih2ome.service.*;
 import com.pabank.sdk.PABankSDK;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Example;
 
@@ -44,6 +45,7 @@ import java.util.Map;
  **/
 @RestController
 @RequestMapping("/test")
+@Scope("prototype")
 public class TestMapperController {
 
     @Autowired
@@ -64,7 +66,6 @@ public class TestMapperController {
     private SubAccountService subAccountService;
     @Autowired
     private WebPaymentsService webPaymentsService;
-
 
     @GetMapping("/one")
     @ResponseBody

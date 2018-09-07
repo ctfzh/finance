@@ -1,15 +1,19 @@
 package com.ih2ome.server.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.ih2ome.common.Exception.PinganMchException;
 import com.ih2ome.common.Exception.PinganWxPayException;
 import com.ih2ome.common.Exception.SaasWxPayException;
+import com.ih2ome.common.PageVO.PinganMchVO.PinganMchAccSupplyResVO;
+import com.ih2ome.common.PageVO.PinganMchVO.PinganMchChargeDetailResVO;
 import com.ih2ome.common.PageVO.SaasWxNotifyReqVO;
 import com.ih2ome.common.PageVO.SaasWxPayOrderReqVO;
 import com.ih2ome.common.PageVO.SaasWxPayOrderResVO;
 import com.ih2ome.common.support.ResponseBodyVO;
+import com.ih2ome.model.lijiang.Orders;
 import com.ih2ome.model.lijiang.SubAccount;
-import com.ih2ome.service.SaasWxPayService;
-import com.ih2ome.service.SubAccountService;
+import com.ih2ome.model.lijiang.SubOrders;
+import com.ih2ome.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -19,6 +23,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 /**
  * @author Sky
@@ -38,6 +43,15 @@ public class SaasWxPayController {
 
     @Autowired
     private SubAccountService subAccountService;
+
+    @Autowired
+    private OrdersService ordersService;
+
+    @Autowired
+    private SubOrdersService subOrdersService;
+
+    @Autowired
+    private PinganMchService pinganMchService;
 
 
     @PostMapping(value = "placeOrder", produces = "application/json;charset=UTF-8")
@@ -71,11 +85,31 @@ public class SaasWxPayController {
     @PostMapping(value = "notify", produces = "application/json;charset=UTF-8")
     @ApiOperation("支付成功回调")
     public String notify(SaasWxNotifyReqVO saasWxNotifyReqVO) {
-        LOGGER.info("notify--->平安微信支付回调参数:{}", saasWxNotifyReqVO.toString());
+        LOGGER.info("notify--->平安微信支付回调参数:{}", JSONObject.toJSONString(saasWxNotifyReqVO));
         Boolean flag = saasWxPayService.notify(saasWxNotifyReqVO);
+        String info = "notify_error";
         if (flag) {
-            return "notify_success";
+            info = "notify_success";
+            try {
+                //查询子订单信息
+                Orders orders = ordersService.findOrdersByOrderId(saasWxNotifyReqVO.getOut_no());
+                String ordersUuid = orders.getUuid();
+                SubOrders subOrders = subOrdersService.findSubOrdersByOrderId(ordersUuid);
+                String subOrderId = subOrders.getSubOrderId();
+                //查询子订单是否已入账到对应子账户
+                PinganMchChargeDetailResVO pinganMchChargeDetailResVO = pinganMchService.queryChargeDetail(subOrderId);
+                //子订单未记账到对应子账户
+                if (pinganMchChargeDetailResVO.getTxnReturnCode().equals("ERR020")) {
+                    //调用补帐接口(总订单号)
+                    PinganMchAccSupplyResVO pinganMchAccSupplyResVO = pinganMchService.accountSupply(orders.getOrderId(), String.valueOf(orders.getAmount()));
+                    LOGGER.info("notify--->补帐请求参数:{}、{},返回报文:{}", orders.getOrderId(), orders.getAmount(), JSONObject.toJSON(pinganMchAccSupplyResVO));
+                }
+            } catch (PinganMchException | IOException e) {
+                e.printStackTrace();
+                LOGGER.error("notify--->查询订单明细,补帐失败,失败原因", e.getMessage());
+                return info;
+            }
         }
-        return "notify_error";
+        return info;
     }
 }

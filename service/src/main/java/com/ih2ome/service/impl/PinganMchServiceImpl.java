@@ -29,7 +29,6 @@ public class PinganMchServiceImpl implements PinganMchService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PinganMchServiceImpl.class);
 
-
     //资金汇总账号
     @Value("${pingan.mch.mainAcctNo}")
     private String mainAcctNo;
@@ -449,6 +448,10 @@ public class PinganMchServiceImpl implements PinganMchService {
         String resultJson = JSONObject.toJSONString(result);
         LOGGER.info("queryChargeDetail--->响应数据:{}", resultJson);
         String code = (String) result.get("TxnReturnCode");
+        if (code.equals("ERR020")) {
+            PinganMchChargeDetailResVO pinganMchChargeDetailResVO = JSONObject.parseObject(resultJson, PinganMchChargeDetailResVO.class);
+            return pinganMchChargeDetailResVO;
+        }
         if (!code.equals("000000")) {
             String txnReturnMsg = (String) result.get("TxnReturnMsg");
             LOGGER.error("queryChargeDetail--->查询交易明细失败,失败原因:{}", txnReturnMsg);
