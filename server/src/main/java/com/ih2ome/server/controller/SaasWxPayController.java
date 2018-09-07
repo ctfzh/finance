@@ -88,8 +88,7 @@ public class SaasWxPayController {
     @ApiOperation("支付成功回调")
     public String notify(SaasWxNotifyReqVO saasWxNotifyReqVO) {
         LOGGER.info("notify--->平安微信支付回调参数:{}", JSONObject.toJSONString(saasWxNotifyReqVO));
-//        Boolean flag = saasWxPayService.notify(saasWxNotifyReqVO);
-        boolean flag = true;
+        Boolean flag = saasWxPayService.notify(saasWxNotifyReqVO);
         String info = "notify_error";
         if (flag) {
             info = "notify_success";
