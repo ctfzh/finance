@@ -93,7 +93,6 @@ public class SaasWxPayController {
         if (flag) {
             info = "notify_success";
             try {
-                //查询子订单信息
                 LOGGER.info("notify--->总订单号:{}", saasWxNotifyReqVO.getOut_no());
                 Orders orders = ordersService.findOrdersByOrderId(saasWxNotifyReqVO.getOut_no());
                 LOGGER.info("notify--->总订单信息:{}", orders);

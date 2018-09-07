@@ -288,7 +288,11 @@ public class WebPaymentsController {
             //判断银行是否是平安银行
             String bankType = bankinfoService.judgeBankTypeIsPingan(reqVO.getBankCnapsNo());
             //发送金额鉴权
-            pinganMchService.bindCardSendAmount(subAccount, bankType, reqVO);
+            String code = pinganMchService.bindCardSendAmount(subAccount, bankType, reqVO);
+            if (code.equals("ERR145")) {
+                return ResponseBodyVO.generateResponseObject
+                        (0, data, "我们已向您的银行卡转入随机金额,请您在收到短信后进行查看并填写您收到的金额,完成银行卡的绑定。");
+            }
         } catch (PinganMchException | IOException e) {
             e.printStackTrace();
             LOGGER.info("sendAmount--->绑卡发送金额验证码失败,请求数据:{},失败原因:{}", reqVO.toString(), e.getMessage());

@@ -145,7 +145,7 @@ public class PinganMchServiceImpl implements PinganMchService {
      * @param companyReqVO
      */
     @Override
-    public void bindCardSendAmount(SubAccount subAccount, String bankType, WebBindCardCompanyReqVO companyReqVO) throws IOException, PinganMchException {
+    public String bindCardSendAmount(SubAccount subAccount, String bankType, WebBindCardCompanyReqVO companyReqVO) throws IOException, PinganMchException {
         PinganMchBindCardGetAmountReqVO reqVO = new PinganMchBindCardGetAmountReqVO();
         reqVO.setCnsmrSeqNo(uid + SerialNumUtil.generateSerial());
         reqVO.setFundSummaryAcctNo(mainAcctNo);
@@ -169,16 +169,12 @@ public class PinganMchServiceImpl implements PinganMchService {
         Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "BindRelateAcctSmallAmount");
         LOGGER.info("bindCardSendAmount--->响应数据:{}", JSONObject.toJSON(result));
         String code = (String) result.get("TxnReturnCode");
-        if (!code.equals("000000")) {
+        if (!code.equals("000000") && !code.equals("ERR145")) {
             String txnReturnMsg = (String) result.get("TxnReturnMsg");
             LOGGER.error("bindCardSendAmount--->会员绑定提现账户(企业)-银联鉴权,失败原因:{}", txnReturnMsg);
-            //限定时间内只能发起一笔小额鉴权的提醒。
-            if (code.equals("ERR145")) {
-                txnReturnMsg = "我们已向您的银行卡转入随机金额,请您在收到短信后进行查看并填写您收到的金额,完成银行卡的绑定。";
-            }
             throw new PinganMchException(txnReturnMsg);
         }
-
+        return code;
     }
 
     /**

@@ -52,7 +52,7 @@ public interface PinganMchService {
      * @param bankType
      * @param companyReqVO
      */
-    void bindCardSendAmount(SubAccount subAccount, String bankType, WebBindCardCompanyReqVO companyReqVO) throws IOException, PinganMchException;
+    String bindCardSendAmount(SubAccount subAccount, String bankType, WebBindCardCompanyReqVO companyReqVO) throws IOException, PinganMchException;
 
     /**
      * 查询会员绑定信息(测试)
