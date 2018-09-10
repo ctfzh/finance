@@ -111,9 +111,10 @@ pingan:
   sdkPrefix: dev
   wxPay:
     shuidiUrl: http://finance.ih2ome.cn/finance/
-    baseUrl: https://mixpayuat4.orangebank.com.cn/mct1/
-    open_id: ee757f1f219759974563dc80acc43b77
-    open_key: 333d153b8b16a5e07e297891e70552e8
+#    baseUrl: https://mixpayuat4.orangebank.com.cn/mct1/
+    baseUrl: https://api_uat.orangebank.com.cn/mct1/
+    open_id: 1e84f06990cd4d571303f02e3e82e50b
+    open_key: 3089b7c61a89ce3fd7a348a676a80a0f
     #文件传输用户短号
     uid: M39479
   mch:
