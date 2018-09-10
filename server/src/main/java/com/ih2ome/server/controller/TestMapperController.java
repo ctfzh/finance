@@ -212,8 +212,7 @@ public class TestMapperController {
 //            pinganMchService.queryMemberBindInfo();
 //            pinganMchService.queryTransferinfo();
 //            pinganMchService.queryTranStatus("M394791808218285023854");
-//            pinganMchService.registerAccount(2788);
-
+            pinganMchService.registerAccount(2984);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -323,7 +322,6 @@ public class TestMapperController {
 
         }
         return ResponseBodyVO.generateResponseObject(0, data, "success");
-
     }
 
 }

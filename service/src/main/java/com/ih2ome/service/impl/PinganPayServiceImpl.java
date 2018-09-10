@@ -92,6 +92,7 @@ public class PinganPayServiceImpl implements PinganPayService {
     public PinganWxOrderResVO queryOrderList(PinganWxOrderReqVO pinganWxOrderReqVO) throws PinganWxPayException {
         //请求对象PinganWxRequestVO生成。
         PinganWxRequestVO pinganWxRequestVO = getPinganWxRequestVO(pinganWxOrderReqVO);
+        System.out.println(pinganWxRequestVO);
         String url = baseUrl + "order";
         TreeMap<String, String> treeMap = BeanMapUtil.objectToMap(pinganWxRequestVO);
         String resultJson = handlePost(url, treeMap);
