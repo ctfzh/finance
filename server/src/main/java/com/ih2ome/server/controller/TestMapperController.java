@@ -217,6 +217,7 @@ public class TestMapperController {
 
     @GetMapping("readftpFileName")
     @ResponseBody
+    @ApiOperation("读取ftp文件,超级网银号和大小额行号")
     public ResponseBodyVO test10() {
         banktypeService.insertBankType();
         return ResponseBodyVO.generateResponseObject(0, null, "成功");

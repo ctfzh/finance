@@ -343,6 +343,7 @@ public class PinganMchServiceImpl implements PinganMchService {
         PinganMchQueryTranStatusReqVO tranStatusReqVO = new PinganMchQueryTranStatusReqVO();
         tranStatusReqVO.setFundSummaryAcctNo(mainAcctNo);
         tranStatusReqVO.setCnsmrSeqNo(uid + SerialNumUtil.generateSerial());
+        //2：会员间交易  3：提现 4：充值
         tranStatusReqVO.setFunctionFlag("3");
         tranStatusReqVO.setTranNetSeqNo(tranSeqNo);
         String reqJson = JSONObject.toJSONString(tranStatusReqVO);
