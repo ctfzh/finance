@@ -22,6 +22,7 @@ import com.ih2ome.service.*;
 import com.pabank.sdk.PABankSDK;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.*;
@@ -256,6 +257,7 @@ public class TestMapperController {
     }
 
     @GetMapping(value = "wx_queryAllOrder")
+    @ApiOperation("查询聚合支付所有订单")
     public ResponseBodyVO test12() {
         JSONObject data = new JSONObject();
         try {
@@ -272,6 +274,7 @@ public class TestMapperController {
     }
 
     @GetMapping(value = "queryAccountBalance")
+    @ApiOperation("查询账户余额")
     public ResponseBodyVO test13(@RequestParam(value = "landlordId") Integer landlordId) {
         JSONObject data = new JSONObject();
         //查询子账户余额
@@ -291,6 +294,7 @@ public class TestMapperController {
     }
 
     @GetMapping(value = "mch_queryChargeDetail")
+    @ApiOperation("查询充值明细交易的状态，用于确定子订单是否已入账到对应子账户")
     public ResponseBodyVO test14(@RequestParam(value = "orderNo") String orderNo) {
         JSONObject data = new JSONObject();
         try {
@@ -305,6 +309,7 @@ public class TestMapperController {
     }
 
     @GetMapping(value = "accountRegulation")
+    @ApiOperation("平台调账")
     public ResponseBodyVO test15(@ApiParam("子订单out_no") @RequestParam("outNo") String outNo) {
         JSONObject data = new JSONObject();
         try {
@@ -321,6 +326,7 @@ public class TestMapperController {
     }
 
     @GetMapping(value = "unbindCard")
+    @ApiOperation("解绑银行卡")
     public ResponseBodyVO test16(@RequestParam("userId") Integer userId, @RequestParam("account") String account,
                                  @RequestParam("bankNo") String bankNo) {
         JSONObject data = new JSONObject();
@@ -341,6 +347,7 @@ public class TestMapperController {
 
 
     @GetMapping(value = "maintainAccountBank")
+    @ApiOperation("修改会员绑定提现账户的大小额行号,超网行号和银行名称")
     public ResponseBodyVO test17(@RequestParam("subAcctNo") String subAcctNo, @RequestParam("branchName") String branchName,
                                  @RequestParam("bankNo") String bankNo, @RequestParam("branchId") String branchId,
                                  @RequestParam("supId") String supId) {
@@ -356,6 +363,7 @@ public class TestMapperController {
     }
 
     @GetMapping(value = "mch_accountSupply")
+    @ApiOperation("补帐")
     public ResponseBodyVO test18(@RequestParam("orderNo") String orderNo, @RequestParam("amt") String amt) {
         JSONObject data = new JSONObject();
         try {
@@ -369,6 +377,7 @@ public class TestMapperController {
     }
 
     @GetMapping("mch_queryCustAcctId")
+    @ApiOperation("根据会员代码查询会员子账号")
     public ResponseBodyVO test19(@RequestParam("memberId") String memberId) {
         JSONObject data = new JSONObject();
         try {
@@ -389,6 +398,21 @@ public class TestMapperController {
         JSONObject data = new JSONObject();
         try {
             pinganMchService.queryTransferinfo(tranSeqNo, tranDate);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseBodyVO.generateResponseObject(-1, data, e.getMessage());
+        }
+        return ResponseBodyVO.generateResponseObject(0, data, "success");
+    }
+
+    @GetMapping("mch_queryCashDetail")
+    @ApiOperation("查询银行时间段内清分提现明细")
+    public ResponseBodyVO test19(@RequestParam("subAcctNo") String subAcctNo, @RequestParam("functionFlag") String functionFlag,
+                                 @RequestParam("queryFlag") String queryFlag, @RequestParam("beginDate") String beginDate,
+                                 @RequestParam("endDate") String endDate, @RequestParam("pageNum") String pageNum) {
+        JSONObject data = new JSONObject();
+        try {
+            pinganMchService.queryCashDetail(subAcctNo, functionFlag, queryFlag, beginDate, endDate, pageNum);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseBodyVO.generateResponseObject(-1, data, e.getMessage());

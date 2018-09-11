@@ -99,6 +99,7 @@ spring:
 
 server:
   port: 80
+  max-http-header-size: 10000000
 #短信平台地址
 sms:
   baseUrl: http://xs1:5312
@@ -113,8 +114,8 @@ pingan:
     shuidiUrl: http://finance.ih2ome.cn/finance/
 #    baseUrl: https://mixpayuat4.orangebank.com.cn/mct1/
     baseUrl: https://api_uat.orangebank.com.cn/mct1/
-    open_id: 1e84f06990cd4d571303f02e3e82e50b
-    open_key: 3089b7c61a89ce3fd7a348a676a80a0f
+    open_id: 948cbe0d5cea8fa727fa220a8172dead
+    open_key: b2e6f8d4c0d25f7cde9d5824eaba3704
     #文件传输用户短号
     uid: M39479
   mch:
