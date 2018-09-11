@@ -27,10 +27,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Example;
 
-import javax.jnlp.IntegrationService;
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.crypto.Data;
-import javax.xml.ws.Response;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
