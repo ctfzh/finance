@@ -3,6 +3,8 @@ package com.ih2ome.common.PageVO.PinganWxPayVO;
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @author Sky
  * create 2018/07/27
@@ -36,7 +38,7 @@ public class PinganWxPayOrderReqVO {
     //订单标记，订单附加数据
     private String tag;
     //分账数据
-    private String cmd;
+    private List<PinganWxPayOrderSubVO> cmd;
     //异步通知地址
     private String notify_url;
 

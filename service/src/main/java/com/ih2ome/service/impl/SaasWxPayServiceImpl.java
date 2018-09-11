@@ -112,7 +112,7 @@ public class SaasWxPayServiceImpl implements SaasWxPayService {
         int amount = (int) (reqVO.getTotalMoney() * 100);
         pinganWxPayOrderReqVO.setOriginal_amount(amount);
         pinganWxPayOrderReqVO.setTrade_amount(amount);
-        pinganWxPayOrderReqVO.setRemark(URLEncoder.encode(FeeTypeEnum.getNameByCode(reqVO.getFeeType()),"utf-8"));
+        pinganWxPayOrderReqVO.setRemark(FeeTypeEnum.getNameByCode(reqVO.getFeeType()));
         //支付成功的异步通知地址
         pinganWxPayOrderReqVO.setNotify_url(shuidiUrl + "saas/wx/notify");
         pinganWxPayOrderReqVO.setSub_appid(subappid);
@@ -120,6 +120,7 @@ public class SaasWxPayServiceImpl implements SaasWxPayService {
         pinganWxPayOrderReqVO.setJSAPI("1");
 
         //子订单信息拼装
+        List<PinganWxPayOrderSubVO> subVOS = new ArrayList<PinganWxPayOrderSubVO>();
         PinganWxPayOrderSubVO pinganWxPayOrderSubVO = new PinganWxPayOrderSubVO();
         pinganWxPayOrderSubVO.setSFJOrdertype("1");
         pinganWxPayOrderSubVO.setRemarktype("JHS0100000");
@@ -137,7 +138,8 @@ public class SaasWxPayServiceImpl implements SaasWxPayService {
         pinganWxPayOrderSubDataVO.setTranFee(String.valueOf(subOrders.getTranFee()));
         orderLists.add(pinganWxPayOrderSubDataVO);
         pinganWxPayOrderSubVO.setOderlist(orderLists);
-        pinganWxPayOrderReqVO.setCmd(JSONObject.toJSONString(pinganWxPayOrderSubVO));
+        subVOS.add(pinganWxPayOrderSubVO);
+        pinganWxPayOrderReqVO.setCmd(subVOS);
 
         PinganWxPayOrderResVO pinganWxPayOrderResVO = pinganPayService.payOrder(pinganWxPayOrderReqVO);
         //第三方下单成功,更新水滴订单信息
