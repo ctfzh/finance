@@ -98,7 +98,7 @@ public class SaasWxPayServiceImpl implements SaasWxPayService {
         subOrders.setOrderId(orders.getUuid());
         subOrders.setSubOrderId(uid + SerialNumUtil.generateSerial());
         subOrders.setSubAccount(subAccount.getAccount());
-        subOrders.setSubAmount(reqVO.getEnterPayMoney());
+        subOrders.setSubAmount(reqVO.getTotalMoney());
         subOrders.setTranFee(reqVO.getPayCharge());
         subOrders.setRemark(FeeTypeEnum.getNameByCode(reqVO.getFeeType()));
         subOrders.setRawData(JSONObject.toJSONString(subOrders));
@@ -109,7 +109,7 @@ public class SaasWxPayServiceImpl implements SaasWxPayService {
         pinganWxPayOrderReqVO.setOut_no(orderId);
         pinganWxPayOrderReqVO.setPmt_tag("WeixinOL");
         //原始交易金额和实际交易金额；
-        int amount = (int) (reqVO.getEnterPayMoney() * 100);
+        int amount = (int) (reqVO.getTotalMoney() * 100);
         pinganWxPayOrderReqVO.setOriginal_amount(amount);
         pinganWxPayOrderReqVO.setTrade_amount(amount);
         pinganWxPayOrderReqVO.setRemark(FeeTypeEnum.getNameByCode(reqVO.getFeeType()));
