@@ -427,7 +427,7 @@ public class WebPaymentsController {
                 try {
                     tranStatusResVO = pinganMchService.queryTranStatus(serialNo);
                 } catch (PinganMchException | IOException e) {
-                    e.printStackTrace();
+//                    e.printStackTrace();
                     LOGGER.info("refreshWithdrawStatus--->该笔提现状态失败,请求tradeId:{},失败原因:{}", withdrawRecord.getH2omeTradeId(), e.getMessage());
                 }
             }

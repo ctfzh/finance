@@ -28,6 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 import com.ih2ome.common.PageVO.PinganWxPayVO.PinganWxPayOrderResVO;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.*;
 
 /**
@@ -73,7 +75,7 @@ public class SaasWxPayServiceImpl implements SaasWxPayService {
      * @return
      */
     @Override
-    public SaasWxPayOrderResVO placeOrder(SaasWxPayOrderReqVO reqVO, SubAccount subAccount) throws SaasWxPayException, PinganWxPayException {
+    public SaasWxPayOrderResVO placeOrder(SaasWxPayOrderReqVO reqVO, SubAccount subAccount) throws SaasWxPayException, PinganWxPayException, UnsupportedEncodingException {
         //生成水滴订单号
         String orderId = uid + SerialNumUtil.generateSerial();
         //水滴总订单下单
@@ -110,7 +112,7 @@ public class SaasWxPayServiceImpl implements SaasWxPayService {
         int amount = (int) (reqVO.getTotalMoney() * 100);
         pinganWxPayOrderReqVO.setOriginal_amount(amount);
         pinganWxPayOrderReqVO.setTrade_amount(amount);
-        pinganWxPayOrderReqVO.setRemark(FeeTypeEnum.getNameByCode(reqVO.getFeeType()));
+        pinganWxPayOrderReqVO.setRemark(URLEncoder.encode(FeeTypeEnum.getNameByCode(reqVO.getFeeType()),"utf-8"));
         //支付成功的异步通知地址
         pinganWxPayOrderReqVO.setNotify_url(shuidiUrl + "saas/wx/notify");
         pinganWxPayOrderReqVO.setSub_appid(subappid);

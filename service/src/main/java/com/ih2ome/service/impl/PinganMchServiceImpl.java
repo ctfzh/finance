@@ -91,7 +91,7 @@ public class PinganMchServiceImpl implements PinganMchService {
         reqVO.setBankType(bankType);
         //其他银行，需要传递大小额行号和支行名称,超级网银号
         if ("2".equals(bankType)) {
-            reqVO.setAcctOpenBranchName(personalReqVO.getBankName());
+            reqVO.setAcctOpenBranchName(personalReqVO.getBankBranchName());
             reqVO.setCnapsBranchId(personalReqVO.getBankCnapsNo());
             reqVO.setEiconBankBranchId(personalReqVO.getBankSupNo());
         }
@@ -158,7 +158,7 @@ public class PinganMchServiceImpl implements PinganMchService {
         reqVO.setBankType(bankType);
         //其他银行，需要传递大小额行号和支行名称
         if ("2".equals(bankType)) {
-            reqVO.setAcctOpenBranchName(companyReqVO.getBankName());
+            reqVO.setAcctOpenBranchName(companyReqVO.getBankBranchName());
             reqVO.setCnapsBranchId(companyReqVO.getBankCnapsNo());
             reqVO.setEiconBankBranchId(companyReqVO.getBankSupNo());
         }
@@ -204,18 +204,18 @@ public class PinganMchServiceImpl implements PinganMchService {
     }
 
     /**
-     * 查询小额鉴权转账结果（测试）
+     * 查询小额鉴权转账结果
      *
      * @throws PinganMchException
      * @throws IOException
      */
     @Override
-    public void queryTransferinfo() throws PinganMchException, IOException {
+    public void queryTransferinfo(String tranSeqNo, String tranDate) throws PinganMchException, IOException {
         PinganMchQueryTransferInfoReqVO transferInfoReqVO = new PinganMchQueryTransferInfoReqVO();
         transferInfoReqVO.setCnsmrSeqNo(uid + SerialNumUtil.generateSerial());
-        transferInfoReqVO.setOldTranSeqNo("M394791808174423564712");
+        transferInfoReqVO.setOldTranSeqNo(tranSeqNo);
         transferInfoReqVO.setFundSummaryAcctNo(mainAcctNo);
-        transferInfoReqVO.setTranDate("20180817");
+        transferInfoReqVO.setTranDate(tranDate);
         String reqJson = JSONObject.toJSONString(transferInfoReqVO);
         LOGGER.info("queryTransferinfo--->请求数据:{}", reqJson);
         Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "SmallAmountTransferQuery");
@@ -331,7 +331,7 @@ public class PinganMchServiceImpl implements PinganMchService {
     }
 
     /**
-     * 查询转账交易状态
+     * 查询提现交易状态 SingleTransactionStatusQuery
      *
      * @param tranSeqNo
      * @return
@@ -518,6 +518,68 @@ public class PinganMchServiceImpl implements PinganMchService {
         }
         PinganMchAccSupplyResVO pinganMchAccSupplyResVO = JSONObject.parseObject(resultJson, PinganMchAccSupplyResVO.class);
         return pinganMchAccSupplyResVO;
+    }
+
+    /**
+     * 修改会员绑定提现账户的大小额行号，超网行号和银行名称
+     *
+     * @param subAcctNo  子账户账号
+     * @param bankNo     会员绑定账号（银行卡号）
+     * @param branchName 开户行名称
+     * @param branchId   大小额行号
+     * @param supId      超级网银行号
+     * @throws PinganMchException
+     * @throws IOException
+     */
+    @Override
+    public void maintainAccountBank(String subAcctNo, String bankNo, String branchName, String branchId, String supId) throws PinganMchException, IOException {
+        PinganMchMntAccountReqVO reqVO = new PinganMchMntAccountReqVO();
+        reqVO.setFundSummaryAcctNo(mainAcctNo);
+        reqVO.setCnsmrSeqNo(uid + SerialNumUtil.generateSerial());
+        reqVO.setSubAcctNo(subAcctNo);
+        reqVO.setMemberBindAcctNo(bankNo);
+        reqVO.setAcctOpenBranchName(branchName);
+        reqVO.setCnapsBranchId(branchId);
+        reqVO.setEiconBankBranchId(supId);
+        String reqJson = JSONObject.toJSONString(reqVO);
+        LOGGER.info("maintainAccountBank--->请求数据:{}", reqJson);
+        Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "MntMbrBindRelateAcctBankCode");
+        String resultJson = JSONObject.toJSONString(result);
+        LOGGER.info("maintainAccountBank--->响应数据:{}", resultJson);
+        String code = (String) result.get("TxnReturnCode");
+        if (!code.equals("000000")) {
+            String txnReturnMsg = (String) result.get("TxnReturnMsg");
+            LOGGER.error("maintainAccountBank--->维护大小额行号失败,失败原因:{}", txnReturnMsg);
+            throw new PinganMchException(txnReturnMsg);
+        }
+    }
+
+    /**
+     * 根据会员代码查询会员子账号
+     *
+     * @param memberId
+     * @return
+     * @throws PinganMchException
+     * @throws IOException
+     */
+    @Override
+    public String queryCustAcctId(String memberId) throws PinganMchException, IOException {
+        PinganMchQueryCustAcctIdReqVO reqVO = new PinganMchQueryCustAcctIdReqVO();
+        reqVO.setFundSummaryAcctNo(mainAcctNo);
+        reqVO.setCnsmrSeqNo(uid + SerialNumUtil.generateSerial());
+        reqVO.setTranNetMemberCode(memberId);
+        String reqJson = JSONObject.toJSONString(reqVO);
+        LOGGER.info("queryCustAcctId--->请求数据:{}", reqJson);
+        Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "QueryCustAcctIdByThirdCustId");
+        String resultJson = JSONObject.toJSONString(result);
+        LOGGER.info("queryCustAcctId--->响应数据:{}", resultJson);
+        String code = (String) result.get("TxnReturnCode");
+        if (!code.equals("000000")) {
+            String txnReturnMsg = (String) result.get("TxnReturnMsg");
+            LOGGER.error("queryCustAcctId--->根据会员代码查询会员子账号,失败原因:{}", txnReturnMsg);
+            throw new PinganMchException(txnReturnMsg);
+        }
+        return (String) result.get("SubAcctNo");
     }
 
 }

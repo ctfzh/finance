@@ -7,6 +7,8 @@ import com.ih2ome.common.PageVO.SaasWxPayOrderReqVO;
 import com.ih2ome.common.PageVO.SaasWxPayOrderResVO;
 import com.ih2ome.model.lijiang.SubAccount;
 
+import java.io.UnsupportedEncodingException;
+
 /**
  * @author Sky
  * create 2018/08/01
@@ -23,7 +25,7 @@ public interface SaasWxPayService {
      * @return
      * @throws SaasWxPayException
      */
-    SaasWxPayOrderResVO placeOrder(SaasWxPayOrderReqVO reqVO, SubAccount subAccount) throws SaasWxPayException, PinganWxPayException;
+    SaasWxPayOrderResVO placeOrder(SaasWxPayOrderReqVO reqVO, SubAccount subAccount) throws SaasWxPayException, PinganWxPayException, UnsupportedEncodingException;
 
     /**
      * 支付成功回调

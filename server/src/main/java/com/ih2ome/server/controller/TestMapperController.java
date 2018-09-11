@@ -15,20 +15,19 @@ import com.ih2ome.dao.caspain.CaspainMoneyFlowDao;
 import com.ih2ome.dao.caspain.ConfigPaymentsChannelDao;
 import com.ih2ome.dao.lijiang.PayOrdersDao;
 import com.ih2ome.dao.volga.VolgaMoneyFlowDao;
-import com.ih2ome.model.lijiang.PayOrders;
-import com.ih2ome.model.lijiang.SubAccount;
-import com.ih2ome.model.lijiang.SubOrders;
-import com.ih2ome.model.lijiang.ZjjzCnapsBanktype;
+import com.ih2ome.model.lijiang.*;
 import com.ih2ome.model.volga.MoneyFlow;
 import com.ih2ome.server.pingan.sdk.InitConfiguration;
 import com.ih2ome.service.*;
 import com.pabank.sdk.PABankSDK;
+import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Example;
 
+import javax.jnlp.IntegrationService;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.crypto.Data;
 import javax.xml.ws.Response;
@@ -209,10 +208,9 @@ public class TestMapperController {
     @ResponseBody
     public ResponseBodyVO test09() throws IOException, InvocationTargetException, IllegalAccessException {
         try {
-//            pinganMchService.queryMemberBindInfo();
-//            pinganMchService.queryTransferinfo();
+            pinganMchService.queryMemberBindInfo();
 //            pinganMchService.queryTranStatus("M394791808218285023854");
-            pinganMchService.registerAccount(2984);
+//            pinganMchService.registerAccount(2984);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -323,5 +321,82 @@ public class TestMapperController {
         }
         return ResponseBodyVO.generateResponseObject(0, data, "success");
     }
+
+    @GetMapping(value = "unbindCard")
+    public ResponseBodyVO test16(@RequestParam("userId") Integer userId, @RequestParam("account") String account,
+                                 @RequestParam("bankNo") String bankNo) {
+        JSONObject data = new JSONObject();
+        try {
+            SubAccount subAccount = new SubAccount();
+            subAccount.setUserId(userId);
+            subAccount.setAccount(account);
+            SubAccountCard subAccountCard = new SubAccountCard();
+            subAccountCard.setBankNo(bankNo);
+            pinganMchService.unbindBankCard(subAccount, subAccountCard);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseBodyVO.generateResponseObject(-1, data, e.getMessage());
+
+        }
+        return ResponseBodyVO.generateResponseObject(0, data, "success");
+    }
+
+
+    @GetMapping(value = "maintainAccountBank")
+    public ResponseBodyVO test17(@RequestParam("subAcctNo") String subAcctNo, @RequestParam("branchName") String branchName,
+                                 @RequestParam("bankNo") String bankNo, @RequestParam("branchId") String branchId,
+                                 @RequestParam("supId") String supId) {
+        JSONObject data = new JSONObject();
+        try {
+            pinganMchService.maintainAccountBank(subAcctNo, bankNo, branchName, branchId, supId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseBodyVO.generateResponseObject(-1, data, e.getMessage());
+
+        }
+        return ResponseBodyVO.generateResponseObject(0, data, "success");
+    }
+
+    @GetMapping(value = "mch_accountSupply")
+    public ResponseBodyVO test18(@RequestParam("orderNo") String orderNo, @RequestParam("amt") String amt) {
+        JSONObject data = new JSONObject();
+        try {
+            pinganMchService.accountSupply(orderNo, amt);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseBodyVO.generateResponseObject(-1, data, e.getMessage());
+        }
+        return ResponseBodyVO.generateResponseObject(0, data, "success");
+
+    }
+
+    @GetMapping("mch_queryCustAcctId")
+    public ResponseBodyVO test19(@RequestParam("memberId") String memberId) {
+        JSONObject data = new JSONObject();
+        try {
+            String result = pinganMchService.queryCustAcctId(memberId);
+            System.out.println(result);
+            data.put("result", result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseBodyVO.generateResponseObject(-1, data, e.getMessage());
+        }
+        return ResponseBodyVO.generateResponseObject(0, data, "success");
+    }
+
+
+    @GetMapping("mch_queryTransferinfo")
+    @ApiOperation("查询小额鉴权转账结果")
+    public ResponseBodyVO test19(@RequestParam("tranSeqNo") String tranSeqNo, @RequestParam("tranDate") String tranDate) {
+        JSONObject data = new JSONObject();
+        try {
+            pinganMchService.queryTransferinfo(tranSeqNo, tranDate);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseBodyVO.generateResponseObject(-1, data, e.getMessage());
+        }
+        return ResponseBodyVO.generateResponseObject(0, data, "success");
+    }
+
 
 }

@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.awt.geom.FlatteningPathIterator;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 /**
  * @author Sky
@@ -71,7 +72,7 @@ public class SaasWxPayController {
             SubAccount subAccount = subAccountService.findAccountByUserId(2984);
             SaasWxPayOrderResVO resVO = saasWxPayService.placeOrder(reqVO, subAccount);
             data.put("payInfo", resVO);
-        } catch (SaasWxPayException e) {
+        } catch (SaasWxPayException | UnsupportedEncodingException e) {
             e.printStackTrace();
             LOGGER.error("placeOrder--->水滴下单失败,请求参数:{},失败原因:{}", reqVO.toString(), e.getMessage());
             return ResponseBodyVO.generateResponseObject(-1, data, e.getMessage());

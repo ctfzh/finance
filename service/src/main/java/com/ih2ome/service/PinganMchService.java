@@ -62,12 +62,12 @@ public interface PinganMchService {
     void queryMemberBindInfo() throws PinganMchException, IOException;
 
     /**
-     * 查询小额鉴权转账结果（测试）
+     * 查询小额鉴权转账结果
      *
      * @throws PinganMchException
      * @throws IOException
      */
-    void queryTransferinfo() throws PinganMchException, IOException;
+    void queryTransferinfo(String tranSeqNo,String tranDate) throws PinganMchException, IOException;
 
     /**
      * 绑定企业银行卡(金额校验)
@@ -162,4 +162,28 @@ public interface PinganMchService {
      * @throws IOException
      */
     PinganMchAccSupplyResVO accountSupply(String orderNo, String amt) throws PinganMchException, IOException;
+
+    /**
+     * 修改会员绑定提现账户的大小额行号，超网行号和银行名称
+     *
+     * @param subAcctNo  子账户账号
+     * @param bankNo     会员绑定账号（银行卡号）
+     * @param branchName 开户行名称
+     * @param branchId   大小额行号
+     * @param supId      超级网银行号
+     * @throws PinganMchException
+     * @throws IOException
+     */
+    void maintainAccountBank(String subAcctNo, String bankNo, String branchName, String branchId, String supId) throws PinganMchException, IOException;
+
+
+    /**
+     * 根据会员代码查询会员子账号
+     *
+     * @param memberId
+     * @return
+     * @throws PinganMchException
+     * @throws IOException
+     */
+    String queryCustAcctId(String memberId) throws PinganMchException, IOException;
 }

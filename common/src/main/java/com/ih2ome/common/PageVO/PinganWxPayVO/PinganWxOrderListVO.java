@@ -20,11 +20,11 @@ public class PinganWxOrderListVO {
     //订单名称（描述）
     private String ord_name;
     //订单流水号
-    private Integer ord_id;
+    private String ord_id;
     //订单号
     private String ord_no;
     //订单类型（1交易，2辙单【退款】)
-    private Integer ord_type;
+    private String ord_type;
     //下单时间
     private Date add_time;
     //交易帐号（银行卡号、支付宝帐号、微信帐号等，某些收单机构没有此数据）
@@ -42,11 +42,11 @@ public class PinganWxOrderListVO {
     //订单备注(分账信息)
     private String remark;
     //原始金额（以分为单位，没有小数点）
-    private Integer original_amount;
+    private String original_amount;
     //折扣金额（以分为单位，没有小数点）
-    private Integer discount_amount;
+    private String discount_amount;
     //抹零金额（以分为单位，没有小数点）
-    private Integer ignore_amount;
+    private String ignore_amount;
     //收单机构原始交易数据，如果返回非标准json数据，请自行转换
     private String trade_result;
     //开发者流水号
@@ -54,9 +54,9 @@ public class PinganWxOrderListVO {
     //自定义支付方式名称
     private String diy_pmt_name;
     //商户流水号（从1开始自增长不重复）
-    private Integer ord_mct_id;
+    private String ord_mct_id;
     //门店流水号（从1开始自增长不重复）
-    private Integer ord_shop_id;
+    private String ord_shop_id;
     //币种
     private String currency;
     //币种符号
