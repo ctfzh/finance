@@ -55,9 +55,9 @@ public class PinganMchServiceImpl implements PinganMchService {
         pinganMchRegisterReqVO.setMemberProperty("00");
         //开通商户子账户请求数据报文
         String reqJson = JSONObject.toJSONString(pinganMchRegisterReqVO);
-        LOGGER.info("registerAccount--->请求数据:{}", reqJson);
+//        LOGGER.info("registerAccount--->请求数据:{}", reqJson);
         Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "OpenCustAcctId");
-        LOGGER.info("registerAccount--->响应数据:{}", JSONObject.toJSON(result));
+        LOGGER.info("registerAccount--->请求数据:{} | 响应数据:{}", reqJson, JSONObject.toJSON(result));
         String code = (String) result.get("TxnReturnCode");
         if (!code.equals("000000")) {
             String txnReturnMsg = (String) result.get("TxnReturnMsg");
@@ -98,9 +98,9 @@ public class PinganMchServiceImpl implements PinganMchService {
         reqVO.setMobile(personalReqVO.getMobile());
         //个人绑卡(短信验证)请求数据报文
         String reqJson = JSONObject.toJSONString(reqVO);
-        LOGGER.info("bindCardSendMessage--->请求数据:{}", reqJson);
+//        LOGGER.info("bindCardSendMessage--->请求数据:{}", reqJson);
         Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "BindRelateAcctUnionPay");
-        LOGGER.info("bindCardSendMessage--->响应数据:{}", JSONObject.toJSON(result));
+        LOGGER.info("bindCardSendMessage--->请求数据:{} | 响应数据:{}", reqJson, JSONObject.toJSON(result));
         String code = (String) result.get("TxnReturnCode");
         if (!code.equals("000000")) {
             String txnReturnMsg = (String) result.get("TxnReturnMsg");
@@ -126,9 +126,9 @@ public class PinganMchServiceImpl implements PinganMchService {
         personalCardReqVO.setMessageCheckCode(reqVO.getMessageCode());
         //个人绑卡(短信验证码回填)请求数据报文
         String reqJson = JSONObject.toJSONString(personalCardReqVO);
-        LOGGER.info("bindPersonalCardVertify--->请求数据:{}", reqJson);
+//        LOGGER.info("bindPersonalCardVertify--->请求数据:{}", reqJson);
         Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "BindRelateAccReUnionPay");
-        LOGGER.info("bindPersonalCardVertify--->响应数据:{}", JSONObject.toJSON(result));
+        LOGGER.info("bindPersonalCardVertify--->请求数据:{} | 响应数据:{}", reqJson, JSONObject.toJSON(result));
         String code = (String) result.get("TxnReturnCode");
         if (!code.equals("000000")) {
             String txnReturnMsg = (String) result.get("TxnReturnMsg");
@@ -165,9 +165,9 @@ public class PinganMchServiceImpl implements PinganMchService {
         reqVO.setMobile(companyReqVO.getMobile());
         //企业绑卡(金额验证)请求数据报文
         String reqJson = JSONObject.toJSONString(reqVO);
-        LOGGER.info("bindCardSendAmount--->请求数据:{}", reqJson);
+//        LOGGER.info("bindCardSendAmount--->请求数据:{}", reqJson);
         Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "BindRelateAcctSmallAmount");
-        LOGGER.info("bindCardSendAmount--->响应数据:{}", JSONObject.toJSON(result));
+        LOGGER.info("bindCardSendAmount--->请求数据:{} | 响应数据:{}", reqJson, JSONObject.toJSON(result));
         String code = (String) result.get("TxnReturnCode");
         if (!code.equals("000000") && !code.equals("ERR145")) {
             String txnReturnMsg = (String) result.get("TxnReturnMsg");
@@ -191,9 +191,9 @@ public class PinganMchServiceImpl implements PinganMchService {
         bindInfoReqVO.setQueryFlag("1");
         bindInfoReqVO.setPageNum("1");
         String reqJson = JSONObject.toJSONString(bindInfoReqVO);
-        LOGGER.info("queryMemberBindInfo--->请求数据:{}", reqJson);
+//        LOGGER.info("queryMemberBindInfo--->请求数据:{}", reqJson);
         Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "MemberBindQuery");
-        LOGGER.info("queryMemberBindInfo--->响应数据:{}", JSONObject.toJSON(result));
+        LOGGER.info("queryMemberBindInfo--->请求数据:{} | 响应数据:{}", reqJson, JSONObject.toJSON(result));
         String code = (String) result.get("TxnReturnCode");
         if (!code.equals("000000")) {
             String txnReturnMsg = (String) result.get("TxnReturnMsg");
@@ -217,9 +217,9 @@ public class PinganMchServiceImpl implements PinganMchService {
         transferInfoReqVO.setFundSummaryAcctNo(mainAcctNo);
         transferInfoReqVO.setTranDate(tranDate);
         String reqJson = JSONObject.toJSONString(transferInfoReqVO);
-        LOGGER.info("queryTransferinfo--->请求数据:{}", reqJson);
+//        LOGGER.info("queryTransferinfo--->请求数据:{}", reqJson);
         Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "SmallAmountTransferQuery");
-        LOGGER.info("queryTransferinfo--->响应数据:{}", JSONObject.toJSON(result));
+        LOGGER.info("queryTransferinfo--->请求数据:{} | 响应数据:{}", reqJson, JSONObject.toJSON(result));
         String code = (String) result.get("TxnReturnCode");
         if (!code.equals("000000")) {
             String txnReturnMsg = (String) result.get("TxnReturnMsg");
@@ -248,9 +248,9 @@ public class PinganMchServiceImpl implements PinganMchService {
         companyCardReqVO.setAuthAmt(reqVO.getVertifyAmount());
         //个人绑卡(短信验证码回填)请求数据报文
         String reqJson = JSONObject.toJSONString(companyCardReqVO);
-        LOGGER.info("bindCompanyCardVertify--->请求数据:{}", reqJson);
+//        LOGGER.info("bindCompanyCardVertify--->请求数据:{}", reqJson);
         Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "CheckAmount");
-        LOGGER.info("bindCompanyCardVertify--->响应数据:{}", JSONObject.toJSON(result));
+        LOGGER.info("bindCompanyCardVertify--->请求数据:{} | 响应数据:{}", reqJson, JSONObject.toJSON(result));
         String code = (String) result.get("TxnReturnCode");
         if (!code.equals("000000")) {
             String txnReturnMsg = (String) result.get("TxnReturnMsg");
@@ -277,10 +277,10 @@ public class PinganMchServiceImpl implements PinganMchService {
         queryBalanceReqVO.setQueryFlag("2");
         queryBalanceReqVO.setPageNum("1");
         String reqJson = JSONObject.toJSONString(queryBalanceReqVO);
-        LOGGER.info("queryBalance--->请求数据:{}", reqJson);
+//        LOGGER.info("queryBalance--->请求数据:{}", reqJson);
         Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "CustAcctIdBalanceQuery");
         String resultJson = JSONObject.toJSONString(result);
-        LOGGER.info("queryBalance--->响应数据:{}", resultJson);
+        LOGGER.info("queryBalance--->请求数据:{} | 响应数据:{}", reqJson, resultJson);
         String code = (String) result.get("TxnReturnCode");
         if (!code.equals("000000")) {
             String txnReturnMsg = (String) result.get("TxnReturnMsg");
@@ -316,10 +316,10 @@ public class PinganMchServiceImpl implements PinganMchService {
         withDrawCashReqVO.setCashAmt(String.valueOf(withdrawMoney));
         withDrawCashReqVO.setTakeCashCommission(String.valueOf(withdrawCharge));
         String reqJson = JSONObject.toJSONString(withDrawCashReqVO);
-        LOGGER.info("withDrawCash--->请求数据:{}", reqJson);
+//        LOGGER.info("withDrawCash--->请求数据:{}", reqJson);
         Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "MemberWithdrawCash");
         String resultJson = JSONObject.toJSONString(result);
-        LOGGER.info("withDrawCash--->响应数据:{}", resultJson);
+        LOGGER.info("withDrawCash--->请求数据:{} | 响应数据:{}", reqJson, resultJson);
         String code = (String) result.get("TxnReturnCode");
         if (!code.equals("000000")) {
             String txnReturnMsg = (String) result.get("TxnReturnMsg");
@@ -347,10 +347,10 @@ public class PinganMchServiceImpl implements PinganMchService {
         tranStatusReqVO.setFunctionFlag("3");
         tranStatusReqVO.setTranNetSeqNo(tranSeqNo);
         String reqJson = JSONObject.toJSONString(tranStatusReqVO);
-        LOGGER.info("queryTranStatus--->请求数据:{}", reqJson);
+//        LOGGER.info("queryTranStatus--->请求数据:{}", reqJson);
         Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "SingleTransactionStatusQuery");
         String resultJson = JSONObject.toJSONString(result);
-        LOGGER.info("queryTranStatus--->响应数据:{}", resultJson);
+        LOGGER.info("queryTranStatus--->请求数据:{} | 响应数据:{}", reqJson, resultJson);
         String code = (String) result.get("TxnReturnCode");
         if (code.equals("ERR020") || !code.equals("000000")) {
             String txnReturnMsg = (String) result.get("TxnReturnMsg");
@@ -380,10 +380,10 @@ public class PinganMchServiceImpl implements PinganMchService {
         unbindCardReqVO.setSubAcctNo(subAccount.getAccount());
         unbindCardReqVO.setMemberAcctNo(subAccountCard.getBankNo());
         String reqJson = JSONObject.toJSONString(unbindCardReqVO);
-        LOGGER.info("unbindBankCard--->请求数据:{}", reqJson);
+//        LOGGER.info("unbindBankCard--->请求数据:{}", reqJson);
         Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "UnbindRelateAcct");
         String resultJson = JSONObject.toJSONString(result);
-        LOGGER.info("unbindBankCard--->响应数据:{}", resultJson);
+        LOGGER.info("unbindBankCard--->请求数据:{} | 响应数据:{}", reqJson, resultJson);
         String code = (String) result.get("TxnReturnCode");
         if (!code.equals("000000")) {
             String txnReturnMsg = (String) result.get("TxnReturnMsg");
@@ -409,10 +409,10 @@ public class PinganMchServiceImpl implements PinganMchService {
         reconciliationDocReqVO.setFileDate(fileDate);
         reconciliationDocReqVO.setFileType(fileType);
         String reqJson = JSONObject.toJSONString(reconciliationDocReqVO);
-        LOGGER.info("queryReconciliationFile--->请求数据:{}", reqJson);
+//        LOGGER.info("queryReconciliationFile--->请求数据:{}", reqJson);
         Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "ReconciliationDocumentQuery");
         String resultJson = JSONObject.toJSONString(result);
-        LOGGER.info("queryReconciliationFile--->响应数据:{}", resultJson);
+        LOGGER.info("queryReconciliationFile--->请求数据:{} | 响应数据:{}", reqJson, resultJson);
         String code = (String) result.get("TxnReturnCode");
         if (!code.equals("000000")) {
             String txnReturnMsg = (String) result.get("TxnReturnMsg");
@@ -440,10 +440,10 @@ public class PinganMchServiceImpl implements PinganMchService {
         reqVO.setOrderNo(orderNo);
         reqVO.setCnsmrSeqNo(uid + SerialNumUtil.generateSerial());
         String reqJson = JSONObject.toJSONString(reqVO);
-        LOGGER.info("queryChargeDetail--->请求数据:{}", reqJson);
+//        LOGGER.info("queryChargeDetail--->请求数据:{}", reqJson);
         Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "ChargeDetailQuery");
         String resultJson = JSONObject.toJSONString(result);
-        LOGGER.info("queryChargeDetail--->响应数据:{}", resultJson);
+        LOGGER.info("queryChargeDetail--->请求数据:{} | 响应数据:{}", reqJson, resultJson);
         String code = (String) result.get("TxnReturnCode");
         if (code.equals("ERR020")) {
             PinganMchChargeDetailResVO pinganMchChargeDetailResVO = JSONObject.parseObject(resultJson, PinganMchChargeDetailResVO.class);
@@ -474,10 +474,10 @@ public class PinganMchServiceImpl implements PinganMchService {
         reqVO.setCcy("RMB");
         reqVO.setRemark("调账");
         String reqJson = JSONObject.toJSONString(reqVO);
-        LOGGER.info("accountRegulation--->请求数据:{}", reqJson);
+//        LOGGER.info("accountRegulation--->请求数据:{}", reqJson);
         Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "AccountRegulation");
         String resultJson = JSONObject.toJSONString(result);
-        LOGGER.info("accountRegulation--->响应数据:{}", resultJson);
+        LOGGER.info("accountRegulation--->请求数据:{} | 响应数据:{}", reqJson, resultJson);
         String code = (String) result.get("TxnReturnCode");
         if (!code.equals("000000")) {
             String txnReturnMsg = (String) result.get("TxnReturnMsg");
@@ -507,10 +507,10 @@ public class PinganMchServiceImpl implements PinganMchService {
         reqVO.setOrderNo(orderNo);
         reqVO.setAmt(amt);
         String reqJson = JSONObject.toJSONString(reqVO);
-        LOGGER.info("accountSupply--->请求数据:{}", reqJson);
+//        LOGGER.info("accountSupply--->请求数据:{}", reqJson);
         Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "PlatformAccountSupply");
         String resultJson = JSONObject.toJSONString(result);
-        LOGGER.info("accountSupply--->响应数据:{}", resultJson);
+        LOGGER.info("accountSupply--->请求数据:{} | 响应数据:{}", reqJson, resultJson);
         String code = (String) result.get("TxnReturnCode");
         if (!code.equals("000000")) {
             String txnReturnMsg = (String) result.get("TxnReturnMsg");
@@ -543,10 +543,10 @@ public class PinganMchServiceImpl implements PinganMchService {
         reqVO.setCnapsBranchId(branchId);
         reqVO.setEiconBankBranchId(supId);
         String reqJson = JSONObject.toJSONString(reqVO);
-        LOGGER.info("maintainAccountBank--->请求数据:{}", reqJson);
+//        LOGGER.info("maintainAccountBank--->请求数据:{}", reqJson);
         Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "MntMbrBindRelateAcctBankCode");
         String resultJson = JSONObject.toJSONString(result);
-        LOGGER.info("maintainAccountBank--->响应数据:{}", resultJson);
+        LOGGER.info("maintainAccountBank--->请求数据:{} | 响应数据:{}", reqJson, resultJson);
         String code = (String) result.get("TxnReturnCode");
         if (!code.equals("000000")) {
             String txnReturnMsg = (String) result.get("TxnReturnMsg");
@@ -570,10 +570,10 @@ public class PinganMchServiceImpl implements PinganMchService {
         reqVO.setCnsmrSeqNo(uid + SerialNumUtil.generateSerial());
         reqVO.setTranNetMemberCode(memberId);
         String reqJson = JSONObject.toJSONString(reqVO);
-        LOGGER.info("queryCustAcctId--->请求数据:{}", reqJson);
+//        LOGGER.info("queryCustAcctId--->请求数据:{}", reqJson);
         Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "QueryCustAcctIdByThirdCustId");
         String resultJson = JSONObject.toJSONString(result);
-        LOGGER.info("queryCustAcctId--->响应数据:{}", resultJson);
+        LOGGER.info("queryCustAcctId--->请求数据:{} | 响应数据:{}", reqJson, resultJson);
         String code = (String) result.get("TxnReturnCode");
         if (!code.equals("000000")) {
             String txnReturnMsg = (String) result.get("TxnReturnMsg");
@@ -582,5 +582,47 @@ public class PinganMchServiceImpl implements PinganMchService {
         }
         return (String) result.get("SubAcctNo");
     }
+
+    /**
+     * 查询银行时间段内清分提现明细
+     *
+     * @param subAcctNo    子账号
+     * @param functionFlag 1:当日，2：历史
+     * @param queryFlag    2：提现 3：清分
+     * @param beginDate    开始日期
+     * @param endDate      结束日期
+     * @param pageNum      页码
+     * @return
+     * @throws PinganMchException
+     * @throws IOException
+     */
+    @Override
+    public PinganMchQueryCashDetailResVO queryCashDetail(String subAcctNo, String functionFlag, String queryFlag, String beginDate, String endDate, String pageNum) throws PinganMchException, IOException {
+        PinganMchQueryCashDetailReqVO reqVO = new PinganMchQueryCashDetailReqVO();
+        reqVO.setFundSummaryAcctNo(mainAcctNo);
+        reqVO.setCnsmrSeqNo(uid + SerialNumUtil.generateSerial());
+        reqVO.setFunctionFlag(functionFlag);
+        reqVO.setSubAcctNo(subAcctNo);
+        reqVO.setQueryFlag(queryFlag);
+        if ("2".equals(functionFlag)) {
+            reqVO.setBeginDate(beginDate);
+            reqVO.setEndDate(endDate);
+        }
+        reqVO.setPageNum(pageNum);
+        String reqJson = JSONObject.toJSONString(reqVO);
+//        LOGGER.info("queryCashDetail--->请求数据:{}", reqJson);
+        Map<String, Object> result = PABankSDK.getInstance().apiInter(reqJson, "BankWithdrawCashDetailsQuery");
+        String resultJson = JSONObject.toJSONString(result);
+        LOGGER.info("queryCashDetail--->请求数据:{} | 响应数据:{}", reqJson, resultJson);
+        String code = (String) result.get("TxnReturnCode");
+        if (!code.equals("000000")) {
+            String txnReturnMsg = (String) result.get("TxnReturnMsg");
+            LOGGER.error("queryCashDetail--->查询清分明细失败,失败原因:{}", txnReturnMsg);
+            throw new PinganMchException(txnReturnMsg);
+        }
+        PinganMchQueryCashDetailResVO pinganMchQueryCashDetailResVO = JSONObject.parseObject(resultJson, PinganMchQueryCashDetailResVO.class);
+        return pinganMchQueryCashDetailResVO;
+    }
+
 
 }

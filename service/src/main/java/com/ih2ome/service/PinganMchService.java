@@ -67,7 +67,7 @@ public interface PinganMchService {
      * @throws PinganMchException
      * @throws IOException
      */
-    void queryTransferinfo(String tranSeqNo,String tranDate) throws PinganMchException, IOException;
+    void queryTransferinfo(String tranSeqNo, String tranDate) throws PinganMchException, IOException;
 
     /**
      * 绑定企业银行卡(金额校验)
@@ -186,4 +186,19 @@ public interface PinganMchService {
      * @throws IOException
      */
     String queryCustAcctId(String memberId) throws PinganMchException, IOException;
+
+    /**
+     * 查询银行时间段内清分提现明细
+     *
+     * @param subAcctNo    子账号
+     * @param functionFlag 1:当日，2：历史
+     * @param queryFlag    2：提现 3：清分
+     * @param beginDate    开始日期
+     * @param endDate      结束日期
+     * @param pageNum      页码
+     * @return
+     * @throws PinganMchException
+     * @throws IOException
+     */
+    PinganMchQueryCashDetailResVO queryCashDetail(String subAcctNo, String functionFlag, String queryFlag, String beginDate, String endDate, String pageNum) throws PinganMchException, IOException;
 }
