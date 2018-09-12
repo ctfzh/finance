@@ -93,29 +93,29 @@ public class SaasWxPayController {
         String info = "notify_error";
         if (flag) {
             info = "notify_success";
-            try {
-                LOGGER.info("notify--->总订单号:{}", saasWxNotifyReqVO.getOut_no());
-                Orders orders = ordersService.findOrdersByOrderId(saasWxNotifyReqVO.getOut_no());
-                LOGGER.info("notify--->总订单信息:{}", orders);
-                String ordersUuid = orders.getUuid();
-                LOGGER.info("notify--->总订单uuid:{}", ordersUuid);
-                SubOrders subOrders = subOrdersService.findSubOrdersByOrderId(ordersUuid);
-                LOGGER.info("notify--->子订单信息:{}", subOrders);
-                String subOrderId = subOrders.getSubOrderId();
-                //查询子订单是否已入账到对应子账户
-                PinganMchChargeDetailResVO pinganMchChargeDetailResVO = pinganMchService.queryChargeDetail(subOrderId);
-                LOGGER.info("notify--->子订单是否入商户子账户:{}", JSONObject.toJSON(pinganMchChargeDetailResVO));
-                //子订单未记账到对应子账户
-                if (pinganMchChargeDetailResVO.getTxnReturnCode().equals("ERR020")) {
-                    //调用补帐接口(总订单号)
-                    PinganMchAccSupplyResVO pinganMchAccSupplyResVO = pinganMchService.accountSupply(orders.getOrderId(), String.valueOf(orders.getAmount()));
-                    LOGGER.info("notify--->补帐请求参数:{}、{},返回报文:{}", orders.getOrderId(), orders.getAmount(), JSONObject.toJSON(pinganMchAccSupplyResVO));
-                }
-            } catch (PinganMchException | IOException e) {
-                e.printStackTrace();
-                LOGGER.error("notify--->查询订单明细,补帐失败,失败原因:{}", e.getMessage());
-                return info;
-            }
+//            try {
+//                LOGGER.info("notify--->总订单号:{}", saasWxNotifyReqVO.getOut_no());
+//                Orders orders = ordersService.findOrdersByOrderId(saasWxNotifyReqVO.getOut_no());
+//                LOGGER.info("notify--->总订单信息:{}", orders);
+//                String ordersUuid = orders.getUuid();
+//                LOGGER.info("notify--->总订单uuid:{}", ordersUuid);
+//                SubOrders subOrders = subOrdersService.findSubOrdersByOrderId(ordersUuid);
+//                LOGGER.info("notify--->子订单信息:{}", subOrders);
+//                String subOrderId = subOrders.getSubOrderId();
+//                //查询子订单是否已入账到对应子账户
+//                PinganMchChargeDetailResVO pinganMchChargeDetailResVO = pinganMchService.queryChargeDetail(subOrderId);
+//                LOGGER.info("notify--->子订单是否入商户子账户:{}", JSONObject.toJSON(pinganMchChargeDetailResVO));
+//                //子订单未记账到对应子账户
+//                if (pinganMchChargeDetailResVO.getTxnReturnCode().equals("ERR020")) {
+//                    //调用补帐接口(总订单号)
+//                    PinganMchAccSupplyResVO pinganMchAccSupplyResVO = pinganMchService.accountSupply(orders.getOrderId(), String.valueOf(orders.getAmount()));
+//                    LOGGER.info("notify--->补帐请求参数:{}、{},返回报文:{}", orders.getOrderId(), orders.getAmount(), JSONObject.toJSON(pinganMchAccSupplyResVO));
+//                }
+//            } catch (PinganMchException | IOException e) {
+//                e.printStackTrace();
+//                LOGGER.error("notify--->查询订单明细,补帐失败,失败原因:{}", e.getMessage());
+//                return info;
+//            }
         }
         return info;
     }
