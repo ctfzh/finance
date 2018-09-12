@@ -1,6 +1,11 @@
 package com.ih2ome.server.controller;
 
 import com.alibaba.fastjson.JSONObject;
+
+
+import com.dcfs.esb.ftp.client.https.FtpGet;
+import com.dcfs.esb.ftp.server.error.FtpException;
+import com.dcfs.esb.ftp.server.msg.FileMsgBean;
 import com.github.pagehelper.PageHelper;
 import com.google.common.io.Resources;
 import com.ih2ome.common.Exception.PinganMchException;
@@ -10,7 +15,10 @@ import com.ih2ome.common.PageVO.PinganWxPayVO.*;
 import com.ih2ome.common.support.ResponseBodyVO;
 import com.ih2ome.common.utils.ip.IPUtil;
 import com.ih2ome.common.utils.ip.IPWhiteListUtil;
+import com.ih2ome.common.utils.pingan.Base64;
+import com.ih2ome.common.utils.pingan.FileEnDeUtil;
 import com.ih2ome.common.utils.pingan.SerialNumUtil;
+import com.ih2ome.common.utils.pingan.SignUtil;
 import com.ih2ome.dao.caspain.CaspainMoneyFlowDao;
 import com.ih2ome.dao.caspain.ConfigPaymentsChannelDao;
 import com.ih2ome.dao.lijiang.PayOrdersDao;
@@ -23,7 +31,9 @@ import com.pabank.sdk.PABankSDK;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import net.bytebuddy.asm.Advice;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Example;
@@ -45,6 +55,8 @@ import java.util.Map;
 @Scope("prototype")
 public class TestMapperController {
 
+    @Value("${pingan.sdkPrefix}")
+    private String pinganSDKPrefix;
     @Autowired
     private ConfigPaymentsChannelDao configPaymentsChannelDao;
     @Autowired
@@ -232,9 +244,62 @@ public class TestMapperController {
             PinganMchQueryReconciliationDocResVO reconciliationDocResVO = pinganMchService.queryReconciliationFile(fileName, fileDate);
             System.out.println(JSONObject.toJSON(reconciliationDocResVO));
             data.put("file", reconciliationDocResVO);
+            for (PinganMchQueryReconciliationDocArrVO docArr : reconciliationDocResVO.getTranItemArray()) {
+                FtpGet ftpGet = null;
+                FileMsgBean bean = new FileMsgBean();
+                InitConfiguration.init(pinganSDKPrefix);
+                String localFile = "D:/" + docArr.getFileName();
+                try {
+                    ftpGet = new FtpGet(docArr.getFilePath(), localFile, false, null, docArr.getDrawCode(), bean);
+                    ftpGet.doGetFile();
+                } catch (FtpException e) {
+                    e.printStackTrace();
+                } finally {
+                    if (null != ftpGet) {
+                        ftpGet.close(true);
+                        //文件解密解压
+                        String key = docArr.getRandomPassword();
+                        String ALG = "DesEde/CBC/PKCS5Padding";
+                        String srcFile = localFile;
+                        String zipFile = srcFile + ".zip";
+                        String desFile = srcFile + ".pre";
+                        byte[] bkey = Base64.decode(key.getBytes());
+                        try {
+                            // 解密
+                            FileEnDeUtil.decrypt(srcFile, zipFile, bkey, ALG, "DesEde", null);
+                            // 解压
+                            FileEnDeUtil.uncompress(zipFile, desFile);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
         } catch (PinganMchException | IOException e) {
             e.printStackTrace();
             return ResponseBodyVO.generateResponseObject(-1, data, e.getMessage());
+        }
+        return ResponseBodyVO.generateResponseObject(0, data, "success");
+    }
+
+    @GetMapping("downloadFile")
+    public ResponseBodyVO test111(@RequestParam("fileName") String fileName,
+                                  @RequestParam("filePath") String filePath,
+                                  @RequestParam("password") String password,
+                                  @RequestParam("drawCode") String drawCode) {
+        JSONObject data = new JSONObject();
+        FtpGet ftpGet = null;
+        FileMsgBean bean = new FileMsgBean();
+        InitConfiguration.init(pinganSDKPrefix);
+        try {
+            ftpGet = new FtpGet(filePath, "D:/" + fileName, false, null, drawCode, bean);
+            ftpGet.doGetFile();
+        } catch (FtpException e) {
+            e.printStackTrace();
+        } finally {
+            if (null != ftpGet) {
+                ftpGet.close(true);
+            }
         }
         return ResponseBodyVO.generateResponseObject(0, data, "success");
     }
@@ -408,11 +473,29 @@ public class TestMapperController {
     @GetMapping("mch_queryCashDetail")
     @ApiOperation("查询银行时间段内清分提现明细")
     public ResponseBodyVO test19(@RequestParam("subAcctNo") String subAcctNo, @RequestParam("functionFlag") String functionFlag,
-                                 @RequestParam("queryFlag") String queryFlag, @RequestParam("beginDate") String beginDate,
-                                 @RequestParam("endDate") String endDate, @RequestParam("pageNum") String pageNum) {
+                                 @RequestParam("queryFlag") String queryFlag, @RequestParam(value = "beginDate", required = false) String beginDate,
+                                 @RequestParam(value = "endDate", required = false) String endDate, @RequestParam("pageNum") String pageNum) {
         JSONObject data = new JSONObject();
         try {
-            pinganMchService.queryCashDetail(subAcctNo, functionFlag, queryFlag, beginDate, endDate, pageNum);
+            PinganMchQueryCashDetailResVO pinganMchQueryCashDetailResVO = pinganMchService.queryCashDetail(subAcctNo, functionFlag, queryFlag, beginDate, endDate, pageNum);
+            System.out.println(pinganMchQueryCashDetailResVO);
+            data.put("result", pinganMchQueryCashDetailResVO);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseBodyVO.generateResponseObject(-1, data, e.getMessage());
+        }
+        return ResponseBodyVO.generateResponseObject(0, data, "success");
+    }
+
+
+    @GetMapping("mch_queryTranStatus")
+    @ApiOperation("查询银行单笔交易状态")
+    public ResponseBodyVO test20(@ApiParam("子订单号") @RequestParam("tranSeqNo") String tranSeqNo) {
+        JSONObject data = new JSONObject();
+        try {
+            PinganMchQueryTranStatusResVO tranStatusResVO = pinganMchService.queryTranStatus(tranSeqNo);
+            System.out.println(tranStatusResVO);
+            data.put("result", tranStatusResVO);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseBodyVO.generateResponseObject(-1, data, e.getMessage());
